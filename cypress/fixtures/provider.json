@@ -1,0 +1,16 @@
+{
+    "nombreValido":"Concox3",
+    "nacionalidadValido":"Mexicana",
+    "giroComercialValido":"Minería",
+    "productoValido":"qbit",
+    "garantiaValido":"1",
+    "temporalidadValido":"dias",
+    "servicioValido":"material",
+    "nombreContactoValido":"Leticia Rodríguez Silva",
+    "telefonoContactoValido":"5510102709",
+    "emailConctactoValido":"leticia.rodriguez@telcel.com",
+    "descripcionDireccionesValido":"Domicilio",
+    "direccionDireccionesValido":"C. Lago Zurich 245, Amp Granada, Miguel Hidalgo, 11529 Ciudad de México, CDMX, México",
+    "nombreInvalido":"SafepointSafepointSafepointSafepointSafepointSafepointSafepointSafepointSafepointSafepointSafepointSafepoint",
+    "nacionalidadInvalido":"MexicanaMexicanaMexicanaMexicanaMexicanaMexicanaMexicanaMexicanaMexicana"
+}
