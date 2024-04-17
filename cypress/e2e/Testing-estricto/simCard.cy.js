@@ -13,7 +13,7 @@ describe("Sim card",function(){
         cy.get("#password").type("123456");
         cy.get("#continuar").click();
     })
-    it("Crear orden de compra con 1 producto",function(){
+    it("Crear orden de compra con 1 producto sim card",function(){
         //?CREAR ORDEN DE COMPRA
         //sección añadir provider
         //módulo administración
@@ -26,12 +26,12 @@ describe("Sim card",function(){
         cy.get(".p-button-success").click();
         cy.wait(300)
         //nombre
-        cy.get("#name").type(this.purchaseOrder.descripcionValida);
+        cy.get("#name").type(this.purchaseOrder.descripcionChipValida);
         //proveedor
         cy.get(':nth-child(3) > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
         //escribir proveedor
         cy.get('.p-dropdown-filter')
-        .type(this.purchaseOrder.proveedorValida)
+        .type(this.purchaseOrder.proveedorChipValida)
         .wait(200)
         .type("{downarrow}")
         .wait(200)
@@ -41,7 +41,7 @@ describe("Sim card",function(){
         //producto
         cy.get(':nth-child(1) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
         //escribir producto
-        cy.get('.p-dropdown-filter').type(this.purchaseOrder.productoValida)
+        cy.get('.p-dropdown-filter').type(this.purchaseOrder.productoChipValida)
         .wait(200)
         .type("{downarrow}")
         .wait(200)
@@ -86,7 +86,7 @@ describe("Sim card",function(){
         //producto 1
         //serial
         cy.get('[ng-reflect-name="0"] > :nth-child(2) > .col-12 > #key').type(
-            this.purchaseOrder.serial1Valida
+            this.purchaseOrder.serialChipValida
         );
         //ubicacion
         cy.get(

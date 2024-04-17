@@ -1,9 +1,14 @@
 {
-    "descripcionValida":"1 chip",
-    "cotizacionValida":"5 chips",
-    "proveedorValida":"Telcel",
-    "productoValida":"sim card",
+    "descripcionChipValida":"1 chip",
+    "cotizacionChipValida":"1 chip",
+    "proveedorChipValida":"Telcel",
+    "productoChipValida":"sim card",
     "cantidadValida":"1",
     "precioValida":"300",
-    "serial1Valida":"8952020219592932426"
+    "serialChipValida":"8952020018590654689",
+    "descripcionGPSValida":"1 gps",
+    "cotizacionGPSValida":"1 gps",
+    "proveedorGPSValida":"Concox",
+    "productoGPSValida":"qbit",
+    "serialGPSValida":"355087093979655"
 }
