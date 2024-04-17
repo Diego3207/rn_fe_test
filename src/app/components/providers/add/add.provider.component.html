@@ -141,7 +141,7 @@
                                 <ng-template pTemplate="body" let-providerService  let-i="rowIndex">
                                     <tr [pEditableRow]="providerService" [formGroupName]="i">
                                         <td>
-                                            <p-dropdown id="services" [options]="listServices"  appendTo="body" [filter]="true" formControlName="providerServiceServiceId" filterBy="label" [showClear]="true" placeholder="Selecciona un servicio" optionValue="value" optionLabel="label"  ></p-dropdown>
+                                            <p-dropdown [options]="listServices"  appendTo="body" [filter]="true" formControlName="providerServiceServiceId" filterBy="label" [showClear]="true" placeholder="Selecciona un servicio" optionValue="value" optionLabel="label"  ></p-dropdown>
                                             <div *ngIf="form.controls.providerServices.controls[i].controls.providerServiceServiceId.invalid">
                                                 <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.providerServices.controls[i].controls.providerServiceServiceId.errors?.['required']" >*Campo requerido</small>
                                             </div>
@@ -151,7 +151,7 @@
                                         </td>
                                         <td [style]="{'min-width':'90px'}">
                                             <p-inputNumber 
-                                                inputId="guarantyService"  
+                                                inputId="locale-us"  
                                                 mode="decimal" 
                                                 locale="en-US" 
                                                 formControlName="providerProductGuaranteeUnit" 

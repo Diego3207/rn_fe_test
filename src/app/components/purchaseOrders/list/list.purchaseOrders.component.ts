@@ -349,7 +349,7 @@ export class ListPurchaseOrdersComponent implements OnInit, OnDestroy {
 
 
                     //2. Generar CSV por categoria
-
+                    let count = 0;
                     for(let type in categorys){
                         //console.log(categorys[type]); 
 
@@ -412,10 +412,22 @@ export class ListPurchaseOrdersComponent implements OnInit, OnDestroy {
                             noDownload: false,
                             headers:  Object.keys(dataCSV[0])
                         };
-                        new  AngularCsv(dataCSV, "orden_compra_"+ dataCSV[0].producto+"_"+dataCSV[0].categoria, csvOptions);
-                
-                    
+                        //new  AngularCsv(dataCSV, "orden_compra_"+ dataCSV[0].producto+"_"+dataCSV[0].categoria, csvOptions);
+                        if(count > 0) {
+                            setTimeout(() => {
+                                new  AngularCsv(dataCSV, "orden_compra_"+ dataCSV[0].producto+"_"+dataCSV[0].categoria, csvOptions);
+                            }, 1000 * count);
+                            
+                        } else {
+                            new  AngularCsv(dataCSV, "orden_compra_"+ dataCSV[0].producto+"_"+dataCSV[0].categoria, csvOptions);
+                        }                        
+                        
+                        count =+1;
                     }
+
+                    
+                
+                
                    
                     this.miscService.endRquest();
                 }else{

@@ -100,8 +100,13 @@
                                 <tr   [pEditableRow]="quotationSaleProducts" [formGroupName]="i">
                                     <td>
                                         <div class="col-12">
-                                            <p-dropdown [style]="{'max-width':'17rem'}" [options]="listProducts" [pTooltip]="getLabel(form.controls.quotationSaleProducts.controls[i].controls.quotationSaleProductProductId.value,'product')" (onChange)="getPriceProduct($event.value,i)" [filter]="true" appendTo="body" placeholder="Selecciona uno" formControlName="quotationSaleProductProductId"   optionValue="value" filterBy="label"   optionLabel="label"   [showClear]="true" >
-                                            
+                                            <p-dropdown [style]="{'max-width':'17rem'}" [options]="listProducts" [pTooltip]="getLabel(form.controls.quotationSaleProducts.controls[i].controls.quotationSaleProductProductId.value,'product')" (onChange)="getPriceProduct($event.value,i)" [filter]="true" appendTo="body" placeholder="Selecciona uno" formControlName="quotationSaleProductProductId"   optionValue="value" filterBy="labelFilter"   optionLabel="label"   [showClear]="true" >
+                                                <ng-template let-product pTemplate="item">
+                                                   
+                                                        <div>{{ product.label }}</div>
+                                                        <small class="text-xs text-500">{{product.description}}</small>
+                                                    
+                                                </ng-template>
                                             </p-dropdown>
                                             <div *ngIf="form.controls.quotationSaleProducts.controls[i].controls.quotationSaleProductProductId.invalid">
                                                 <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.quotationSaleProducts.controls[i].controls.quotationSaleProductProductId.errors?.['required']">*Campo requerido</small>

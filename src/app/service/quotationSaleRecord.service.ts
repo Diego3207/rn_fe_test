@@ -39,7 +39,7 @@ export class  QuotationSaleRecordService
 
     return this.http.get<QuotationSaleRecord>(this.url+"/find",options);
   }
-  update(data: QuotationSaleRecord):Observable<any>{
+  update(data: any):Observable<any>{
     return this.http.put<QuotationSaleRecord>(this.url+"/update",data);
    }
   disable(id:number){

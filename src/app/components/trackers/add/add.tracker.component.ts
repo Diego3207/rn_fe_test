@@ -19,18 +19,16 @@ export class AddTrackerComponent  {
     form: FormGroup | any;
     listSIMs: any[] = [];
     listSupplies: any[] = [];
+    listSuppliesRaw: any[] = [];
     listSimCards: any[] = [];
 
     constructor(    
         private formBuilder: FormBuilder,
-        
         private trackerService: TrackerService,
         private supplyService: SupplyService,
         private simCardService: SimCardService,
         private messageService: MessageService,
-        private confirmationService: ConfirmationService,
         private miscService:MiscService,
-        private ngZone: NgZone,
         private router: Router ) 
     {
     }
@@ -47,13 +45,20 @@ export class AddTrackerComponent  {
             trackerSupplyId: [null,[Validators.required]],
             trackerImei: [null, [Validators.required,Validators.maxLength(16)]],
             trackerSimCardId: null,
-            trackerMaximumVoltage: [null,[Validators.required,Validators.min(1), Validators.max(99999999)]],
-            trackerMinimumVoltage:[null,[Validators.required,Validators.min(1), Validators.max(99999999)]],
+            trackerMaximumVoltage: 0.00,
+            trackerMinimumVoltage: 0.00,
          }, formOptions);
          
          this.list();
 
-        
+        this.form.get("trackerSupplyId").valueChanges.subscribe(selectedValue => 
+        {
+            this.listSuppliesRaw['object'].forEach(element => {
+                if(element.id == selectedValue ){
+                    this.form.controls.trackerImei.setValue(element.supplyKey);
+                }
+            });
+        });        
     }
 
     ngOnDestroy() {
@@ -119,11 +124,12 @@ export class AddTrackerComponent  {
         forkJoin([supplies,sims]).subscribe(([dataSupplies, dataSims] )=>
         {
             this.miscService.endRquest(); 
+            this.listSuppliesRaw = dataSupplies;
             if(dataSupplies != null )
-            {                    
+            {        
+                this.listSuppliesRaw = dataSupplies;            
                 dataSupplies['object'].forEach(element => {
-                        this.listSupplies.push({'label':  "Producto: "+element['product']+" / Serial: "+element['supplyKey'],'value': element['id']});
-                
+                    this.listSupplies.push({'label':  "Producto: "+element['product']+" / Serial: "+element['supplyKey'],'value': element['id']});
                 });
             }else{
                 this.messageService.add({ severity: 'warn', key: 'msg', summary: 'Advertencia', detail: 'Sin  suministros disponibles de tipo RASTREADOR para relacionar', life: 4000 });
@@ -132,8 +138,8 @@ export class AddTrackerComponent  {
             if(dataSims != null )
             {                 
                 dataSims['object'].forEach(element => {
-                    this.listSimCards.push({'label':  "Número: "+element['simCardNumber'],'value': element['id']});
-                    //console.log(element);   
+                    this.listSimCards.push({'label':  "ICCID: "+element['iccid'],'value': element['id']});
+                    console.log(element);   
                 });
             }else{
                 this.messageService.add({ severity: 'warn', key: 'msg', summary: 'Advertencia', detail: 'Sin  SIMs disponibles para relacionar', life: 4000 });

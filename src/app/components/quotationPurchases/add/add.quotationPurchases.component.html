@@ -48,7 +48,15 @@
                                 <tr   [pEditableRow]="quotationPurchaseProducts" [formGroupName]="i">
                                     <td>
                                         <div class="">
-                                            <p-dropdown  [options]="listProducts"  [filter]="true" appendTo="body" placeholder="Selecciona uno" formControlName="quotationPurchaseProductProductId"   optionValue="value"  optionLabel="label"   [showClear]="true" [pTooltip]="getLabel(form.controls.quotationPurchaseProducts.controls[i].controls.quotationPurchaseProductProductId.value,'product')" [style]="{'max-width':'17rem'}" ></p-dropdown>
+                                            <p-dropdown [style]="{'max-width':'17rem'}" [options]="listProducts" [pTooltip]="getLabel(form.controls.quotationPurchaseProducts.controls[i].controls.quotationPurchaseProductProductId.value,'product')"  [filter]="true" appendTo="body" placeholder="Selecciona uno" formControlName="quotationPurchaseProductProductId"   optionValue="value" filterBy="labelFilter"   optionLabel="label"   [showClear]="true" >
+                                                <ng-template let-product pTemplate="item">
+                                                   
+                                                        <div>{{ product.label }}</div>
+                                                        <small class="text-xs text-500">{{product.description}}</small>
+                                                    
+                                                </ng-template>
+                                            </p-dropdown>
+                                            
                                             <div *ngIf="form.controls.quotationPurchaseProducts.controls[i].controls.quotationPurchaseProductProductId.invalid">
                                                 <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.quotationPurchaseProducts.controls[i].controls.quotationPurchaseProductProductId.errors?.['required']">*Campo requerido</small>
                                             </div>

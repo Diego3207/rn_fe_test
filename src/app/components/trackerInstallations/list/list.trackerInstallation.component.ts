@@ -29,7 +29,10 @@ export class ListTrackerInstallationComponent implements OnInit, OnDestroy {
     matchModeOptionsText: SelectItem[];
     matchModeOptionsNumber: SelectItem[];
     matchModeOptionsDate: SelectItem[];
+    visibleHistorial: boolean = false;
     visible: boolean = false;
+    listHistorial : any[] = [];
+    totalRowsHistorial:number = 0;
 
     constructor(
         private miscService:MiscService,
@@ -114,9 +117,10 @@ export class ListTrackerInstallationComponent implements OnInit, OnDestroy {
             {
                 this.trackerInstallations = data['object']['records'];                    
                 this.totalRows = data['object']['totalRecords'];
-                console.log(this.trackerInstallations);
 
             }else{
+                this.trackerInstallations  = [];
+                this.totalRows = 0;
                 this.messageService.add({severity:'warn', key: 'msg',summary:'Sin registros',life: 3000});
             }
             this.miscService.endRquest();
@@ -250,6 +254,35 @@ export class ListTrackerInstallationComponent implements OnInit, OnDestroy {
     closeModalMap(){
         this.visible = false;
         this.coordenates = null;
+    }
+
+    getHistorial(idInstallation:number) {
+        this.visibleHistorial = true;
+
+        this.trackerInstallationService.getList(1,'{"installation_id":'+idInstallation+'}')
+        .subscribe((data: any)=>{
+            if(data != null){
+                this.listHistorial = data['object'];                    
+                this.totalRowsHistorial = data['object'].length;
+                console.log(data);
+
+
+            }else{
+                this.messageService.add({severity:'warn', key: 'msg',summary:'Sin hisotrial',life: 3000});
+            }
+            this.miscService.endRquest();
+
+        },  (err : any) => {
+           
+            if( err.status == 416){
+                this.messageService.add({severity:'warn', key: 'msg',summary: err.error.message,life: 3000});
+            
+            }else{
+
+                this.messageService.add({severity:'error', key: 'msg', summary:  err.error.message,detail: err.name,life: 3000});
+            }
+            this.miscService.endRquest();
+        });
     }
 
 }

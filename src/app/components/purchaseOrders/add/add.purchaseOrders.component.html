@@ -59,7 +59,15 @@
                                 <tr   [pEditableRow]="purchaseOrderProducts" [formGroupName]="i">
                                     <td>
                                         <div class="col-12 ">
-                                            <p-dropdown  [options]="listProducts"  [filter]="true" appendTo="body" placeholder="Selecciona uno" formControlName="purchaseOrderProductProductId"   optionValue="value"  optionLabel="label"   [showClear]="true"  [pTooltip]="getLabel(form.controls.purchaseOrderProducts.controls[i].controls.purchaseOrderProductProductId.value,'product')" [style]="{'max-width':'17rem'}" ></p-dropdown>
+                                            <p-dropdown  [options]="listProducts" filterBy="labelFilter" [filter]="true" appendTo="body" placeholder="Selecciona uno" formControlName="purchaseOrderProductProductId"   optionValue="value"  optionLabel="label"   [showClear]="true"  [pTooltip]="getLabel(form.controls.purchaseOrderProducts.controls[i].controls.purchaseOrderProductProductId.value,'product')" [style]="{'max-width':'17rem'}" >
+                                                <ng-template let-product pTemplate="item">
+                                                   
+                                                    <div>{{ product.label }}</div>
+                                                    <small class="text-xs text-500">{{product.description}}</small>
+                                                
+                                                </ng-template>
+                                            </p-dropdown>
+                                            
                                             <div *ngIf="form.controls.purchaseOrderProducts.controls[i].controls.purchaseOrderProductProductId.invalid">
                                                 <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.purchaseOrderProducts.controls[i].controls.purchaseOrderProductProductId.errors?.['required']">*Campo requerido</small>
                                             </div>

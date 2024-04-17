@@ -40,6 +40,11 @@ const routes: Routes =
             { path: 'tickets', loadChildren: () => import('./components/tickets/tickets.module').then(m => m.TicketModule), data:{ module: 'tickets' } },
             { path: 'directory', loadChildren: () => import('./components/dependencies/dependency.module').then(m => m.DependencyModule), data:{ module: 'directory' } },
             { path: 'incidences', loadChildren: () => import('./components/incidences/incidence.module').then(m => m.IncidenceModule), data:{ module: 'incidences' } },
+            { path: 'renovations', loadChildren: () => import('./components/renovations/renovation.module').then(m => m.RenovationModule), data:{ module: 'renovations' } },
+            { path: 'associations', loadChildren: () => import('./components/associations/association.module').then(m => m.AssociationModule), data:{ module: 'associations' } },
+            { path: 'trackerUninstalls', loadChildren: () => import('./components/trackerUninstalls/trackerUninstall.module').then(m => m.TrackerUninstallModule), data:{ module: 'trackerUninstalls' } },
+            { path: 'trackerInstallationReviews', loadChildren: () => import('./components/trackerInstallationReviews/trackerInstallationReview.module').then(m => m.TrackerInstallationReviewModule), data:{ module: 'trackerInstallationReviews' } },
+
         ]
 
     },

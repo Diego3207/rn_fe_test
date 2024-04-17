@@ -3,14 +3,14 @@ import { CommonModule } from '@angular/common';
 
 
 
-import { ProviderRoutingModule } from './trackerInstallation-routing.module';
+import { TrackerInstallationRoutingModule } from './trackerInstallation-routing.module';
 
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
-    ProviderRoutingModule,
+    TrackerInstallationRoutingModule,
   ]
 })
 export class TrackerInstallationModule { }

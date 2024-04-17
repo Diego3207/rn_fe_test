@@ -18,6 +18,7 @@
                             filterBy="costumerName" 
                             [showClear]="true"  
                             optionLabel="costumerName" 
+                            [disabled]="true"
                             optionValue="id">
                     </p-dropdown>
                     <div *ngIf="form.controls.trackerInstallationCostumerId.invalid">
@@ -25,6 +26,7 @@
                         <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.trackerInstallationCostumerId.errors?.['maxlength']" >*Longitud máxima 100</small>
                     </div>
                 </div>
+                <p>Si requiere hacer un cambio en rastreador o vehiculo favor de solicitar una revisión o desinstalación</p>
                 <div class="field" *ngIf="form.controls.trackerInstallationCostumerId.value">
                     <label for="trackerInstallationVehicleId" class="font-semibold">Vehiculo</label>
                     <p-dropdown 
@@ -35,6 +37,7 @@
                             filterBy="vehicleVin" 
                             [showClear]="true"  
                             optionLabel="vehicleVin" 
+                            [disabled]="true"
                             optionValue="id">
                     </p-dropdown>
                     <div *ngIf="form.controls.trackerInstallationCostumerId.invalid">
@@ -49,11 +52,11 @@
                             [options]="listTrackers" 
                             placeholder="Seleciona una opción"
                             [filter]="true" 
-                            filterBy="label" 
+                            filterBy="trackerImei" 
                             [showClear]="true"  
-                            optionLabel="label" 
+                            optionLabel="trackerImei" 
                             [disabled]="true"
-                            optionValue="value">
+                            optionValue="id">
                     </p-dropdown>
                     <div *ngIf="form.controls.trackerInstallationTrackerId.invalid">
                         <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.trackerInstallationTrackerId.errors?.['required']" >*Campo requerido</small>
@@ -132,24 +135,26 @@
                         <ng-template let-file pTemplate="file"></ng-template>
                         <ng-template pTemplate="content">
 
-                    <div formArrayName="trackerInstallationEvidences"  *ngFor="let file of uploadedFiles; let i = index">
-                        <div class="grid border-bottom-1 surface-border m-2 surface-overlay font-bold "   [formGroupName]="i" >                           
+                           
+
+                    <div *ngFor="let upload of uploadedFiles;">
+                        <div class="grid border-bottom-1 surface-border m-2 surface-overlay font-bold ">                           
                             <div class="col-12 md:col-3 lg:col-2 align-content-center	 p-fileupload-filename" style="margin: 0.5rem;"> 
-                                <p-image *ngIf="file.type != 'application/pdf'" [src]="file.objectURL" class="m-auto" alt="Image" width="150" [preview]="true"></p-image>
+                                <p-image *ngIf="upload['file'].type != 'application/pdf'" [src]="upload['file'].objectURL" class="m-auto" alt="Image" width="150" [preview]="true"></p-image>
                                 
-                                <a *ngIf="file.type == 'application/pdf' && file.hasOwnProperty('id')"  [href]="file.objectURL" target="_blank" rel="noopener noreferrer" class=" font-bold">
+                                <a *ngIf="upload['file'].type == 'application/pdf' && upload.hasOwnProperty('id')"  [href]="upload['file'].objectURL" target="_blank" rel="noopener noreferrer" class=" font-bold">
                                     <span  style="font-size: 3rem; color: red"  class="pi pi-file-pdf m-auto"></span>
                                 </a>
-                                <span *ngIf="file.type == 'application/pdf' && !file.hasOwnProperty('id')" style="font-size: 3rem; color: red"  class="pi pi-file-pdf m-auto"></span>
+                                <span *ngIf="upload['file'].type == 'application/pdf' && !upload.hasOwnProperty('id')" style="font-size: 3rem; color: red"  class="pi pi-file-pdf m-auto"></span>
 
                             </div>
-                            <div class="col-12 md:col-3 lg:col-3 align-content-center p-fileupload-filename" style="margin: 0.5rem;"> {{ file.name}} </div> 
-                            <div class="col-12 md:col-3 lg:col-2 align-content-center p-fileupload-filename" style="margin: 0.5rem;"> {{ (file.size/1024).toFixed(2) }} KB  </div>
+                            <div class="col-12 md:col-3 lg:col-3 align-content-center p-fileupload-filename" style="margin: 0.5rem;"> {{ upload['file'].name}} </div> 
+                            <div class="col-12 md:col-3 lg:col-2 align-content-center p-fileupload-filename" style="margin: 0.5rem;"> {{ (upload['file'].size/1024).toFixed(2) }} KB  </div>
                             <div class="col-12 md:col-3 lg:col-3 align-content-center p-fileupload-filename" style="margin: 0.5rem;">
-                                <p-autoComplete [dropdown]="true" formControlName="trackerInstallationEvidenceDescription"  [suggestions]="listFilteredDescriptions" (completeMethod)="filterDescriptions($event)"></p-autoComplete>
+                                <p-autoComplete [dropdown]="true" [(ngModel)]="upload.description"  [ngModelOptions]="{standalone: true}"  [suggestions]="listFilteredDescriptions" (completeMethod)="filterDescriptions($event)"></p-autoComplete>
                             </div>
                             <div class="col-12 md:col-3 lg:col-1 align-content-center">
-                                <button type="button" icon="pi pi-times" pbutton="" (click)="removeFile(file,i)" class="p-element p-button p-component p-button-icon-only" ng-reflect-icon="pi pi-times"  ><span class="p-button-icon pi pi-times" aria-hidden="true"></span></button>
+                                <button type="button" icon="pi pi-times" pbutton="" (click)="removeFile(upload)" class="p-element p-button p-component p-button-icon-only" ng-reflect-icon="pi pi-times"  ><span class="p-button-icon pi pi-times" aria-hidden="true"></span></button>
                             </div>
                         </div>
                     </div>
@@ -159,7 +164,7 @@
                 </div>
                 <div [ngClass]="{'error-box  ':form.controls.trackerInstallationAccessories.errors  }" >
                     <div class="flex flex-wrap gap-2 m-2">
-                        <p-button label="Accesorios"  (onClick)="addRow('accessory')" icon="pi pi-plus"  badge="{{form.controls.trackerInstallationAccessories.length}}" ></p-button>
+                        <p-button label="Accesorios"  (onClick)="addRow()" icon="pi pi-plus"  badge="{{form.controls.trackerInstallationAccessories.length}}" ></p-button>
                     </div>
                     <div class="card mt-3" formArrayName="trackerInstallationAccessories">
                         <div *ngIf="form.controls.trackerInstallationAccessories.invalid ">
@@ -185,7 +190,7 @@
                                     </td>
                                     <td>
                                         <div class="flex align-items-center justify-content-center gap-2">
-                                            <button pButton pRipple type="button"  (click)="removeRow(trackerInstallationAccessory,'accessory',i)" pCancelEditableRow icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"></button>                                                
+                                            <button pButton pRipple type="button"  (click)="removeRow(trackerInstallationAccessory,i)" pCancelEditableRow icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"></button>                                                
                                         </div>
                                     </td>
                                 </tr>

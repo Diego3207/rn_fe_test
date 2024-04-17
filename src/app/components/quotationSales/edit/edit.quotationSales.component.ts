@@ -441,7 +441,7 @@ export class EditQuotationSalesComponent  {
             if(dataProducts != null )
             {                    
                 dataProducts['object']['records'].forEach(element => {
-                    this.listProducts.push({'label':element['productBrand']+" "+ element['productModel'],'value':element['id'],'price':element['productPrice']});
+                    this.listProducts.push({'label':element['productBrand']+" "+ element['productModel'],'value':element['id'],'price':element['productPrice'],description:element['productDescription'],labelFilter:element['productBrand']+" "+ element['productModel']+" "+element['productDescription']});
                 });
                 //console.log(this.listProducts);
             }

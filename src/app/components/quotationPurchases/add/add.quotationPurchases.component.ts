@@ -232,7 +232,7 @@ export class AddQuotationPurchasesComponent  {
                 if(dataProducts != null )
                 {                    
                     dataProducts['object']['records'].forEach(element => {
-                        this.listProducts.push({'label':element['providerProductProductId']['productBrand']+" "+ element['providerProductProductId']['productModel'],'value':element['providerProductProductId']['id']});
+                        this.listProducts.push({'label':element['providerProductProductId']['productBrand']+" "+ element['providerProductProductId']['productModel'],'value':element['providerProductProductId']['id'],description:element['providerProductProductId']['productDescription'],labelFilter:element['providerProductProductId']['productBrand']+" "+ element['providerProductProductId']['productModel']+" "+element['providerProductProductId']['productDescription']});
                     });
                 }
                 if(dataServices != null)

@@ -45,12 +45,12 @@
                                        <p-checkbox  [binary]="true"  [(ngModel)]="register.supplyIsSelected" [ngModelOptions]="{standalone: true}"  [disabled]="register.supplyIsSelected ? false: getStatusCheck(register,i)" ></p-checkbox>
 
                                     </td>
-                                    <td> {{ register.suppKey }}</td>
-                                    <td> {{register.supplyProductId['productBrand'] + " " +  register.supplyProductId['productModel']}}</td>
+                                    <td>{{ register.supplyKey }}</td>
+                                    <td>{{register.supplyProductId['productBrand'] + " " +  register.supplyProductId['productModel']}}</td>
                                     <td>{{ register.supplyPurchaseOrderId.id}}</td>
                                     <td>{{ register.supplyDateSupplied | date: 'dd-MM-yyyy h:mm a ' }}</td>
                                     <td>
-                                        <i class="pi" [ngClass]="{ 'text-green-500 pi-check-circle': register.status == 'disponible', 'text-red-500 pi-times-circle': register.status == 'vendido'}"></i>
+                                        <i class="pi" [ngClass]="{ 'text-green-500 pi-check-circle': register.supplyStatus == 'disponible', 'text-red-500 pi-times-circle': register.supplyStatus == 'vendido'}"></i>
                                     </td>
                                 </tr>
                             </ng-template>
@@ -93,7 +93,7 @@
                             <p> Garantía: {{ product.guarranty }} </p>
                         </div>
                         <div class="col-3" style="display: flex; justify-content: end; align-items: center;">
-                            <button pTooltip="Asignar productos a orden de venta" type="button" pButton pRipple icon="pi pi-arrow-circle-up" style="height: fit-content;"  (click)="getAllProducts( product.id,product.quantity)"></button>
+                            <button pTooltip="Asignar productos a orden de venta" type="button" pButton pRipple icon="pi pi-arrow-circle-up" style="height: fit-content;"  (click)="getAllProducts( product.idProduct,product.quantity)"></button>
                         </div>
                     </div>
                 </div>
@@ -156,8 +156,9 @@
                 </div>
             
                 <div class="col-12 flex justify-content-end mt-4">
-                    <button pButton pRipple class="p-button-outlined w-8rem mr-3"  label="Cancelar" (click)="cancel($event)" ></button>
-                    <button pButton pRipple class="p-button-primary w-8rem"  label="Guardar" ></button>
+                    <button pButton pRipple class="p-button-success w-8rem mr-auto p-2"  label="Terminar" (click)="closeResume()"></button>
+                    <button pButton pRipple class="p-button-outlined w-8rem mr-3 p-2"  label="Cancelar" (click)="cancel($event)" ></button>
+                    <button pButton pRipple class="p-button-primary w-8rem p-2"  label="Guardar" ></button>
                 </div>
             </form>
         </div>

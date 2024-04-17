@@ -9,6 +9,7 @@ import { QuotationSaleService } from 'src/app/service/quotationSale.service';
 import { QuotationSaleProductService } from 'src/app/service/quotationSaleProduct.service';
 import { QuotationSalePackageService } from 'src/app/service/quotationSalePackage.service';
 import { QuotationSaleServiceService } from 'src/app/service/quotationSaleService.service';
+import { QuotationSaleRecordService } from 'src/app/service/quotationSaleRecord.service';
 import { MiscService } from 'src/app/service/misc.service';
 import { MessageService  } from 'primeng/api';
 import { AbstractControlOptions, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
@@ -36,11 +37,14 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
     listProducts: any[] = [] ;
     listPackages: any[] = [] ;
     listServices: any[] = [] ;
+    listQuantities: any[] = [] ;
+    quantities: any [] = [];
     supplies: any[] = [];
     //saveSupplies: any[] = [];
     visible: boolean = false;
     disabled: boolean = false;
     size: number;
+    idSaleOrder: number;
     form: FormGroup | any;
     formGroup: FormGroup | undefined;
    
@@ -57,6 +61,7 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
         private quotationSaleProductService:QuotationSaleProductService,
         private quotationSalePackageService:QuotationSalePackageService,
         private quotationSaleServiceService:QuotationSaleServiceService,
+        private quotationSaleRecordService: QuotationSaleRecordService,
         private ngZone: NgZone,
         private route: ActivatedRoute,
         private datePipe: DatePipe,
@@ -136,7 +141,7 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
       let propertiesSaleOrder = {};
 
       //Iteramos el objeto de formulario para guardar el valor en las variables arriba declaradas
-      Object.keys(this.form.value).forEach(element => 
+     /* Object.keys(this.form.value).forEach(element => 
       {
         propertiesSaleOrder[element] = this.form.value[element];                       
       });
@@ -147,40 +152,70 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
         if (propertiesSaleOrder['saleOrderPayWayId']) propertiesSaleOrder['saleOrderPayWayId'] = (propertiesSaleOrder['saleOrderPayWayId']).toString();
         if (propertiesSaleOrder['saleOrderPayMethodId']) propertiesSaleOrder['saleOrderPayMethodId'] = (propertiesSaleOrder['saleOrderPayMethodId']).toString();
         if (propertiesSaleOrder['saleOrderDate']) propertiesSaleOrder['saleOrderDate'] = this.datePipe.transform(propertiesSaleOrder['saleOrderDate'], 'yyyy-MM-dd HH:mm:ss');
-        if (propertiesSaleOrder['saleOrderShippingDate']) propertiesSaleOrder['saleOrderShippingDate'] = this.datePipe.transform(propertiesSaleOrder['saleOrderShippingDate'], 'yyyy-MM-dd HH:mm:ss');
+        if (propertiesSaleOrder['saleOrderShippingDate']) propertiesSaleOrder['saleOrderShippingDate'] = this.datePipe.transform(propertiesSaleOrder['saleOrderShippingDate'], 'yyyy-MM-dd HH:mm:ss');*/
        
       //Actualizamos la orden de Compra
       this.saleOrderService.update(propertiesSaleOrder)
       .subscribe(data => 
       {
         //Método para actualizar la tabla de suministros con los ID seleccionados
-        this.selectedRegister.forEach(element => 
+        let actions = [];
+
+        //Método para actualizar la tabla de suministros con los ID seleccionados
+        /////////////////////
+        this.selectedRegister.forEach(obj => {  
+
+          const ptt = this.supplyService.update({
+            'id': obj['id'].toString(), 
+            'supplyStatus': 'vendido' , 
+            'supplySaleOrderId': (propertiesSaleOrder['id']).toString()
+          }).pipe(
+              catchError((error) => {
+                  throw this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al asignar el suministro en inventario: "+ obj['id'],detail:  error.error.error });
+                  return of(null);
+              })
+          );		
+          actions.push(ptt);
+        });
+
+        //Método para actualizar los registros de venta
+        
+        var result = this.selectedRegister.reduce(function (groupSupplies, supply) {
+          groupSupplies[supply.supplyProductId['id']] = groupSupplies[supply.supplyProductId['id']] || [];
+          groupSupplies[supply.supplyProductId['id']].push(supply);
+          return groupSupplies;
+        }, {});
+    
+        Object.keys(result).forEach(key => 
+        {
+          let listRecord = this.quantities.filter(obj => obj.quotationSaleRecordProductId.id == key && obj.quotationSaleRecordSupplyId == null);    
+          for(var i=0; i < result[key].length ; i++)
           {
-            console.log(this.selectedRegister);
-            this.miscService.startRequest();
-            this.supplyService.update({
-              'id': element['id'].toString(), 
-              'supplyStatus': 'vendido' , 
-              'supplySaleOrderId': (propertiesSaleOrder['id']).toString()
-            }).subscribe(data =>{
-                //Actualizamos el estado de la cotización a pendiente
-                  /*this.miscService.startRequest();
-                  this.saleOrderService.update({
-                    'id': (propertiesSaleOrder['id']).toString(), 
-                    'saleOrderStatus': 'pendiente' 
-                  }).subscribe(data =>{
-                      this.miscService.endRquest();
-                  },  (err : any)=> {
-                      this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error', detail:err.error.error , life: 3000 });
-                      this.miscService.endRquest(); 
-                  });*/
-                //////////////////////////////
-                this.miscService.endRquest();
-            },  (err : any)=> {
-                this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error', detail:err.error.error , life: 3000 });
-                this.miscService.endRquest(); 
-            });
-          });
+            const ptt = this.quotationSaleRecordService.update({
+              'id': listRecord[i].id.toString(), 
+              'quotationSaleRecordSupplyId': result[key][i].id.toString(),
+              'quotationSaleRecordSaleOrderId': data['newId'].toString()
+            }).pipe(
+                catchError((error) => {
+                    throw this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al asignar el suministro en registro de venta: ",detail:  error.error.error });
+                    return of(null);
+                })
+            );		
+            actions.push(ptt);
+          }
+        });
+        ///////////////////////////
+
+        //Hacemos fork join para mandar las peticiones
+        forkJoin(actions).subscribe(()=>
+        {
+          this.miscService.endRquest(); 
+        },
+        (err:any)=>
+        {
+          this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error', detail: 'Error general al actualizar', life: 3000 });
+          this.miscService.endRquest();
+        });
 
         ///Continuamos el proceso de orden de venta
         this.miscService.endRquest();
@@ -285,6 +320,8 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
         //Llena el formulario
         if(dataSaleOrderInfo != null)
         {
+          console.log(dataSaleOrderInfo.id);
+          this.idSaleOrder = dataSaleOrderInfo.id;
           dataSaleOrderInfo.saleOrderShippingDate = new Date(dataSaleOrderInfo.saleOrderShippingDate);
           dataSaleOrderInfo.saleOrderDate = new Date(dataSaleOrderInfo.saleOrderDate);
           this.listQuotationSale.push({label: dataSaleOrderInfo['saleOrderQuotationSaleId']['quotationSaleDescription'] , value : dataSaleOrderInfo['saleOrderQuotationSaleId']['id'] }); 
@@ -310,16 +347,6 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
       if(value != null){
           this.miscService.startRequest(); 
 
-          //1. Hacer una peticion para traer los productos de un proveedor
-          const products = this.quotationSaleProductService.getFilter('[{"value":"'+value+'","matchMode":"equals","field":"quotationSaleProductQuotationSaleId"}]',0,1,'[{"id":"asc"}]')
-          .pipe(
-              catchError((error) => 
-              {
-                  this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al cargar productos", detail:error.message });
-                  return of(null); 
-              })
-          );
-
           //2. Hacer una peticion para traer los servicios de un proveedor
           const services = this.quotationSaleServiceService.getFilter('[{"value":"'+value+'","matchMode":"equals","field":"quotationSaleServiceQuotationSaleId"}]',0,1,'[{"id":"asc"}]')
           .pipe(
@@ -340,24 +367,53 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
               })
           );
 
-          forkJoin([products,services,packages]).subscribe(([dataProducts,dataServices,dataPackages] )=>
-          {
-              if(dataProducts != null )
+          //3. Hacer una peticion para traer la cantidad de productos
+          const quantities = this.quotationSaleRecordService.getFilter('[{"value":"'+value+'","matchMode":"equals","field":"quotationSaleRecordQuotationSaleId"}]',0,1,'[{"id":"asc"}]')
+          .pipe(
+              catchError((error) => 
               {
-               /* for (let i = 0; i < this.supplies.length; i++) 
-                {
-                  var idProduct = this.supplies[i].supplyProductId;
-                  var result = this.listProducts.find((obj) => obj.id ==  idProduct)
-                } */
-                  dataProducts['object']['records'].forEach(element => {
-                    this.listProducts.push({
-                      "id": element.quotationSaleProductProductId.id , 
-                      "brand": element.quotationSaleProductProductId.productBrand, 
-                      "model": element.quotationSaleProductProductId.productModel, 
-                      "quantity": element.quotationSaleProductQuantity - this.supplies.length,
-                      "guarranty": element.quotationSaleProductProductId.productGuaranteeUnit + " " +  element.quotationSaleProductProductId.productGuaranteeUnitMeasure
-                    });
+                  this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al cargar productos", detail:error.message });
+                  return of(null); 
+              })
+          );
+
+
+          forkJoin([services,packages,quantities]).subscribe(([dataServices,dataPackages,dataQuantities] )=>
+          {
+            if(dataQuantities != null )
+            {   
+              this.quantities = dataQuantities['object']['records'];
+              dataQuantities['object']['records'].forEach(element => {
+                  this.listQuantities.push({
+                    "id": element.id , 
+                    "idSupply":element.quotationSaleRecordSupplyId,
+                    "idType": element.quotationSaleRecordProductId.id,
+                    "idProduct": element.quotationSaleRecordProductId.id,
+                    "brand": element.quotationSaleRecordProductId.productBrand, 
+                    "model": element.quotationSaleRecordProductId.productModel, 
+                    "guarranty": element.quotationSaleRecordProductId.productGuaranteeUnit + " " +  element.quotationSaleRecordProductId.productGuaranteeUnitMeasure
                   });
+                });
+
+                this.listProducts = this.listQuantities.reduce((newArray, e) => {
+                  if(e.idSupply === null){
+                    const alreadyArray = newArray.find(a => a.idProduct == e.idProduct);
+                  
+                    if (alreadyArray) {
+                      alreadyArray.quantity++;
+                    }
+                    else {
+                      newArray.push({
+                        idProduct: e.idProduct, 
+                        brand: e.brand,
+                        model: e.model,
+                        guarranty: e.guarranty,
+                        quantity: 1});
+                    }
+                  }
+                  return newArray;
+                }, []);
+                
               }
 
               if(dataServices != null )
@@ -377,22 +433,6 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
               {                 
                   dataPackages['object']['records'].forEach(element => {
                     
-                    //iteramos los paquetes con producto para sumarlos a productlist
-                    for (let i = 0; i < element.quotationSalePackageProducts.length; i++) 
-                      {
-                        var idProduct = element.quotationSalePackageProducts[i].infoDetail.id;
-
-                        var result = this.listProducts.find((obj) => obj.id ==  idProduct)
-                        
-                        result == undefined ? this.listProducts.push({
-                          "id": idProduct, 
-                          "brand": element.quotationSalePackageProducts[i].infoDetail.productBrand, 
-                          "model": element.quotationSalePackageProducts[i].infoDetail.productModel, 
-                          "guarranty": element.quotationSalePackageProducts[i].infoDetail.productGuaranteeUnit + " " +  element.quotationSalePackageProducts[i].infoDetail.productGuaranteeUnitMeasure,
-                          "quantity": element.quotationSalePackageProducts[i].packageProductQuantity * element.quotationSalePackageQuantity
-                        }) : result.quantity = result.quantity + (element.quotationSalePackageProducts[i].packageProductQuantity * element.quotationSalePackageQuantity); 
-                      }
-
                       //iteramos los paquetes con servicios para sumarlos a servicelist
                       for (let i = 0; i < element.quotationSalePackageServices.length; i++) 
                       {
@@ -434,6 +474,7 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
 
   //traer los suministros de la orden de venta
   getAllProducts(value, quantity){
+    console.log(this.selectedRegister);
     this.visible = true;
     this.size = quantity;
     if(value != null ) {
@@ -442,26 +483,16 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
       {            
         data == null ? []: 
           data['object']['records'].forEach(element => {
-            if(element.supplyStatus == "disponible" ){
-             /* this.listAllRegisters.push({
-                "id": element.id, 
-                "key": element.supplyKey, 
-                "purchase": element.supplyPurchaseOrderId.id, 
-                "date": element.supplyDateSupplied, 
-                "status": element.supplyStatus,
-                "product": element.supplyProductId['productBrand'] + " " +  element.supplyProductId['productModel']
-              });*/
+            if(element.supplyStatus == "disponible"){
+              const pos = this.selectedRegister.map(e => e.id).indexOf(element.id);
+              //console.log(pos);
+              if(pos > -1){
+                element.supplyIsSelected = true
+              }
               this.listAllRegisters.push(element);
-
             }
         });
-        //console.log(this.saveSupplies);
-        //console.log(this.listAllRegisters);
-        /////
-        /*for(let i=0; i < this.saveSupplies.length ; i++){
-          var item = this.listAllRegisters.find((element) => element.id == this.saveSupplies[i].id);
-          this.selectedRegister.push(item);
-        }*/
+        
       },
       (err : any) =>
       {
@@ -479,13 +510,17 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
   assignProduct() {
     this.listAllRegisters.forEach(element => {
       if(element["supplyIsSelected"] ){
+        const pos = this.selectedRegister.map(e => e.id).indexOf(element.id);
+        if(pos == -1){
           this.selectedRegister.push(element);
+        }
       }
     });
+
     this.closeModalMap();
     this.messageService.add({ severity: 'success',key: 'msg', summary: 'Operación exitosa', life: 3000 });
-    
   }
+
   getStatusCheck(obj:any,index:number){
     let disabled = false;
     //console.log(x);
@@ -494,9 +529,19 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
 
       if( !obj.isSelected  && this.size == itemSelected.length )  
           disabled = true;
-        
-
       return disabled;
 
+  }
+
+  closeResume(){
+    this.saleOrderService.update({
+      'id': this.idSaleOrder.toString(), 
+      'saleOrderStatus': 'terminada' 
+    }).subscribe(data =>{
+        this.miscService.endRquest();
+    },  (err : any)=> {
+        this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error', detail:err.error.error , life: 3000 });
+        this.miscService.endRquest(); 
+    });
   }
 }

@@ -8,6 +8,7 @@ import { QuotationSaleService } from 'src/app/service/quotationSale.service';
 import { QuotationSaleProductService } from 'src/app/service/quotationSaleProduct.service';
 import { QuotationSalePackageService } from 'src/app/service/quotationSalePackage.service';
 import { QuotationSaleServiceService } from 'src/app/service/quotationSaleService.service';
+import { QuotationSaleRecordService } from 'src/app/service/quotationSaleRecord.service';
 import { SupplyService } from 'src/app/service/supply.service';
 import { Router } from '@angular/router';
 import { MiscService } from 'src/app/service/misc.service';
@@ -33,6 +34,8 @@ export class AddSaleOrderComponent
     listProducts: any[] = [] ;
     listPackages: any[] = [] ;
     listServices: any[] = [] ;
+    listQuantities: any[] = [] ;
+    quantities: any [] = [];
     listAllRegisters: Supply[] = [] ;
     arrayIdProducts: any[] = [];
     selectedRegister: Supply[] = [];
@@ -58,6 +61,7 @@ export class AddSaleOrderComponent
         private quotationSaleProductService:QuotationSaleProductService,
         private quotationSalePackageService:QuotationSalePackageService,
         private quotationSaleServiceService:QuotationSaleServiceService,
+        private quotationSaleRecordService: QuotationSaleRecordService,
         private ngZone: NgZone,
         private datePipe: DatePipe,
         private sessionService:SessionService,
@@ -152,7 +156,7 @@ export class AddSaleOrderComponent
       if (propertiesSaleOrder['saleOrderCfdiId']) propertiesSaleOrder['saleOrderCfdiId'] = (propertiesSaleOrder['saleOrderCfdiId']).toString();
       if (propertiesSaleOrder['saleOrderPayWayId']) propertiesSaleOrder['saleOrderPayWayId'] = (propertiesSaleOrder['saleOrderPayWayId']).toString();
       if (propertiesSaleOrder['saleOrderPayMethodId']) propertiesSaleOrder['saleOrderPayMethodId'] = (propertiesSaleOrder['saleOrderPayMethodId']).toString();
-      propertiesSaleOrder['saleOrderShippingDate'] = this.datePipe.transform(propertiesSaleOrder['saleOrderShippingDate'], 'yyyy-MM-dd HH:mm:ss');
+      if (propertiesSaleOrder['saleOrderShippingDate']) propertiesSaleOrder['saleOrderShippingDate'] = this.datePipe.transform(propertiesSaleOrder['saleOrderShippingDate'], 'yyyy-MM-dd HH:mm:ss');
 
       //Creamos la orden de Compra
       this.saleOrderService.create(propertiesSaleOrder)
@@ -169,7 +173,7 @@ export class AddSaleOrderComponent
             'supplySaleOrderId': data['newId'].toString()
           }).pipe(
               catchError((error) => {
-                  throw this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al asignar el suministro: "+ obj['id'],detail:  error.error.error });
+                  throw this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al asignar el suministro en inventario: "+ obj['id'],detail:  error.error.error });
                   return of(null);
               })
           );		
@@ -177,19 +181,32 @@ export class AddSaleOrderComponent
         });
         ////////////////////
 
-        //Método para actulizar estado de la cotizacion
-        propertiesQuotationSale['quotationSaleStatus'] = 'aceptada';   
-        propertiesQuotationSale['id'] = propertiesSaleOrder['saleOrderQuotationSaleId'].toString();
-
-        const ptt = this.quotationSaleService.update(propertiesQuotationSale).pipe(
-            catchError((error) => 
-            {
-                this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al actualizar el estado de la cotización", detail:error.message });
-                return of(null);
-            })
-        );		
-
-        actions.push(ptt);
+        //Método para actualizar los registros de venta
+        
+        var result = this.selectedRegister.reduce(function (groupSupplies, supply) {
+          groupSupplies[supply.supplyProductId['id']] = groupSupplies[supply.supplyProductId['id']] || [];
+          groupSupplies[supply.supplyProductId['id']].push(supply);
+          return groupSupplies;
+        }, {});
+    
+        Object.keys(result).forEach(key => 
+        {
+          let listRecord = this.quantities.filter(obj => obj.quotationSaleRecordProductId.id == key && obj.quotationSaleRecordSupplyId == null);    
+          for(var i=0; i < result[key].length ; i++)
+          {
+            const ptt = this.quotationSaleRecordService.update({
+              'id': listRecord[i].id.toString(), 
+              'quotationSaleRecordSupplyId': result[key][i].id.toString(),
+              'quotationSaleRecordSaleOrderId': data['newId'].toString()
+            }).pipe(
+                catchError((error) => {
+                    throw this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al asignar el suministro en registro de venta: ",detail:  error.error.error });
+                    return of(null);
+                })
+            );		
+            actions.push(ptt);
+          }
+        });
         ///////////////////////////
 
         //Hacemos fork join para mandar las peticiones
@@ -218,16 +235,6 @@ export class AddSaleOrderComponent
     getFilter(value){
         if(value != null){
             this.miscService.startRequest(); 
-          
-            //1. Hacer una peticion para traer los productos de un proveedor
-            const products = this.quotationSaleProductService.getFilter('[{"value":"'+value+'","matchMode":"equals","field":"quotationSaleProductQuotationSaleId"}]',0,1,'[{"id":"asc"}]')
-            .pipe(
-                catchError((error) => 
-                {
-                    this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al cargar productos", detail:error.message });
-                    return of(null); 
-                })
-            );
 
              //2. Hacer una peticion para traer los servicios de un proveedor
              const services = this.quotationSaleServiceService.getFilter('[{"value":"'+value+'","matchMode":"equals","field":"quotationSaleServiceQuotationSaleId"}]',0,1,'[{"id":"asc"}]')
@@ -249,65 +256,75 @@ export class AddSaleOrderComponent
                 })
             );
 
-            forkJoin([products,services,packages]).subscribe(([dataProducts,dataServices,dataPackages] )=>
+            //3. Hacer una peticion para traer la cantidad de productos
+            const quantities = this.quotationSaleRecordService.getFilter('[{"value":"'+value+'","matchMode":"equals","field":"quotationSaleRecordQuotationSaleId"}]',0,1,'[{"id":"asc"}]')
+            .pipe(
+                catchError((error) => 
+                {
+                    this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al cargar productos", detail:error.message });
+                    return of(null); 
+                })
+            );
+
+            forkJoin([services,packages,quantities]).subscribe(([dataServices,dataPackages,dataQuantities] )=>
             {
-              //this.totalQuantityProductos = 0;
-                if(dataProducts != null )
-                {                    
-                    
-                    dataProducts['object']['records'].forEach(element => {
-                     // this.totalQuantityProductos+= element.quotationSaleProductQuantity;
-                      this.listProducts.push({
-                        "id": element.quotationSaleProductProductId.id , 
-                        "brand": element.quotationSaleProductProductId.productBrand, 
-                        "model": element.quotationSaleProductProductId.productModel, 
-                        "quantity": element.quotationSaleProductQuantity,
-                        "guarranty": element.quotationSaleProductProductId.productGuaranteeUnit + " " +  element.quotationSaleProductProductId.productGuaranteeUnitMeasure
-                      });
+
+                if(dataQuantities != null )
+                {   
+                  this.quantities = dataQuantities['object']['records'];
+                  dataQuantities['object']['records'].forEach(element => {
+                    this.listQuantities.push({
+                      "id": element.id , 
+                      "idSupply":element.quotationSaleRecordSupplyId,
+                      "idType": element.quotationSaleRecordProductId.id,
+                      "idProduct": element.quotationSaleRecordProductId.id,
+                      "brand": element.quotationSaleRecordProductId.productBrand, 
+                      "model": element.quotationSaleRecordProductId.productModel, 
+                      "guarranty": element.quotationSaleRecordProductId.productGuaranteeUnit + " " +  element.quotationSaleRecordProductId.productGuaranteeUnitMeasure
                     });
+                  });
+
+                  this.listProducts = this.listQuantities.reduce((newArray, e) => {
+                    if(e.idSupply === null){
+                      const alreadyArray = newArray.find(a => a.idProduct == e.idProduct);
+                    
+                      if (alreadyArray) {
+                        alreadyArray.quantity++;
+                      }
+                      else {
+                        newArray.push({
+                          idProduct: e.idProduct, 
+                          brand: e.brand,
+                          model: e.model,
+                          guarranty: e.guarranty,
+                          quantity: 1});
+                      }
+                    }
+                    return newArray;
+                  }, []);
+                  
                 }
 
                 if(dataServices != null )
-                {                    
-                    //console.log(dataServices);
-                    dataServices['object']['records'].forEach(element => {
-                      this.listServices.push({
-                        "id": element.quotationSaleServiceServiceId.id , 
-                        "description": element.quotationSaleServiceServiceId.serviceDescription,
-                        "temporality": element.quotationSaleServiceServiceId.serviceTemporality,
-                        "temporalityQuantity": element.quotationSaleServiceServiceId.serviceQuantityTemporality, 
-                        "quantity": element.quotationSaleServiceQuantity
-                      });
+                {  
+                  dataServices['object']['records'].forEach(element => {
+                    this.listServices.push({
+                      "id": element.quotationSaleServiceServiceId.id , 
+                      "description": element.quotationSaleServiceServiceId.serviceDescription,
+                      "temporality": element.quotationSaleServiceServiceId.serviceTemporality,
+                      "temporalityQuantity": element.quotationSaleServiceServiceId.serviceQuantityTemporality, 
+                      "quantity": element.quotationSaleServiceQuantity
                     });
+                  });
                 }  
 
                 if(dataPackages != null )
                 {                 
                     dataPackages['object']['records'].forEach(element => {
-                      
-                      //iteramos los paquetes con producto para sumarlos a productlist
-                       for (let i = 0; i < element.quotationSalePackageProducts.length; i++) 
-                        {
-                          var idProduct = element.quotationSalePackageProducts[i].infoDetail.id;
-
-                          //this.totalQuantityProductos+= element.quotationSalePackageProducts[i].packageProductQuantity; //PENDIENTE: FALTA MULTIPLICAR  POR LA CATIDAD DE PRODUCTOS QUE TIENE EL PAQUETE
-
-                          var result = this.listProducts.find((obj) => obj.id ==  idProduct)
-                          
-                          
-                          result == undefined ? this.listProducts.push({
-                            "id": idProduct, 
-                            "brand": element.quotationSalePackageProducts[i].infoDetail.productBrand, 
-                            "model": element.quotationSalePackageProducts[i].infoDetail.productModel, 
-                            "guarranty": element.quotationSalePackageProducts[i].infoDetail.productGuaranteeUnit + " " +  element.quotationSalePackageProducts[i].infoDetail.productGuaranteeUnitMeasure,
-                            "quantity": element.quotationSalePackageProducts[i].packageProductQuantity * element.quotationSalePackageQuantity
-                          }) : result.quantity = result.quantity + (element.quotationSalePackageProducts[i].packageProductQuantity * element.quotationSalePackageQuantity); 
-                        }
 
                         //iteramos los paquetes con servicios para sumarlos a servicelist
                         for (let i = 0; i < element.quotationSalePackageServices.length; i++) 
                         {
-                          //console.log(element.quotationSalePackageServices[i]);
                           var idService = element.quotationSalePackageServices[i].infoDetail.id;
 
                           var result = this.listServices.find((obj) => obj.id ==  idService)
@@ -322,7 +339,6 @@ export class AddSaleOrderComponent
 
                         } 
                     }); 
-                    //console.log(this.totalQuantityProductos);
                 }  
 
               this.miscService.endRquest(); 
@@ -448,6 +464,7 @@ export class AddSaleOrderComponent
   }
   //traer los suministros de la orden de venta
   getAllProducts(value, quantity){
+    console.log(this.selectedRegister);
     this.visible = true;
     this.size = quantity;
     if(value != null ) {
@@ -457,16 +474,7 @@ export class AddSaleOrderComponent
         data == null ? []: 
           data['object']['records'].forEach(element => {
             if(element.supplyStatus == "disponible"){
-            /* this.listAllRegisters.push({
-                "id": element.id, 
-                "key": element.supplyKey, 
-                "purchase": element.supplyPurchaseOrderId.id, 
-                "date": element.supplyDateSupplied, 
-                "status": element.supplyStatus,
-                "product": element.supplyProductId['productBrand'] + " " +  element.supplyProductId['productModel'],
-                "isSelected":false,
-                "isDisabled":false
-              });*/
+              
               this.listAllRegisters.push(element);
             }
         });
@@ -491,6 +499,7 @@ export class AddSaleOrderComponent
           this.selectedRegister.push(element);
       }
     });
+
     this.closeModalMap();
     this.messageService.add({ severity: 'success',key: 'msg', summary: 'Operación exitosa', life: 3000 });
     

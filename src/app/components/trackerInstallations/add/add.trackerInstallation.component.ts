@@ -4,10 +4,12 @@ import { CostumerService } from 'src/app/service/costumer.service';
 import { TrackerService } from 'src/app/service/tracker.service';
 import { InstallerService } from 'src/app/service/installer.service';
 import { TrackerInstallationEvidenceService  } from 'src/app/service/trackerInstallationEvidence.service'; 
+import { EvidenceInstallationService  } from 'src/app/service/evidenceInstallation.service'; 
 import { TrackerInstallationAccessoryService  } from 'src/app/service/trackerInstallationAccessory.service';
 import { VehicleService } from 'src/app/service/vehicle.service';
 import { ProductService } from 'src/app/service/product.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute,Router } from '@angular/router';
+
 import { MiscService } from 'src/app/service/misc.service';
 import { MessageService } from 'primeng/api';
 import { AbstractControlOptions, FormControl, FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
@@ -56,9 +58,11 @@ export class AddTrackerInstallationComponent {
     private vehicleService: VehicleService,
     private trackerInstallationAccessoryService : TrackerInstallationAccessoryService,
     private trackerInstallationEvidenceService : TrackerInstallationEvidenceService,
+    private evidenceInstallationService : EvidenceInstallationService,
     private messageService: MessageService,
     private miscService: MiscService,
     private fileService:FileService,
+    private route: ActivatedRoute,
     private datePipe: DatePipe,
     private router: Router) { }
 
@@ -72,11 +76,18 @@ export class AddTrackerInstallationComponent {
         trackerInstallationDate: [null, [Validators.required]],
         trackerInstallationEngineStop: [false,[Validators.required]],
         trackerInstallationTypeCut: [null, [Validators.required, Validators.maxLength(100)]],
-        trackerInstallationEvidences: this.formBuilder.array([]),
         trackerInstallationAccessories: this.formBuilder.array([],[this. isAccessoryDuplicated]),
         trackerInstallationLocation: [null, [Validators.required, Validators.maxLength(100)]],
         
     }, formOptions);
+
+    if(this.route.snapshot.paramMap.get('idCustomer') && this.route.snapshot.paramMap.get('idVehicle') )
+    {
+      this.form.controls['trackerInstallationCostumerId'].setValue(parseInt(this.route.snapshot.paramMap.get('idCustomer')));  
+      this.getInfoCustomer(parseInt(this.route.snapshot.paramMap.get('idCustomer')));
+      this.form.controls['trackerInstallationVehicleId'].setValue(parseInt(this.route.snapshot.paramMap.get('idVehicle')));  
+
+    }
 
     this.getLists();
 
@@ -128,41 +139,19 @@ export class AddTrackerInstallationComponent {
     return this.form.get('trackerInstallationAccessories') as FormArray;
   }
 
-  infoEvidencesArray(): FormArray {
-    return this.form.get('trackerInstallationEvidences') as FormArray;
-  }
-
-  addRow(type: string){
+  addRow(){
      
-
-      switch (type) {
-        case 'accessory':
-            this.infoAccessoriesArray().push(this.newAccessoryArray()); 
-            break;
-        case 'evidence':
-            this.infoEvidencesArray().push(this.newEvidenceArray()); 
-            break;
-      }
+    this.infoAccessoriesArray().push(this.newAccessoryArray()); 
+      
   }
-  removeRow(type: string,index:number){
-    switch (type) {
-      case 'accessory':
-        this.infoAccessoriesArray().removeAt(index); 
-      break;
-      case 'evidence':
-        this.infoEvidencesArray().removeAt(index); 
-      break;
-    }
-          
+  removeRow(index:number){
+    
+      this.infoAccessoriesArray().removeAt(index); 
+       
   }
   newAccessoryArray() {
     return this.formBuilder.group({
       trackerInstallationAccessoryProductId:  [null,[Validators.required]],
-    });
-  }
-  newEvidenceArray() {
-    return this.formBuilder.group({
-      trackerInstallationEvidenceDescription: null,
     });
   }
   isAccessoryDuplicated(control: FormArray){
@@ -259,7 +248,7 @@ export class AddTrackerInstallationComponent {
   }
   getInfoCustomer(value:number){
 
-    const trackers =  this.trackerService.getList(1,'{"customer_id":1}')
+    const trackers =  this.trackerService.getList(1,'{"customer_id":'+value+'}')
     .pipe(
         catchError((error) => 
         {
@@ -280,9 +269,10 @@ export class AddTrackerInstallationComponent {
     forkJoin([trackers,vehicles]).subscribe(([dataTrackers,dataVehicles])=>
     {
       if(dataTrackers != null){
-                
+        this.listTrackers = [];    
         dataTrackers['object'].forEach(element => {
-          this.listTrackers.push({'label':element['trackerImei']+" / "+ element['trackerStatus'].toUpperCase(),'value':element['id']});
+            //if(element['trackerStatus']== 'nuevo')
+            this.listTrackers.push({'label':element['trackerImei']+" / "+ element['trackerStatus'].toUpperCase(),'value':element['id']});
         });
 
       }else{
@@ -314,9 +304,10 @@ export class AddTrackerInstallationComponent {
      
       for(let i = 0 ; i < this.files.length; i++)
       {
-        if(this.uploadedFiles.indexOf(this.files[i]) === -1){
-           this.uploadedFiles.push(this.files[i]);
-           this.addRow('evidence');
+      
+        if(this.uploadedFiles.findIndex(item => item.file == this.files[i]) === -1){
+           this.uploadedFiles.push({file:this.files[i],description:''});
+          
            //asigna valores del File 
         }else {
           //PENDIENTE MEJORAR
@@ -325,10 +316,10 @@ export class AddTrackerInstallationComponent {
   }
 
   
-  removeFile(obj:any,i:number){
-      this.uploadedFiles = this.uploadedFiles.filter(e => e != obj);
+  removeFile(obj:any){
+      this.uploadedFiles = this.uploadedFiles.filter(e => e.file != obj.file);
       this.fileUpload.files = this.uploadedFiles;
-      this.removeRow('evidence',i);
+      //this.removeRow('evidence',i);
   }
   saveEvidence(id:string)
   {     
@@ -336,9 +327,10 @@ export class AddTrackerInstallationComponent {
     if(this.uploadedFiles.length > 0)
     {	
             var peticiones: any[] = []; 
+            let descriptions = [];
             for(let i = 0 ; i < this.uploadedFiles.length; i++)
             {
-                const ptt = this.fileService.upload(this.uploadedFiles[i], 'tracker_installation_evidence').pipe
+                const ptt = this.fileService.upload(this.uploadedFiles[i].file, 'tracker_installation_evidence').pipe
                 (
                     catchError((error) => 
                     {
@@ -346,7 +338,8 @@ export class AddTrackerInstallationComponent {
                 return of(null);
                     })
                 );				
-                peticiones.push(ptt);			        
+                peticiones.push(ptt);			
+                descriptions.push(this.uploadedFiles[i].description);        
             }
             
             forkJoin(peticiones).subscribe((data: any[]) => 
@@ -356,11 +349,11 @@ export class AddTrackerInstallationComponent {
                 {
                     if(data[i] != null){
                         files.push({
-                          trackerInstallationEvidenceTrackerInstallationId: id,
-                          trackerInstallationEvidencePath: data[i].files[0].fd,
-                          trackerInstallationEvidenceName : data[i].files[0].filename,
-                          trackerInstallationEvidenceSize : (data[i].files[0].size / 1024).toFixed(2),
-                          trackerInstallationEvidenceDescription :this.form.value['trackerInstallationEvidences'][i]['trackerInstallationEvidenceDescription']                     
+                          //trackerInstallationEvidenceTrackerInstallationId: id,
+                          evidenceInstallationPath: data[i].files[0].fd,
+                          evidenceInstallationName : data[i].files[0].filename,
+                          evidenceInstallationSize : (data[i].files[0].size / 1024).toFixed(2),
+                          evidenceInstallationDescription :descriptions[i]                    
                         });
                     }           
                 }
@@ -379,14 +372,15 @@ export class AddTrackerInstallationComponent {
         }
 
     }
-  private saveEvidenceFiles(idP,files)
+  private saveEvidenceFiles(idInstallation,files)
     {
     
         var peticiones: any[] = [];
 
         for(let i = 0 ; i < files.length; i++)
         {
-            peticiones.push(this.trackerInstallationEvidenceService.create(files[i]).pipe
+          //aqui guardar en tabla gral
+            peticiones.push(this.evidenceInstallationService.create(files[i]).pipe
             (
                 catchError((error) => 
                 {
@@ -398,6 +392,10 @@ export class AddTrackerInstallationComponent {
 
         forkJoin(peticiones).subscribe((data: any[]) => 
         {
+            // aqui tabla intermedia de instalacion evidencia
+           
+            this.saveEvidenceInstallation(idInstallation,data);
+
             this.messageService.add({ severity: 'success', key: 'msg',summary: 'Operación exitosa', detail: 'Elemento guardado exitosamente', life: 3000 }); 
             this.miscService.endRquest(); 
         }, 
@@ -407,6 +405,40 @@ export class AddTrackerInstallationComponent {
             this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al guardar archivo", detail:err.message });
         }); 
   }
+  saveEvidenceInstallation(idInstallation:number,arrayEvidenceID:any[]){
+    let actions = [];
+    let service = this.trackerInstallationEvidenceService;
+    arrayEvidenceID.forEach(function (obj) {
+      if(obj != null){
+
+        let object = {trackerInstallationEvidenceTrackerInstallationId:idInstallation.toString(),trackerInstallationEvidenceEvidenceInstallationId  :obj['newId'].toString()}
+        //console.log(object);
+        const ptt= service.create(object).pipe
+            (
+                catchError((error) => 
+                {
+                    this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al guardar relacion entre instalacion y evidencia", detail:error.message });
+                    return of(null);
+                })
+            );
+        actions.push(ptt);	
+      }
+    
+    });
+    forkJoin(actions).subscribe((data: any[]) => 
+        {
+           
+            this.miscService.endRquest(); 
+        }, 
+        err => 
+        {		
+            this.miscService.endRquest(); 
+            this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error  general al guardar relacion entre instalacion y evidencia", detail:err.message });
+        }); 
+
+  }
+
+
   filterTypeCuts(event: any) {
     let filtered: any[] = [];
     let query = event.query;

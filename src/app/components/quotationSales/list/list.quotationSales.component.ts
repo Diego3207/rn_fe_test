@@ -1,7 +1,8 @@
 import {ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { QuotationSale } from 'src/app/api/quotationSale';
-import { QuotationSaleService } from 'src/app/service/quotationSale.service'
+import { QuotationSaleService } from 'src/app/service/quotationSale.service';
+import { SaleOrderService } from 'src/app/service/saleOrder.service';
 import {ConfirmationService, MessageService, LazyLoadEvent, SelectItem, FilterMatchMode , ConfirmEventType  } from 'primeng/api';
 import { forkJoin, of } from 'rxjs';
 import { catchError  } from 'rxjs/operators';
@@ -75,6 +76,7 @@ export class ListQuotationSalesComponent implements OnInit, OnDestroy {
         private miscService:MiscService,
         private cdref:ChangeDetectorRef ,
         private quotationSaleService: QuotationSaleService,
+        private saleOrderService: SaleOrderService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
 		private quotationSaleProductService: QuotationSaleProductService,
@@ -383,10 +385,25 @@ export class ListQuotationSalesComponent implements OnInit, OnDestroy {
             accept: () => {
                 
                 this.processAcceptance(id);
-               
+                this.createSalesOrder(id);
             }
         });
 
+    }
+
+    createSalesOrder(id:number){
+        let saleOrder = {};
+        saleOrder['saleOrderQuotationSaleId'] = id.toString();
+        saleOrder['saleOrderShippingDate'] = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+        saleOrder['saleOrderTransmitter'] = this.sessionService.getUserId().toString();
+        this.saleOrderService.create(saleOrder)
+        .subscribe(data => {
+        this.miscService.endRquest();
+        this.messageService.add({ severity: 'success', key: 'msg', summary: 'Orden de venta creada exitosamente', life: 3000 });
+        }, (err: any) => {
+        this.messageService.add({ severity: 'error', key: 'msg', summary: 'Error', detail: 'Problemas al guardar', life: 3000 });
+        this.miscService.endRquest();
+        });
     }
 
     processAcceptance(id:number){

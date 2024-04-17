@@ -16,6 +16,7 @@ import { catchError  } from 'rxjs/operators';
 import { DatePipe } from '@angular/common';
 import { FileUpload } from 'primeng/fileupload';
 import { FileService } from 'src/app/service/file.service';
+import { EvidenceInstallationService } from 'src/app/service/evidenceInstallation.service';
 
 
 
@@ -61,6 +62,7 @@ export class EditTrackerInstallationComponent implements OnInit, OnDestroy {
         private installerService: InstallerService,
         private trackerInstallationAccessoryService : TrackerInstallationAccessoryService,
         private trackerInstallationEvidenceService : TrackerInstallationEvidenceService,
+        private evidenceInstallationService : EvidenceInstallationService,
         private productService: ProductService,
         private miscService:MiscService,
         private ngZone: NgZone,
@@ -78,14 +80,13 @@ export class EditTrackerInstallationComponent implements OnInit, OnDestroy {
 		    this.form = this.formBuilder.group
 		({
             id:[this.id, Validators.required],
-            trackerInstallationCostumerId: [null, [Validators.required]],
-            trackerInstallationVehicleId : [null, [Validators.required]],
+            trackerInstallationCostumerId: [{value:null, disabled:true}, [Validators.required]],
+            trackerInstallationVehicleId : [{value:null, disabled:true}, [Validators.required]],
             trackerInstallationTrackerId: [{value:null, disabled:true}, [Validators.required]],
             trackerInstallationInstallerId: [null, [Validators.required]],
             trackerInstallationDate: [null, [Validators.required]],
             trackerInstallationEngineStop: [false,[Validators.required]],
             trackerInstallationTypeCut: [null, [Validators.required, Validators.maxLength(100)]],
-            trackerInstallationEvidences: this.formBuilder.array([]),
             trackerInstallationAccessories: this.formBuilder.array([],[this. isAccessoryDuplicated]),
             trackerInstallationLocation: [null, [Validators.required, Validators.maxLength(100)]],
          }, formOptions);
@@ -142,35 +143,17 @@ export class EditTrackerInstallationComponent implements OnInit, OnDestroy {
     infoAccessoriesArray(): FormArray {
         return this.form.get('trackerInstallationAccessories') as FormArray;
     }
-    infoEvidencesArray(): FormArray {
-        return this.form.get('trackerInstallationEvidences') as FormArray;
-    }
-
-    addRow(type:string){
-        switch (type) {
-            case 'accessory':
-                this.infoAccessoriesArray().push(this.newAccessoryArray()); 
-                break;
-            case 'evidence':
-                this.infoEvidencesArray().push(this.newEvidenceArray()); 
-                break;
-        }    
+    addRow(){
+        this.infoAccessoriesArray().push(this.newAccessoryArray()); 
+               
     }
   
 
-    removeRow(object:any,type: string,index:number){
-        switch (type) {
-            case 'accessory':
-                this.infoAccessoriesArray().removeAt(index); 
-                if(object.value.id !== null)
-                    this.deletedAccessories.push(object.value.id);
-            break;
-            case 'evidence':
-                this.infoEvidencesArray().removeAt(index); 
-                if(object.value.id !== null)
-                    this.deletedEvidences.push(object.value.id);
-            break;
-        }
+    removeRow(object:any,index:number){
+       
+        this.infoAccessoriesArray().removeAt(index); 
+        if(object.value.id !== null)
+            this.deletedAccessories.push(object.value.id);
     }
 
     newAccessoryArray() {
@@ -179,12 +162,7 @@ export class EditTrackerInstallationComponent implements OnInit, OnDestroy {
             trackerInstallationAccessoryProductId:  [null,[Validators.required]],
         });
     }
-    newEvidenceArray() {
-        return this.formBuilder.group({
-            id:null,
-            trackerInstallationEvidenceDescription: null,
-        });
-    }
+    
     isAccessoryDuplicated(control: FormArray){
         const uniqueValues = new Set();
         
@@ -221,41 +199,41 @@ export class EditTrackerInstallationComponent implements OnInit, OnDestroy {
         
         for(let i = 0 ; i < this.files.length; i++)
         {
-            if(this.uploadedFiles.indexOf(this.files[i]) === -1){
-            this.uploadedFiles.push(this.files[i]);
-            this.addRow('evidence');
-            //asigna valores del File 
-            }else {
-            //PENDIENTE MEJORAR
-            // console.log('Elemento duplidado');
-            }
+            if(this.uploadedFiles.findIndex(item => item.file == this.files[i]) === -1){
+                this.uploadedFiles.push({file:this.files[i],description:''});
+               
+                //asigna valores del File 
+             }else {
+               //PENDIENTE MEJORAR
+             }
+           
+            
         } 
        
     }
-
  
-    removeFile(obj:any,i:number){
-        this.uploadedFiles = this.uploadedFiles.filter(e => e != obj);
-        //if(this.fileUpload.files.length > 0)
-        this.fileUpload.files = this.fileUpload.files.filter(e => e != obj);
-
-        //console.log(this.fileUpload);
-        //console.log(this.form);
-        this.removeRow(this.form.controls.trackerInstallationEvidences.controls[i],'evidence',i);
+    removeFile(obj:any){
+        
+        this.uploadedFiles = this.uploadedFiles.filter(e => e.file != obj.file);
+        this.fileUpload.files = this.fileUpload.files.filter(e => e != obj.file);
+        if(obj.id !== null)
+            this.deletedEvidences.push(obj);
     }
     saveEvidence(id:string)
     {     
         //1. solo guardar la evidencia nueva con su descripcion
         let newFiles = this.uploadedFiles.filter(e => !e.hasOwnProperty("id")) ;
-        let descriptions = this.form.value.trackerInstallationEvidences.filter(e=> e.id== null) ;
+        let descriptions = this.uploadedFiles.filter(e=> e.id== null) ;
     
         if(newFiles.length > 0)
         {	
                 var peticiones: any[] = []; 
+                let descriptions = [];
+
                 for(let i = 0 ; i < newFiles.length; i++)
                 {
                     
-                        const ptt = this.fileService.upload(newFiles[i], 'tracker_installation_evidence').pipe
+                        const ptt = this.fileService.upload(newFiles[i].file, 'tracker_installation_evidence').pipe
                         (
                             catchError((error) => 
                             {
@@ -264,6 +242,7 @@ export class EditTrackerInstallationComponent implements OnInit, OnDestroy {
                             })
                         );				
                         peticiones.push(ptt);
+                        descriptions.push(newFiles[i].description);   
                             
                 }
                 
@@ -274,11 +253,12 @@ export class EditTrackerInstallationComponent implements OnInit, OnDestroy {
                     {
                         if(data[i] != null){
                             files.push({
-                                trackerInstallationEvidenceTrackerInstallationId: id,
-                                trackerInstallationEvidencePath: data[i].files[0].fd,
-                                trackerInstallationEvidenceName : data[i].files[0].filename,
-                                trackerInstallationEvidenceSize : (data[i].files[0].size / 1024).toFixed(2),
-                                trackerInstallationEvidenceDescription :descriptions[i]['trackerInstallationEvidenceDescription']                     
+                               
+                                evidenceInstallationPath: data[i].files[0].fd,
+                                evidenceInstallationName : data[i].files[0].filename,
+                                evidenceInstallationSize : (data[i].files[0].size / 1024).toFixed(2),
+                                evidenceInstallationDescription :descriptions[i]  
+
                             });
                         }           
                     }
@@ -297,14 +277,14 @@ export class EditTrackerInstallationComponent implements OnInit, OnDestroy {
         }
 
     }
-    private saveEvidenceFiles(idP,files)
+    private saveEvidenceFiles(idIntallation,files)
     {
     
         var peticiones: any[] = [];
 
         for(let i = 0 ; i < files.length; i++)
         {
-            peticiones.push(this.trackerInstallationEvidenceService.create(files[i]).pipe
+            peticiones.push(this.evidenceInstallationService.create(files[i]).pipe
             (
                 catchError((error) => 
                 {
@@ -316,6 +296,7 @@ export class EditTrackerInstallationComponent implements OnInit, OnDestroy {
 
         forkJoin(peticiones).subscribe((data: any[]) => 
         {
+            this.saveEvidenceInstallation(idIntallation,data);
             this.messageService.add({ severity: 'success', key: 'msg',summary: 'Operación exitosa', detail: 'Elemento guardado exitosamente', life: 3000 }); 
             this.miscService.endRquest(); 
         }, 
@@ -325,7 +306,39 @@ export class EditTrackerInstallationComponent implements OnInit, OnDestroy {
             this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al guardar archivo", detail:err.message });
         }); 
     }
-  
+    saveEvidenceInstallation(idInstallation:number,arrayEvidenceID:any[]){
+        let actions = [];
+        let service = this.trackerInstallationEvidenceService;
+        arrayEvidenceID.forEach(function (obj) {
+          if(obj != null){
+    
+            let object = {trackerInstallationEvidenceTrackerInstallationId:idInstallation.toString(),trackerInstallationEvidenceEvidenceInstallationId  :obj['newId'].toString()}
+            //console.log(object);
+            const ptt= service.create(object).pipe
+                (
+                    catchError((error) => 
+                    {
+                        this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al guardar relacion entre instalacion y evidencia", detail:error.message });
+                        return of(null);
+                    })
+                );
+            actions.push(ptt);	
+          }
+        
+        });
+        forkJoin(actions).subscribe((data: any[]) => 
+            {
+               
+                this.messageService.add({ severity: 'success', key: 'msg',summary: 'Operación exitosa', detail: 'Elemento guardado exitosamente', life: 3000 }); 
+                this.miscService.endRquest(); 
+            }, 
+            err => 
+            {		
+                this.miscService.endRquest(); 
+                this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error  general al guardar relacion entre instalacion y evidencia", detail:err.message });
+            }); 
+    
+      }
     
     private save()  
     {
@@ -339,8 +352,8 @@ export class EditTrackerInstallationComponent implements OnInit, OnDestroy {
             installation[element] = this.form.value[element];   
         });
 
-        installation['trackerInstallationCostumerId'] = installation['trackerInstallationCostumerId'].toString(); 
-        installation['trackerInstallationVehicleId'] = installation['trackerInstallationVehicleId'].toString();
+        if (installation['trackerInstallationCostumerId']) installation['trackerInstallationCostumerId'] = installation['trackerInstallationCostumerId'].toString(); 
+        if (installation['trackerInstallationVehicleId']) installation['trackerInstallationVehicleId'] = installation['trackerInstallationVehicleId'].toString();
         installation['trackerInstallationInstallerId'] =  installation['trackerInstallationInstallerId'].toString();
         installation['trackerInstallationDate'] = this.datePipe.transform(this.form.value['trackerInstallationDate'], 'yyyy-MM-dd HH:mm:ss');
     
@@ -398,40 +411,54 @@ export class EditTrackerInstallationComponent implements OnInit, OnDestroy {
     
             }
 
-            if(this.form.value['trackerInstallationEvidences'].length > 0){
-                this.form.value['trackerInstallationEvidences'].forEach((obj,index) => {
-                    
-                        
+            if(this.uploadedFiles.length > 0){
+                this.uploadedFiles.forEach((obj,index) => {
+                  //  console.log(obj);
+                   
                     if(obj['id'] != null) //id == null fueron guardados al subir la evidencia
                     {
-                        // update               
-                        const update = this.trackerInstallationEvidenceService.update(obj)
+                        // update  
+                        //console.log(obj);             
+                        const update = this.evidenceInstallationService.update({id:obj.idEvidenceInstallation, evidenceInstallationDescription:obj.description})
                         .pipe(
                             catchError((error) => 
                             {
-                                this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error ", detail:"Al actualizar descripción de evidencia  con orden: "+(index+1)+"\n"+error.message });
+                                this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error ", detail:"Al actualizar descripción de evidencia:"+error.message });
                                 return of(null);
                             })
                         );		
                         actions.push(update);
                     }
                 });
-                //crear nueva evidencia
+                
+               
                 this.saveEvidence(this.form.value['id'].toString());
 
                 //-Delete evidence
-                this.deletedEvidences.forEach(id => {
+                this.deletedEvidences.forEach(obj => {
                     // update
-                    const deleteFile = this.trackerInstallationEvidenceService.delete(id).pipe
+                    const tblInstallation = this.trackerInstallationEvidenceService.delete(obj.id).pipe
                     (
                         catchError((error) => 
                         {
-                            this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al eliminar archivos de la base se datos", detail:error.message });
+                            this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al eliminar archivos de la base de datos de tabla intermedia", detail:error.message });
                             return of(null);
                         })
                     );	
-                    actions.push(deleteFile);	
-                    
+
+
+                    actions.push(tblInstallation);	
+
+                    const tblEvidencie = this.evidenceInstallationService.delete(obj.idEvidenceInstallation).pipe
+                    (
+                        catchError((error) => 
+                        {
+                            this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al eliminar archivos de la base de datos de datos tabla global", detail:error.message });
+                            return of(null);
+                        })
+                    );	
+
+                    actions.push(tblEvidencie);
                 });
 
             }
@@ -459,7 +486,7 @@ export class EditTrackerInstallationComponent implements OnInit, OnDestroy {
     } 
     getInfoCustomer(value:number){
 
-        const trackers =  this.trackerService.getList(1,'{"customer_id":1}')
+        const trackers =  this.trackerService.getList(1,'{"customer_id":'+value+'}')
         .pipe(
             catchError((error) => 
             {
@@ -479,8 +506,9 @@ export class EditTrackerInstallationComponent implements OnInit, OnDestroy {
         );
         forkJoin([trackers,vehicles]).subscribe(([dataTrackers,dataVehicles])=>
         {
+          console.log(dataTrackers);
           if(dataTrackers != null){
-                    
+            this.listTrackers = [];      
             dataTrackers['object'].forEach(element => {
               this.listTrackers.push({'label':element['trackerImei']+" / "+ element['trackerStatus'].toUpperCase(),'value':element['id']});
             });
@@ -579,31 +607,34 @@ export class EditTrackerInstallationComponent implements OnInit, OnDestroy {
             
                 //Asigna valores
                 for (let i=0; i < dataInstallation['trackerInstallationAccessories'].length; i++){
-                   this.addRow('accessory');    
+                   this.addRow();    
                 }
 
                 for (let i=0; i < dataInstallation['trackerInstallationEvidences'].length; i++){
 
-                    this.addRow('evidence');   
-
                     let row = dataInstallation['trackerInstallationEvidences'][i];
 
-                    let mimeType =  this.getMimeType(row['trackerInstallationEvidenceName'])[0];
+                    let mimeType =  this.getMimeType(row['trackerInstallationEvidenceEvidenceInstallationId']['evidenceInstallationName'])[0];
 
                     let obj = {
-                        id:row['id'],
-                        name: row['trackerInstallationEvidenceName'],
-                        size: row['trackerInstallationEvidenceSize'] * 1024,
+                        //id:row['id'],
+                        name: row['trackerInstallationEvidenceEvidenceInstallationId']['evidenceInstallationName'],
+                        size: row['trackerInstallationEvidenceEvidenceInstallationId']['evidenceInstallationSize'] * 1024,
                         type: mimeType,
-                        objectURL:this.fileService.downloadServer(row['trackerInstallationEvidencePath'])
+                        objectURL:this.fileService.downloadServer(row['trackerInstallationEvidenceEvidenceInstallationId']['evidenceInstallationPath'])
                     }
 
-                    this.uploadedFiles.push(obj);               
+                    this.uploadedFiles.push({id:row['id'],idEvidenceInstallation:row['trackerInstallationEvidenceEvidenceInstallationId']['id'],file:obj, description:row['trackerInstallationEvidenceEvidenceInstallationId']['evidenceInstallationDescription']});               
 
                 }
+                 console.log(dataInstallation);
 
-                this.getInfoCustomer(dataInstallation['trackerInstallationCostumerId']);
-
+                this.getInfoCustomer(dataInstallation['trackerInstallationCostumerId']['id']);
+                
+                dataInstallation['trackerInstallationCostumerId'] = dataInstallation['trackerInstallationCostumerId']['id'];
+                dataInstallation['trackerInstallationInstallerId'] = dataInstallation['trackerInstallationInstallerId']['id'];
+                dataInstallation['trackerInstallationTrackerId'] = dataInstallation['trackerInstallationTrackerId']['id'];
+                dataInstallation['trackerInstallationVehicleId'] = dataInstallation['trackerInstallationVehicleId']['id'];
                 dataInstallation['trackerInstallationDate'] = new Date(dataInstallation['trackerInstallationDate']);
 
                 this.form.patchValue(dataInstallation);

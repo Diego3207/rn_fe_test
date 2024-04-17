@@ -109,6 +109,11 @@ export class AppMenuComponent implements OnInit {
                                     }
                                 ]
                             },
+                            {
+                                label: 'Renovaciones',
+                                icon: 'pi pi-calendar',
+                                routerLink: ['/renovations']
+                            },
                         ]
                     },
                     {
@@ -170,15 +175,30 @@ export class AppMenuComponent implements OnInit {
                         label: 'Instalaciones',
                         icon: 'pi pi-fw pi-car',
                         items: [
-                            {
+                           {
                                 label: 'Vehiculos',
                                 icon: 'pi pi-car',
                                 routerLink: ['/vehicles']
+                           },
+                           {
+                                label: 'Instalaciones',
+                                icon: 'pi pi-microsoft',
+                                routerLink: ['/trackerInstallations']
+                           },
+                           {
+                                label: 'Asociaciones ',
+                                icon: 'pi pi-verified',
+                                routerLink: ['/associations']
+                           },
+                           {
+                                label: 'Revisiones',
+                                icon: 'pi pi-book',
+                                routerLink: ['/trackerInstallationReviews']
                             },
                             {
-                                label: 'Instalación',
-                                icon: 'pi pi-book',
-                                routerLink: ['/trackerInstallations']
+                                label: 'Desintalaciones',
+                                icon: 'pi pi-qrcode',
+                                routerLink: ['/trackerUninstalls']
                             },
                             {
                                 label: 'Instaladores',
