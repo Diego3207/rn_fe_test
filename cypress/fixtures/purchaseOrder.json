@@ -1,10 +1,9 @@
 {
-    "descripcionValida":"5 chips",
+    "descripcionValida":"1 chip",
     "cotizacionValida":"5 chips",
     "proveedorValida":"Telcel",
-    "serial1Valida":"8952020519496641829",
-    "serial2Valida":"8952020319693502688",
-    "serial3Valida":"8952020922393784025",
-    "serial4Valida":"8952020020694294685",
-    "serial5Valida":"8952020020694292465"
+    "productoValida":"sim card",
+    "cantidadValida":"1",
+    "precioValida":"300",
+    "serial1Valida":"8952020219592932426"
 }
