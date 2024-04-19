@@ -8,19 +8,22 @@ describe("Servicio",function(){
         cy.visit("/");
         cy.get("#email").type("admin@reportnow.com.mx");
         cy.get("#password").type("123456");
-        cy.get("#continuar").click();
+        cy.get('[label="CONTINUAR"]').click();
     })
     it("Añadir Servicio válido",function(){
         //sección añadir producto
         //módulo inventario
         cy.get(".p-element.ng-tns-c21-16").click();
         //módulo servicio
-        cy.get(".ng-tns-c21-29.ng-tns-c21-16 > .p-element").click();
+        cy.get('.ng-tns-c21-30.ng-tns-c21-16 > .p-element').click();
         //boton agregar
         cy.get('.p-button-success').click();
         //formulario
+        //nombre
         cy.get('#name').type(this.service.descripcionValido);
-        cy.get('#price > .p-inputnumber > #locale-us').type(this.service.precioValido);
+        //precio
+        cy.get('[formControlName="servicePrice"]').type(this.service.precioValido);
+        //renovación
         cy.get('.grid > :nth-child(2) > .p-inputwrapper > .p-inputnumber > #locale-us').type(this.service.renovacionValido);
         //selecciona uno
         cy.get('.p-dropdown-label').click();
@@ -39,7 +42,7 @@ describe("Servicio",function(){
         //módulo inventario
         cy.get(".p-element.ng-tns-c21-16").click();
         //módulo servicio
-        cy.get(".ng-tns-c21-29.ng-tns-c21-16 > .p-element").click();
+        cy.get('.ng-tns-c21-30.ng-tns-c21-16 > .p-element').click();
         //boton agregar
         cy.get('.p-button-success').click();
         //boton guardar
@@ -52,12 +55,13 @@ describe("Servicio",function(){
         //módulo inventario
         cy.get(".p-element.ng-tns-c21-16").click();
         //módulo servicio
-        cy.get(".ng-tns-c21-29.ng-tns-c21-16 > .p-element").click();
+        cy.get('.ng-tns-c21-30.ng-tns-c21-16 > .p-element').click();
         //boton agregar
         cy.get('.p-button-success').click();
         //formulario
+        //
         cy.get('#name').type(this.service.descripcionInvalido);
-        cy.get('#price > .p-inputnumber > #locale-us').type(this.service.precioInvalido)
+        cy.get('[formControlName="servicePrice"]').type(this.service.precioInvalido);
         //selecciona uno
         cy.get('.p-dropdown-label').click();
         cy.get('.p-dropdown-filter').type(this.service.cadaXTiempoValido);

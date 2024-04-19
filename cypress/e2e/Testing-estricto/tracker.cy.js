@@ -11,7 +11,7 @@ describe("Rastreador",function(){
         cy.visit("/");
         cy.get("#email").type("admin@reportnow.com.mx");
         cy.get("#password").type("123456");
-        cy.get("#continuar").click();
+        cy.get('[label="CONTINUAR"]').click();
     })
     it("Crear orden de compra con 1 producto gps",function(){
         //?CREAR ORDEN DE COMPRA

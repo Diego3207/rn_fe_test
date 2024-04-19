@@ -8,14 +8,14 @@ describe("Paquetes",function(){
         cy.visit("/");
         cy.get("#email").type("admin@reportnow.com.mx");
         cy.get("#password").type("123456");
-        cy.get("#continuar").click();
+        cy.get('[label="CONTINUAR"]').click();
     })
     it("Añadir paquete válido",function(){
         //sección añadir producto
         //módulo inventario
-        cy.get(".p-element.ng-tns-c21-16").click();
+        cy.get('.p-element.ng-tns-c21-16').click();
         //módulo paquete
-        cy.get('.ng-tns-c21-30.ng-tns-c21-16 > .p-element').click();
+        cy.get('.ng-tns-c21-31.ng-tns-c21-16 > .p-element > .layout-menuitem-text').click();
         //boton agregar
         cy.get('.p-button-success').click();
         //?agregar producto
@@ -49,9 +49,9 @@ describe("Paquetes",function(){
     it("Añadir paquete inválido por exceso de caracteres",function(){
         //sección añadir producto
         //módulo inventario
-        cy.get(".p-element.ng-tns-c21-16").click();
+        cy.get('.p-element.ng-tns-c21-16').click();
         //módulo paquete
-        cy.get('.ng-tns-c21-30.ng-tns-c21-16 > .p-element').click();
+        cy.get('.ng-tns-c21-31.ng-tns-c21-16 > .p-element > .layout-menuitem-text').click();
         //boton agregar
         cy.get('.p-button-success').click();
         //?agregar producto
@@ -79,9 +79,9 @@ describe("Paquetes",function(){
     it("Añadir paquete inválido por campos vacíos",function(){
         //sección añadir producto
         //módulo inventario
-        cy.get(".p-element.ng-tns-c21-16").click();
+        cy.get('.p-element.ng-tns-c21-16').click();
         //módulo paquete
-        cy.get('.ng-tns-c21-30.ng-tns-c21-16 > .p-element').click();
+        cy.get('.ng-tns-c21-31.ng-tns-c21-16 > .p-element > .layout-menuitem-text').click();
         //boton agregar
         cy.get('.p-button-success').click();
         //?agregar producto

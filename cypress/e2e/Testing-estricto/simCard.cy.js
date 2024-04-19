@@ -11,17 +11,17 @@ describe("Sim card",function(){
         cy.visit("/");
         cy.get("#email").type("admin@reportnow.com.mx");
         cy.get("#password").type("123456");
-        cy.get("#continuar").click();
+        cy.get('[label="CONTINUAR"]').click();
     })
     it("Crear orden de compra con 1 producto sim card",function(){
         //?CREAR ORDEN DE COMPRA
         //sección añadir provider
         //módulo administración
-        cy.get(".p-element.ng-tns-c21-15").click();
+        cy.get('.p-element.ng-tns-c21-15').click();
         //ordenes
-        cy.get(".p-element.ng-tns-c21-21").click();
+        cy.get('.p-element.ng-tns-c21-21').click();
         //de compra
-        cy.get(".ng-tns-c21-25.ng-tns-c21-21 > .p-element").click();
+        cy.get('.ng-tns-c21-26.ng-tns-c21-21 > .p-element').click();
         //boton agregar
         cy.get(".p-button-success").click();
         cy.wait(300)
@@ -56,15 +56,15 @@ describe("Sim card",function(){
         cy.get(':nth-child(4) > .col-12 > .p-inputwrapper > .p-inputnumber > .p-inputtext').type(this.purchaseOrder.precioValida);
         cy.get(".p-button-primary").click();
     })
-    it("Abastecer orden de compra",function(){
-        //?ABASTECER ORDEN DE COMPRA
+    it.only("Abastecer orden de compra",function(){
+        //?CREAR ORDEN DE COMPRA
         //sección añadir provider
         //módulo administración
-        cy.get(".p-element.ng-tns-c21-15").click();
+        cy.get('.p-element.ng-tns-c21-15').click();
         //ordenes
-        cy.get(".p-element.ng-tns-c21-21").click();
+        cy.get('.p-element.ng-tns-c21-21').click();
         //de compra
-        cy.get(".ng-tns-c21-25.ng-tns-c21-21 > .p-element").click();
+        cy.get('.ng-tns-c21-26.ng-tns-c21-21 > .p-element').click();
         //estado
         cy.get('[psortablecolumn="purchaseOrderStatus"]').click();
         //boton abastecer
@@ -92,7 +92,12 @@ describe("Sim card",function(){
         cy.get(
             '[ng-reflect-name="0"] > :nth-child(3) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label'
         ).click();
-        cy.get('[ng-reflect-label="Cliente"] > .p-ripple').click();
+        cy.get('[ng-reflect-label="Cliente"] > .p-ripple')
+        .type("Oficina")
+        .wait(200)
+        .type("{downarrow}")
+        .wait(200)
+        .type("{enter}");
         //estado
         cy.get(
             '[ng-reflect-name="0"] > :nth-child(4) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label'
@@ -107,9 +112,9 @@ describe("Sim card",function(){
     });
     it("Crear sim card valida",function(){
         //módulo catálogos
-        cy.get('.p-element.ng-tns-c21-32').click();
+        cy.get('.p-element.ng-tns-c21-33').click();
         //módulo sim cards
-        cy.get('.ng-tns-c21-34.ng-tns-c21-32 > .p-element').click();
+        cy.get('.ng-tns-c21-35.ng-tns-c21-33 > .p-element').click();
         //boton agregar
         cy.get('.p-button-success').click();
         cy.wait(400)

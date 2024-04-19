@@ -8,13 +8,13 @@ describe("Vehículos",function(){
         cy.visit("/");
         cy.get("#email").type("admin@reportnow.com.mx");
         cy.get("#password").type("123456");
-        cy.get("#continuar").click();
+        cy.get('[label="CONTINUAR"]').click();
     })
     it("Añadir Vehículo válido",function(){
        //módulo instalaciones
-       cy.get('.p-element.ng-tns-c21-33').click();
+       cy.get('.p-element.ng-tns-c21-34').click();
        //módulo instalación
-       cy.get('.ng-tns-c21-36.ng-tns-c21-33 > .p-element').click();
+       cy.get('.ng-tns-c21-37.ng-tns-c21-34 > .p-element').click();
        //boton agregar
         cy.get('.p-button-success').click();
         //cliente
@@ -36,9 +36,9 @@ describe("Vehículos",function(){
     })
     it("Añadir Vehículo inválido por exceso de caracteres",function(){
        //módulo instalaciones
-       cy.get('.p-element.ng-tns-c21-33').click();
+       cy.get('.p-element.ng-tns-c21-34').click();
        //módulo instalación
-       cy.get('.ng-tns-c21-36.ng-tns-c21-33 > .p-element').click();
+       cy.get('.ng-tns-c21-37.ng-tns-c21-34 > .p-element').click();
        //boton agregar
         cy.get('.p-button-success').click();
         //cliente
@@ -57,9 +57,9 @@ describe("Vehículos",function(){
     })
     it("Añadir Vehículo inválido por campos vacíos",function(){
        //módulo instalaciones
-       cy.get('.p-element.ng-tns-c21-33').click();
+       cy.get('.p-element.ng-tns-c21-34').click();
        //módulo instalación
-       cy.get('.ng-tns-c21-36.ng-tns-c21-33 > .p-element').click();
+       cy.get('.ng-tns-c21-37.ng-tns-c21-34 > .p-element').click();
        //boton agregar
         cy.get('.p-button-success').click();
         //boton guardar

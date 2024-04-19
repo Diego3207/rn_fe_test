@@ -8,13 +8,13 @@ describe("Instaladores",function(){
         cy.visit("/");
         cy.get("#email").type("admin@reportnow.com.mx");
         cy.get("#password").type("123456");
-        cy.get("#continuar").click();
+        cy.get('[label="CONTINUAR"]').click();
     })
     it("Añadir Instalador válido",function(){
        //módulo instalaciones
-       cy.get('.p-element.ng-tns-c21-33').click();
+       cy.get('.p-element.ng-tns-c21-34').click();
        //módulo instaladores
-       cy.get('.ng-tns-c21-38.ng-tns-c21-33 > .p-element').click();
+       cy.get('.ng-tns-c21-42.ng-tns-c21-34 > .p-element').click();
        //boton agregar
        cy.get('.p-button-success').click();
        //nombre
@@ -33,9 +33,9 @@ describe("Instaladores",function(){
     })
     it("Añadir Instalador inválido por exceso de caracteres",function(){
        //módulo instalaciones
-       cy.get('.p-element.ng-tns-c21-33').click();
+       cy.get('.p-element.ng-tns-c21-34').click();
        //módulo instaladores
-       cy.get('.ng-tns-c21-38.ng-tns-c21-33 > .p-element').click();
+       cy.get('.ng-tns-c21-42.ng-tns-c21-34 > .p-element').click();
        //boton agregar
        cy.get('.p-button-success').click();
        //nombre
@@ -51,9 +51,9 @@ describe("Instaladores",function(){
     })
     it("Añadir Instalador inválido por campos vacíos",function(){
        //módulo instalaciones
-       cy.get('.p-element.ng-tns-c21-33').click();
+       cy.get('.p-element.ng-tns-c21-34').click();
        //módulo instaladores
-       cy.get('.ng-tns-c21-38.ng-tns-c21-33 > .p-element').click();
+       cy.get('.ng-tns-c21-42.ng-tns-c21-34 > .p-element').click();
        //boton agregar
        cy.get('.p-button-success').click();
         //boton guardar

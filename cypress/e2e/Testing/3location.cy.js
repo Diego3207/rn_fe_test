@@ -8,14 +8,14 @@ describe("Ubicaciones", function () {
         cy.visit("/");
         cy.get("#email").type("admin@reportnow.com.mx");
         cy.get("#password").type("123456");
-        cy.get("#continuar").click();
+        cy.get('[label="CONTINUAR"]').click();
     });
     it("Añadir ubicación válido", function () {
         //sección añadir producto
         //módulo inventario
-        cy.get(".p-element.ng-tns-c21-16").click();
+        cy.get('.p-element.ng-tns-c21-16').click();
         //módulo ubicaciones
-        cy.get(".ng-tns-c21-27.ng-tns-c21-16 > .p-element").click();
+        cy.get('.ng-tns-c21-28.ng-tns-c21-16 > .p-element').click();
         //boton agregar
         cy.get(".p-button-success").click();
         //nombre
@@ -35,9 +35,9 @@ describe("Ubicaciones", function () {
     it("Añadir ubicación inválido por exceso de caracteres", function () {
         //sección añadir producto
         //módulo inventario
-        cy.get(".p-element.ng-tns-c21-16").click();
+        cy.get('.p-element.ng-tns-c21-16').click();
         //módulo ubicaciones
-        cy.get(".ng-tns-c21-27.ng-tns-c21-16 > .p-element").click();
+        cy.get('.ng-tns-c21-28.ng-tns-c21-16 > .p-element').click();
         //boton agregar
         cy.get(".p-button-success").click();
         //nombre
@@ -52,9 +52,9 @@ describe("Ubicaciones", function () {
     it("Añadir ubicación inválido por campos vacíos", function () {
         //sección añadir producto
         //módulo inventario
-        cy.get(".p-element.ng-tns-c21-16").click();
+        cy.get('.p-element.ng-tns-c21-16').click();
         //módulo ubicaciones
-        cy.get(".ng-tns-c21-27.ng-tns-c21-16 > .p-element").click();
+        cy.get('.ng-tns-c21-28.ng-tns-c21-16 > .p-element').click();
         //boton agregar
         cy.get(".p-button-success").click();
         //nombre

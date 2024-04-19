@@ -8,14 +8,13 @@ describe("Añadir producto", function () {
         cy.visit("/");
         cy.get("#email").type("admin@reportnow.com.mx");
         cy.get("#password").type("123456");
-        cy.get("#continuar").click();
+        cy.get('[label="CONTINUAR"]').click();
     });
     it("Añadir Producto válido de tipo gps", function () {
-        //sección añadir producto
+        //módulo inventario
         cy.get(".p-element.ng-tns-c21-16").click();
-        cy.get(
-            ".ng-tns-c21-28.ng-tns-c21-16 > .p-element > .layout-menuitem-text"
-        ).click();
+        //módulo productos
+        cy.get('.ng-tns-c21-29.ng-tns-c21-16 > .p-element > .layout-menuitem-text').click();
         cy.get(".p-button-success").click();
         //formulario
         //marca
@@ -62,28 +61,24 @@ describe("Añadir producto", function () {
     });
     
     it("Añadir Producto inválido por campos sin llenar", function () {
-        //sección añadir producto
         //módulo inventario
         cy.get(".p-element.ng-tns-c21-16").click();
-        //módulo producto
-        cy.get(
-            ".ng-tns-c21-28.ng-tns-c21-16 > .p-element > .layout-menuitem-text"
-        ).click();
+        //módulo productos
+        cy.get('.ng-tns-c21-29.ng-tns-c21-16 > .p-element > .layout-menuitem-text').click();
         cy.get(".p-button-success").click();
         cy.wait(sleepLargo);
+        cy.get("#brand").type(this.producto.marcaValido);
         //botón de guardar
-        cy.get("#brand").type(this.producto.marcaInvalido);
         cy.get(".p-button-primary > .p-button-label").click();
         cy.wait(sleepLargo);
         cy.url().should("eq", "http://localhost:4200/#/product/add");
         cy.wait(sleepLargo);
     });
     it("Añadir Producto inválido por exceder la longitud de valores máximos", function () {
-        //sección añadir producto
+        //módulo inventario
         cy.get(".p-element.ng-tns-c21-16").click();
-        cy.get(
-            ".ng-tns-c21-28.ng-tns-c21-16 > .p-element > .layout-menuitem-text"
-        ).click();
+        //módulo productos
+        cy.get('.ng-tns-c21-29.ng-tns-c21-16 > .p-element > .layout-menuitem-text').click();
         cy.get(".p-button-success").click();
         cy.wait(sleepLargo);
         //formulario

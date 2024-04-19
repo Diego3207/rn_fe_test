@@ -8,7 +8,7 @@ describe("Clientes", function () {
         cy.visit("/");
         cy.get("#email").type("admin@reportnow.com.mx");
         cy.get("#password").type("123456");
-        cy.get("#continuar").click();
+        cy.get('[label="CONTINUAR"]').click();
     });
     it("Añadir cliente válido", function () {
         //sección añadir provider
@@ -29,9 +29,9 @@ describe("Clientes", function () {
         //direccion
         cy.get("#costumerAddress")
             .type(this.costumer.direccionValido)
-            .wait(2000)
+            .wait(200)
             .type("{downarrow}")
-            .wait(500)
+            .wait(200)
             .type("{enter}");
         //sitio web
         cy.get("#costumerWebSite").type(this.costumer.sitioWebValido);
@@ -40,12 +40,11 @@ describe("Clientes", function () {
         //grupo
         cy.get(".p-autocomplete-input")
             .type(this.costumer.grupoValido)
-            .wait(400)
+            .wait(200)
             .type("{downarrow}")
-            .wait(400)
+            .type("{downarrow}")
+            .wait(200)
             .type("{enter}");
-        //cy.get('#pr_id_8_list > .p-ripple').click();
-        cy.wait(sleepCorto);
         //agregar contacto
         cy.get(
             ":nth-child(8) > .flex > p-button.p-element > .p-ripple"

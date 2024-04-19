@@ -8,7 +8,7 @@ describe("Proveedor", function () {
         cy.visit("/");
         cy.get("#email").type("admin@reportnow.com.mx");
         cy.get("#password").type("123456");
-        cy.get("#continuar").click();
+        cy.get('[label="CONTINUAR"]').click();
     });
     it("Añadir Proveedor válido con 1 producto y 1 servicio", function () {
         //sección añadir provider
@@ -51,14 +51,14 @@ describe("Proveedor", function () {
             ":nth-child(5) > .flex > p-button.p-element > .p-ripple"
         ).click();
         //?selecciona servicio
-        cy.get("#services").click();
+        cy.get("[formControlName='providerServiceServiceId']").click();
         cy.get(".p-dropdown-filter")
             .type(this.provider.servicioValido)
             .type("{downarrow}")
             .wait(500)
             .type("{enter}");
         //garantia
-        cy.get("#guarantyService").type(this.provider.garantiaValido);
+        cy.get('[formControlName="providerProductGuaranteeUnit"]').last().type(this.provider.garantiaValido);
         cy.get(
             "#pr_id_10-table > .p-datatable-tbody > .ng-star-inserted.ng-dirty > :nth-child(4) > .p-inputwrapper > .p-dropdown > .p-dropdown-label"
         ).click();
@@ -148,14 +148,14 @@ describe("Proveedor", function () {
             ":nth-child(5) > .flex > p-button.p-element > .p-ripple"
         ).click();
         //?selecciona servicio
-        cy.get("#services").click();
+        cy.get("[formControlName='providerServiceServiceId']").click();
         cy.get(".p-dropdown-filter")
             .type(this.provider.servicioValido)
             .type("{downarrow}")
             .wait(500)
             .type("{enter}");
         //garantia
-        cy.get("#guarantyService").type(this.provider.garantiaValido);
+        cy.get('[formControlName="providerProductGuaranteeUnit"]').last().type(this.provider.garantiaValido);
         cy.get(
             "#pr_id_10-table > .p-datatable-tbody > .ng-star-inserted.ng-dirty > :nth-child(4) > .p-inputwrapper > .p-dropdown > .p-dropdown-label"
         ).click();
@@ -245,14 +245,14 @@ describe("Proveedor", function () {
             ":nth-child(5) > .flex > p-button.p-element > .p-ripple"
         ).click();
         //?selecciona servicio
-        cy.get("#services").click();
+        cy.get("[formControlName='providerServiceServiceId']").click();
         cy.get(".p-dropdown-filter")
             .type(this.provider.servicioValido)
             .type("{downarrow}")
             .wait(500)
             .type("{enter}");
         //garantia
-        cy.get("#guarantyService").type(this.provider.garantiaValido);
+        cy.get('[formControlName="providerProductGuaranteeUnit"]').last().type(this.provider.garantiaValido)
         cy.get(
             "#pr_id_10-table > .p-datatable-tbody > .ng-star-inserted.ng-dirty > :nth-child(4) > .p-inputwrapper > .p-dropdown > .p-dropdown-label"
         ).click();

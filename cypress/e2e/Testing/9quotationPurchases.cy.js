@@ -8,16 +8,16 @@ describe("Cotizaciones de compra", function () {
         cy.visit("/");
         cy.get("#email").type("admin@reportnow.com.mx");
         cy.get("#password").type("123456");
-        cy.get("#continuar").click();
+        cy.get('[label="CONTINUAR"]').click();
     });
     it("Añadir cotización válido con 1 producto y 1 servicio", function () {
         //sección añadir provider
         //módulo administración
         cy.get(".p-element.ng-tns-c21-15").click();
         //módulo cotizaciones
-        cy.get(".p-element.ng-tns-c21-20").click();
+        cy.get('.p-element.ng-tns-c21-20').click();
         //de compra
-        cy.get(".ng-tns-c21-23.ng-tns-c21-20 > .p-element").click();
+        cy.get('.ng-tns-c21-24.ng-tns-c21-20 > .p-element').click();
         //boton agregar
         cy.get(".p-button-success").click();
         cy.wait(500);
@@ -77,9 +77,9 @@ describe("Cotizaciones de compra", function () {
         //módulo administración
         cy.get(".p-element.ng-tns-c21-15").click();
         //módulo cotizaciones
-        cy.get(".p-element.ng-tns-c21-20").click();
+        cy.get('.p-element.ng-tns-c21-20').click();
         //de compra
-        cy.get(".ng-tns-c21-23.ng-tns-c21-20 > .p-element").click();
+        cy.get('.ng-tns-c21-24.ng-tns-c21-20 > .p-element').click()
         //estatus
         cy.get('[psortablecolumn="quotationPurchaseStatus"]').click();
         cy.wait(500);
@@ -90,9 +90,7 @@ describe("Cotizaciones de compra", function () {
         //tiempo de entrega
         cy.get(".p-calendar > .p-element").click();
         //dia 31 - última fila, primera columna
-        cy.get(
-            "tbody.ng-tns-c88-55 > :nth-child(1) > :nth-child(3) > .p-ripple"
-        ).click();
+        cy.get('tbody.ng-tns-c88-59 > :nth-child(2) > :nth-child(4)').click();
         //precio producto
         cy.get('[formControlName="quotationPurchaseProductPrice"]').type(
             this.quotationPurchase.precioValido
@@ -110,9 +108,9 @@ describe("Cotizaciones de compra", function () {
         //módulo administración
         cy.get(".p-element.ng-tns-c21-15").click();
         //módulo cotizaciones
-        cy.get(".p-element.ng-tns-c21-20").click();
+        cy.get('.p-element.ng-tns-c21-20').click();
         //de compra
-        cy.get(".ng-tns-c21-23.ng-tns-c21-20 > .p-element").click();
+        cy.get('.ng-tns-c21-24.ng-tns-c21-20 > .p-element').click()
         //boton agregar
         cy.get(".p-button-success").click();
         cy.wait(500);
@@ -177,9 +175,9 @@ describe("Cotizaciones de compra", function () {
         //módulo administración
         cy.get(".p-element.ng-tns-c21-15").click();
         //módulo cotizaciones
-        cy.get(".p-element.ng-tns-c21-20").click();
+        cy.get('.p-element.ng-tns-c21-20').click();
         //de compra
-        cy.get(".ng-tns-c21-23.ng-tns-c21-20 > .p-element").click();
+        cy.get('.ng-tns-c21-24.ng-tns-c21-20 > .p-element').click()
         //boton agregar
         cy.get(".p-button-success").click();
         //boton guardar
