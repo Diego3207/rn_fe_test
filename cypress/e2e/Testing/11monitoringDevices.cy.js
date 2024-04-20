@@ -39,6 +39,7 @@ describe("Dispositivos",function(){
         cy.get('.p-button-primary').click();
         cy.wait("@añadir").its("response.statusCode").should("eq",201);
         cy.url().should("eq","http://localhost:4200/#/monitoringDevices");
+        cy.wait(sleepLargo);
     })
     it("Añadir dispositivo inválido por exceso de caracteres",function(){
         //módulo operativo
@@ -53,6 +54,7 @@ describe("Dispositivos",function(){
         //boton guardar
         cy.get('.p-button-primary').click();
         cy.url().should("eq","http://localhost:4200/#/monitoringDevices/add");
+        cy.wait(sleepLargo);
     })
     it("Añadir dispositivo inválido por campos vacíos",function(){
         //módulo operativo
@@ -65,5 +67,6 @@ describe("Dispositivos",function(){
         //boton guardar
         cy.get('.p-button-primary').click();
         cy.url().should("eq","http://localhost:4200/#/monitoringDevices/add");
+        cy.wait(sleepLargo);
     })
 })

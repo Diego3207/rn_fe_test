@@ -57,6 +57,7 @@ describe("Directorio/Dependencias",function(){
         cy.get('.p-button-primary').click();
         cy.wait("@añadir").its("response.statusCode").should("eq",201);
         cy.url().should("eq","http://localhost:4200/#/directory");
+        cy.wait(sleepLargo);
     })
     it("Añadir dependencia inválido por exceso de carecteres",function(){
         //módulo operativo
@@ -87,6 +88,7 @@ describe("Directorio/Dependencias",function(){
         //boton guardar
         cy.get('.p-button-primary').click();
         cy.url().should("eq","http://localhost:4200/#/directory/add");
+        cy.wait(sleepLargo);
     })
     it("Añadir dependencia inválido por campos vacíos",function(){
         //módulo operativo
@@ -103,5 +105,6 @@ describe("Directorio/Dependencias",function(){
         //boton guardar
         cy.get('.p-button-primary').click();
         cy.url().should("eq","http://localhost:4200/#/directory/add");
+        cy.wait(sleepLargo);
     })
 })

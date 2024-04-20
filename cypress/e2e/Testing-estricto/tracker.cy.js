@@ -2,9 +2,6 @@ const sleepCorto = 1000;
 const sleepLargo = 2500;
 describe("Rastreador",function(){
     beforeEach(function(){
-        cy.fixture("purchaseOrder").then(function (purchaseOrder) {
-            this.purchaseOrder = purchaseOrder;
-        });
         cy.fixture("tracker").then(function (tracker) {
             this.tracker = tracker;
         });
@@ -17,54 +14,54 @@ describe("Rastreador",function(){
         //?CREAR ORDEN DE COMPRA
         //sección añadir provider
         //módulo administración
-        cy.get(".p-element.ng-tns-c21-15").click();
+        cy.get('.p-element.ng-tns-c21-15').click();
         //ordenes
-        cy.get(".p-element.ng-tns-c21-21").click();
+        cy.get('.p-element.ng-tns-c21-21').click();
         //de compra
-        cy.get(".ng-tns-c21-25.ng-tns-c21-21 > .p-element").click();
+        cy.get('.ng-tns-c21-26.ng-tns-c21-21 > .p-element').click();
         //boton agregar
         cy.get(".p-button-success").click();
         cy.wait(300)
         //nombre
-        cy.get("#name").type(this.purchaseOrder.descripcionGPSValida);
+        cy.get("#name").type(this.tracker.descripcionGPSValida);
         //proveedor
         cy.get(':nth-child(3) > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
         //escribir proveedor
         cy.get('.p-dropdown-filter')
-        .type(this.purchaseOrder.proveedorGPSValida)
+        .type(this.tracker.proveedorGPSValida)
         .wait(200)
         .type("{downarrow}")
         .wait(200)
         .type("{enter}");
-        //agregar productocy.get('[ng-reflect-label="Pieza"] > .p-ripple').click()
         cy.get(':nth-child(5) > .flex > p-button.p-element > .p-ripple').click();
         //producto
         cy.get(':nth-child(1) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
         //escribir producto
-        cy.get('.p-dropdown-filter').type(this.purchaseOrder.productoGPSValida)
+        cy.get('.p-dropdown-filter').type(this.tracker.productoGPSValida)
         .wait(200)
         .type("{downarrow}")
         .wait(200)
-        .type("{enter}");
         //unidad
         cy.get(':nth-child(2) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
         //elegir "pieza"
         cy.get('[ng-reflect-label="Pieza"] > .p-ripple').click();
         //cantidad
-        cy.get('#locale-us').type(this.purchaseOrder.cantidadValida);
+        cy.get('#locale-us').type(this.tracker.cantidadValida);
         //precio
-        cy.get(':nth-child(4) > .col-12 > .p-inputwrapper > .p-inputnumber > .p-inputtext').type(this.purchaseOrder.precioValida);
+        cy.get(':nth-child(4) > .col-12 > .p-inputwrapper > .p-inputnumber > .p-inputtext').type(this.tracker.precioValida);
+        cy.get('#locale-us').click();
         cy.get(".p-button-primary").click();
+        cy.wait(sleepLargo)
     })
     it("Abastecer orden de compra gps",function(){
-        //?ABASTECER ORDEN DE COMPRA
+        //?CREAR ORDEN DE COMPRA
         //sección añadir provider
         //módulo administración
-        cy.get(".p-element.ng-tns-c21-15").click();
+        cy.get('.p-element.ng-tns-c21-15').click();
         //ordenes
-        cy.get(".p-element.ng-tns-c21-21").click();
+        cy.get('.p-element.ng-tns-c21-21').click();
         //de compra
-        cy.get(".ng-tns-c21-25.ng-tns-c21-21 > .p-element").click();
+        cy.get('.ng-tns-c21-26.ng-tns-c21-21 > .p-element').click();
         //estado
         cy.get('[psortablecolumn="purchaseOrderStatus"]').click();
         //boton abastecer
@@ -86,13 +83,16 @@ describe("Rastreador",function(){
         //producto 1
         //serial
         cy.get('[ng-reflect-name="0"] > :nth-child(2) > .col-12 > #key').type(
-            this.purchaseOrder.serialGPSValida
+            this.tracker.serialGPSValida
         );
-        //ubicacion
-        cy.get(
-            '[ng-reflect-name="0"] > :nth-child(3) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label'
-        ).click();
-        cy.get('[ng-reflect-label="Cliente"] > .p-ripple').click();
+        cy.get(':nth-child(3) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-trigger').click();
+        cy.wait(200)
+        cy.get('.p-dropdown-filter')
+        .type("Oficina")
+        .wait(200)
+        .type("{downarrow}")
+        .wait(200)
+        .type("{enter}");
         //estado
         cy.get(
             '[ng-reflect-name="0"] > :nth-child(4) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label'
@@ -104,26 +104,27 @@ describe("Rastreador",function(){
         ).type("na");
         //boton abastecer
         cy.get("#p-tabpanel-0 > .mt-4 > .p-button-primary").click();
+        cy.wait(sleepLargo)
     });
     it("Crear orden de compra con 1 producto sim card",function(){
         //?CREAR ORDEN DE COMPRA
         //sección añadir provider
         //módulo administración
-        cy.get(".p-element.ng-tns-c21-15").click();
+        cy.get('.p-element.ng-tns-c21-15').click();
         //ordenes
-        cy.get(".p-element.ng-tns-c21-21").click();
+        cy.get('.p-element.ng-tns-c21-21').click();
         //de compra
-        cy.get(".ng-tns-c21-25.ng-tns-c21-21 > .p-element").click();
+        cy.get('.ng-tns-c21-26.ng-tns-c21-21 > .p-element').click()
         //boton agregar
         cy.get(".p-button-success").click();
         cy.wait(300)
         //nombre
-        cy.get("#name").type(this.purchaseOrder.descripcionChipValida);
+        cy.get("#name").type(this.tracker.descripcionChipValida);
         //proveedor
         cy.get(':nth-child(3) > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
         //escribir proveedor
         cy.get('.p-dropdown-filter')
-        .type(this.purchaseOrder.proveedorChipValida)
+        .type(this.tracker.proveedorChipValida)
         .wait(200)
         .type("{downarrow}")
         .wait(200)
@@ -133,30 +134,31 @@ describe("Rastreador",function(){
         //producto
         cy.get(':nth-child(1) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
         //escribir producto
-        cy.get('.p-dropdown-filter').type(this.purchaseOrder.productoChipValida)
+        cy.get('.p-dropdown-filter').type(this.tracker.productoChipValida)
         .wait(200)
         .type("{downarrow}")
         .wait(200)
-        .type("{enter}");
         //unidad
         cy.get(':nth-child(2) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
         //elegir "pieza"
         cy.get('[ng-reflect-label="Pieza"] > .p-ripple').click();
         //cantidad
-        cy.get('#locale-us').type(this.purchaseOrder.cantidadValida);
+        cy.get('#locale-us').type(this.tracker.cantidadValida);
         //precio
-        cy.get(':nth-child(4) > .col-12 > .p-inputwrapper > .p-inputnumber > .p-inputtext').type(this.purchaseOrder.precioValida);
+        cy.get(':nth-child(4) > .col-12 > .p-inputwrapper > .p-inputnumber > .p-inputtext').type(this.tracker.precioValida);
+        cy.wait(20)
         cy.get(".p-button-primary").click();
+        cy.wait(sleepLargo)
     })
     it("Abastecer orden de compra sim card",function(){
-        //?ABASTECER ORDEN DE COMPRA
+        //?CREAR ORDEN DE COMPRA
         //sección añadir provider
         //módulo administración
-        cy.get(".p-element.ng-tns-c21-15").click();
+        cy.get('.p-element.ng-tns-c21-15').click();
         //ordenes
-        cy.get(".p-element.ng-tns-c21-21").click();
+        cy.get('.p-element.ng-tns-c21-21').click();
         //de compra
-        cy.get(".ng-tns-c21-25.ng-tns-c21-21 > .p-element").click();
+        cy.get('.ng-tns-c21-26.ng-tns-c21-21 > .p-element').click();
         //estado
         cy.get('[psortablecolumn="purchaseOrderStatus"]').click();
         //boton abastecer
@@ -178,13 +180,17 @@ describe("Rastreador",function(){
         //producto 1
         //serial
         cy.get('[ng-reflect-name="0"] > :nth-child(2) > .col-12 > #key').type(
-            this.purchaseOrder.serialChipValida
+            this.tracker.iccidValida
         );
         //ubicacion
-        cy.get(
-            '[ng-reflect-name="0"] > :nth-child(3) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label'
-        ).click();
-        cy.get('[ng-reflect-label="Cliente"] > .p-ripple').click();
+        cy.get(':nth-child(3) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-trigger').click();
+        cy.wait(200)
+        cy.get('.p-dropdown-filter')
+        .type("Oficina")
+        .wait(200)
+        .type("{downarrow}")
+        .wait(200)
+        .type("{enter}");
         //estado
         cy.get(
             '[ng-reflect-name="0"] > :nth-child(4) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label'
@@ -196,12 +202,13 @@ describe("Rastreador",function(){
         ).type("na");
         //boton abastecer
         cy.get("#p-tabpanel-0 > .mt-4 > .p-button-primary").click();
+        cy.wait(sleepLargo);
     });
     it("Crear sim card valida",function(){
         //módulo catálogos
-        cy.get('.p-element.ng-tns-c21-32').click();
+        cy.get('.p-element.ng-tns-c21-33').click();
         //módulo sim cards
-        cy.get('.ng-tns-c21-34.ng-tns-c21-32 > .p-element').click();
+        cy.get('.ng-tns-c21-35.ng-tns-c21-33 > .p-element').click();
         //boton agregar
         cy.get('.p-button-success').click();
         cy.wait(400)
@@ -215,7 +222,7 @@ describe("Rastreador",function(){
         .wait(200)
         .type("{enter}")
         //numero telefono
-        cy.get('#simCardNumber').type(this.tracker.tarjetaSIMValida);
+        cy.get('#simCardNumber').type(this.tracker.iccidValida);
         //nombre compañía
         cy.get(':nth-child(3) > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
         //elegir "telcel"
@@ -237,18 +244,16 @@ describe("Rastreador",function(){
         cy.get(':nth-child(1) > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
         //escribir serial
         cy.get('.p-dropdown-filter')
-        .type(this.tracker.suministroValida)
+        .type(this.tracker.serialGPSValida)
         .wait(200)
         .type("{downarrow}")
         .wait(200)
         .type("{enter}");
-        //imei
-        cy.get('#name').type(this.tracker.imeiValida);
         //tarjeta sim
         cy.get(':nth-child(3) > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
         //escribir sim
         cy.get('.p-dropdown-filter')
-        .type(this.tracker.tarjetaSIMValida)
+        .type(this.tracker.iccidValida)
         .wait(200)
         .type("{downarrow}")
         .wait(200)

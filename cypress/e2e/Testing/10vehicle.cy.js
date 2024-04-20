@@ -54,6 +54,7 @@ describe("Vehículos",function(){
         cy.wait(sleepLargo)
         cy.get('.p-button-primary').click();
         cy.url().should("eq","http://localhost:4200/#/vehicles/add");
+        cy.wait(sleepLargo);
     })
     it("Añadir Vehículo inválido por campos vacíos",function(){
        //módulo instalaciones
@@ -66,5 +67,6 @@ describe("Vehículos",function(){
         cy.wait(sleepLargo)
         cy.get('.p-button-primary').click();
         cy.url().should("eq","http://localhost:4200/#/vehicles/add");
+        cy.wait(sleepLargo);
     })
 })

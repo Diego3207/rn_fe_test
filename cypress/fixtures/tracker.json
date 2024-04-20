@@ -1,8 +1,16 @@
 {
-    "suministroValida":"355087093979655",
-    "imeiValida":"355087093979655",
-    "tarjetaSIMValida":"5579131177",
     "voltajeValida":"3.7",
-    "iccidValida":"8952020018590654689",
-    "planServicioValida":"ADDON"
+    "iccidValida":"8952020219592932426",
+    "planServicioValida":"ADDON",
+    "descripcionGPSValida":"1 gps",
+    "cotizacionGPSValida":"1 gps",
+    "proveedorGPSValida":"Concox",
+    "productoGPSValida":"qbit",
+    "serialGPSValida":"355087093974283",
+    "descripcionChipValida":"1 chip",
+    "cotizacionChipValida":"1 chip",
+    "proveedorChipValida":"Telcel",
+    "productoChipValida":"sim card",
+    "cantidadValida":"1",
+    "precioValida":"300"
 }

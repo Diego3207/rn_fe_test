@@ -60,5 +60,6 @@ describe("Instaladores",function(){
         cy.wait(sleepLargo)
         cy.get('.p-button-primary').click();
         cy.url().should("eq","http://localhost:4200/#/installers/add");
+        cy.wait(sleepLargo)
     })
 })

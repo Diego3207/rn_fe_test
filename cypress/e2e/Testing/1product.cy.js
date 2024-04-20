@@ -33,6 +33,7 @@ describe("Añadir producto", function () {
         .type("{downarrow}")
         .wait(200)
         .type("{enter}");
+        cy.wait(500);
         //precio
         cy.get("#price > .p-inputnumber > #locale-us").type(
             this.producto.precioValido

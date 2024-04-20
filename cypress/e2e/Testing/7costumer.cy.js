@@ -82,6 +82,7 @@ describe("Clientes", function () {
             .its("response.statusCode")
             .should("eq", 201);
         cy.url().should("eq", "http://localhost:4200/#/costumers");
+        cy.wait(sleepLargo);
     });
     it("Añadir cliente inválido por cliente duplicado con error 400", function () {
         //sección añadir provider
@@ -215,5 +216,6 @@ describe("Clientes", function () {
         //boton guardar
         cy.get(".p-button-primary").click();
         cy.url().should("eq", "http://localhost:4200/#/costumers/add");
+        cy.wait(sleepLargo);
     });
 });

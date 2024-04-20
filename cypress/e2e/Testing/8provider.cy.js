@@ -286,9 +286,9 @@ describe("Proveedor", function () {
         //direccion
         cy.get("#providerLocationAddress")
             .type(this.provider.direccionDireccionesValido)
-            .wait(2000)
+            .wait(200)
             .type("{downarrow}")
-            .wait(500)
+            .wait(200)
             .type("{enter}");
         //boton guardar
         cy.get(".p-button-primary").click();

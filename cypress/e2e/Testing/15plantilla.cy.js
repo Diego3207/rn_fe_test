@@ -10,6 +10,6 @@ describe("Plantilla",function(){
         cy.get("#password").type("123456");
         cy.get('[label="CONTINUAR"]').click();
     })
-    it("Añadir Producto válido",function(){
+    it("",function(){
     })
 })
