@@ -222,7 +222,7 @@ describe("Rastreador",function(){
         .wait(200)
         .type("{enter}")
         //numero telefono
-        cy.get('#simCardNumber').type(this.tracker.iccidValida);
+        cy.get('#simCardNumber').type(this.tracker.numeroValida);
         //nombre compañía
         cy.get(':nth-child(3) > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
         //elegir "telcel"
@@ -234,9 +234,9 @@ describe("Rastreador",function(){
     })
     it("Crear rastreador valida",function(){
         //módulo catálogos
-        cy.get('.p-element.ng-tns-c21-32').click();
+        cy.get('.p-element.ng-tns-c21-33').click();
         //módulo rastreadores
-        cy.get('.ng-tns-c21-35.ng-tns-c21-32 > .p-element').click();
+        cy.get('.ng-tns-c21-36.ng-tns-c21-33 > .p-element').click();
         //boton agregar
         cy.get('.p-button-success').click();
         cy.wait(400)
@@ -269,6 +269,18 @@ describe("Rastreador",function(){
         cy.get(".p-button-primary").click();
         cy.wait("@añadirProducto").its("response.statusCode").should("eq", 201);
         cy.url().should("eq", "http://localhost:4200/#/trackers");
+        cy.wait(sleepLargo);
+    })
+    it("Crear rastreador invalida por exceso de caracteres",function(){
+        //módulo catálogos
+        cy.get('.p-element.ng-tns-c21-33').click();
+        //módulo rastreadores
+        cy.get('.ng-tns-c21-36.ng-tns-c21-33 > .p-element').click();
+        //boton agregar
+        cy.get('.p-button-success').click();
+        cy.wait(sleepLargo);
+        cy.get(".p-button-primary").click();
+        cy.url().should("eq", "http://localhost:4200/#/trackers/add");
         cy.wait(sleepLargo);
     })
 })

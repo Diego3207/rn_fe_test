@@ -32,6 +32,8 @@ describe("Añadir producto", function () {
         .wait(200)
         .type("{downarrow}")
         .wait(200)
+        .type("{downarrow}")
+        .wait(200)
         .type("{enter}");
         cy.wait(500);
         //precio
