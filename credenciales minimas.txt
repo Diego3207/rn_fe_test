@@ -135,3 +135,17 @@ insert into dependency_categories values
 (NULL,NULL,4,'Seguridad Publica Municipales',1),
 (NULL,NULL,5,'Personal Report Now',1),
 (NULL,NULL,6,'Clientes',1);
+
+
+insert into quotation_sale_commercial_terms values
+(1700779209,1700779209,1,'EQUIPO GPS FIJO – PLAN ANUAL','Condiciones comerciales:
+<ul>
+	<li>Agregar 16% de IVA a todos los precios.</li>
+	<li>Posteriormente a la contratación y pago inicial, únicamente se pagaría el servicio integral de monitoreo de manera anual. </li>
+	<li>Plazo mínimo de contratación 12 meses.</li>
+	<li>Para la contratación es necesario cubrir costo de instalación, el costo del equipo y el pago por servicio anual. </li>
+	<li>Precio de servicio en zona metropolitana de Guadalajara, instalaciones foráneas tienen costo extra. </li>
+	<li>Garantía en equipos contra defectos de fabricación de 12 meses.</li>
+	<li>Existe penalización en caso de que las unidades no se encuentren en el lugar y a la hora programada para instalación.</li>
+	<li>El tiempo de instalación y entrega será acordada con el cliente.</li>
+</ul>',1);

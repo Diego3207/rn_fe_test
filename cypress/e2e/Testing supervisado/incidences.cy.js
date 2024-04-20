@@ -81,6 +81,7 @@ describe("Incidencias",function(){
         cy.get('.p-button-primary').click();
         cy.wait("@añadir").its("response.statusCode").should("eq",201);
         cy.url().should("eq","http://localhost:4200/#/incidences");
+        cy.wait(sleepLargo)
     })
     it("Añadir Incidencia inválido por duplicado",function(){
         //módulo operativo
