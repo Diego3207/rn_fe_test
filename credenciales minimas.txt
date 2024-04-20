@@ -124,3 +124,14 @@ INSERT INTO `pay_ways` VALUES
 /*pay_methods*/
 INSERT INTO `pay_methods` VALUES 
 (1689981908457,1689981908457,1,"PPU",'Pago en una sola exhibicion',1);
+
+insert into costumers values 
+(1713394772682,1713394772682,1,'MATTEL','MATTEL','DFDF3838','C. Mar de Bering 2014, Lomas del Country, 44620 Guadalajara, Jal., México','www.mattel.com','Empresa',1,1);
+
+insert into dependency_categories values
+(NULL,NULL,1,'Dependencias Estatales y Federales',1),
+(NULL,NULL,2,'Protección Civil y Bomberos Municipales',1),
+(NULL,NULL,3,'Servicios medicos Municipales (Cruz Verde)',1),
+(NULL,NULL,4,'Seguridad Publica Municipales',1),
+(NULL,NULL,5,'Personal Report Now',1),
+(NULL,NULL,6,'Clientes',1);
