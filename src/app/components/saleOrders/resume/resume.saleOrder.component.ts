@@ -141,7 +141,7 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
       let propertiesSaleOrder = {};
 
       //Iteramos el objeto de formulario para guardar el valor en las variables arriba declaradas
-     /* Object.keys(this.form.value).forEach(element => 
+      Object.keys(this.form.value).forEach(element => 
       {
         propertiesSaleOrder[element] = this.form.value[element];                       
       });
@@ -152,7 +152,7 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
         if (propertiesSaleOrder['saleOrderPayWayId']) propertiesSaleOrder['saleOrderPayWayId'] = (propertiesSaleOrder['saleOrderPayWayId']).toString();
         if (propertiesSaleOrder['saleOrderPayMethodId']) propertiesSaleOrder['saleOrderPayMethodId'] = (propertiesSaleOrder['saleOrderPayMethodId']).toString();
         if (propertiesSaleOrder['saleOrderDate']) propertiesSaleOrder['saleOrderDate'] = this.datePipe.transform(propertiesSaleOrder['saleOrderDate'], 'yyyy-MM-dd HH:mm:ss');
-        if (propertiesSaleOrder['saleOrderShippingDate']) propertiesSaleOrder['saleOrderShippingDate'] = this.datePipe.transform(propertiesSaleOrder['saleOrderShippingDate'], 'yyyy-MM-dd HH:mm:ss');*/
+        if (propertiesSaleOrder['saleOrderShippingDate']) propertiesSaleOrder['saleOrderShippingDate'] = this.datePipe.transform(propertiesSaleOrder['saleOrderShippingDate'], 'yyyy-MM-dd HH:mm:ss');
        
       //Actualizamos la orden de Compra
       this.saleOrderService.update(propertiesSaleOrder)
@@ -188,13 +188,16 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
     
         Object.keys(result).forEach(key => 
         {
-          let listRecord = this.quantities.filter(obj => obj.quotationSaleRecordProductId.id == key && obj.quotationSaleRecordSupplyId == null);    
+          let listRecord = this.quantities.filter(obj => obj.quotationSaleRecordProductId.id == key && obj.quotationSaleRecordSupplyId == null);
+          
+          console.log(listRecord);
+
           for(var i=0; i < result[key].length ; i++)
           {
             const ptt = this.quotationSaleRecordService.update({
               'id': listRecord[i].id.toString(), 
               'quotationSaleRecordSupplyId': result[key][i].id.toString(),
-              'quotationSaleRecordSaleOrderId': data['newId'].toString()
+              'quotationSaleRecordSaleOrderId': (propertiesSaleOrder['id']).toString()
             }).pipe(
                 catchError((error) => {
                     throw this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al asignar el suministro en registro de venta: ",detail:  error.error.error });

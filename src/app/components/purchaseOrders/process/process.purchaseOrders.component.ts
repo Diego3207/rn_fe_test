@@ -49,7 +49,7 @@ export class ProcessPurchaseOrdersComponent implements OnInit, OnDestroy {
     listEvidence : any[] = [];
     date: any = '';
     updateReceived : boolean = false;
-    massiveOption : boolean = false;
+    massiveOption : boolean = true;
     dataCSV : any[] = [];
     totalProducts : number = 0;
     listCategories: any[] = [];
@@ -149,12 +149,7 @@ export class ProcessPurchaseOrdersComponent implements OnInit, OnDestroy {
         
         this.miscService.startRequest();
 
-        if (this.formReceived.invalid  && ( this.uploadedFiles.length == 0  || this.listEvidence.length == 0 ) ) {
-
-            this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error", detail:'Campos obligatorios pendiente'});                        
-            this.miscService.endRquest();
-        }else{
-           
+        if (!this.formReceived.invalid  &&  (( this.uploadedFiles.length + this.listEvidence.length) > 0 )) {
             let received = this.formReceived.value;
 
             
@@ -197,6 +192,9 @@ export class ProcessPurchaseOrdersComponent implements OnInit, OnDestroy {
                 this.miscService.endRquest();
                 this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error',  detail:err.message, life: 3000 });
             });
+        }else {
+            this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error", detail:'Campos obligatorios pendiente'});                        
+            this.miscService.endRquest();
         }
     }
     saveSupply(){
@@ -569,7 +567,10 @@ export class ProcessPurchaseOrdersComponent implements OnInit, OnDestroy {
 
         let keys = [];
         let lines = text.replace(/"+/g,'').split(/[\r\n]+/);
-        lines.pop(); //eliminar ultimo elemento del array (ya eque esta vacia la ultima posicion)
+        //comprobar si la ultima posicion de lines esta vacia
+        if(lines[lines.length - 1] == "")
+            lines.pop(); //eliminar ultimo elemento del array (ya eque esta vacia la ultima posicion)
+
         keys = lines[0].split(',');
         lines.shift();//eliminar el primer elemento de lines (quitar las keys)
        
@@ -720,13 +721,13 @@ export class ProcessPurchaseOrdersComponent implements OnInit, OnDestroy {
 
         });
 
-        if((quantity - currentSupplies) == supplies.length){
+        if(supplies.length  <= (quantity - currentSupplies) ){
             supplies.forEach((obj)=>{
 
                 const ptt = this.supplyService.create(obj).pipe(
                     catchError((error) => 
                     {
-                    let text = (error.error.code == undefined) ? error.error.split("}")[0] :error.error.code +"\n"+error.error.problems ;
+                        let text = (error.error.code == undefined) ? error.error.error :error.error.code +"\n"+error.error.problems ;
 
                         this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al crear suministro con serial "+obj.supplyKey, detail:text });
                         return of(null);
@@ -829,6 +830,7 @@ export class ProcessPurchaseOrdersComponent implements OnInit, OnDestroy {
                     this.miscService.endRquest();
 
                 }*/
+            
             },
 
             (err:any)=>
