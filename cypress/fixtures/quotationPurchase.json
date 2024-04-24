@@ -1,8 +1,8 @@
 {
-    "proveedorValido":"Concox",
-    "descripcionValido":"1 qbit",
+    "proveedorValido":"Telcel",
+    "descripcionValido":"1 chip",
     "productoValido":"qbit",
-    "cantidadValido":"5",
+    "cantidadValido":"1",
     "servicioValido":"Instala",
     "precioValido":"37"
 }

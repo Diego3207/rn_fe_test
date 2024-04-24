@@ -40,7 +40,7 @@ describe("Cotizaciones de venta",function(){
         .type("{enter}");
         //tipo moneda
         cy.get('#pr_id_13_label').click();
-        cy.get('.p-dropdown-filter')
+        cy.get('.p-dropdown-filter').last()
         .type("{downarrow}")
         .wait(200)
         .type("{enter}");

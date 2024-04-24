@@ -21,7 +21,11 @@ describe("Ubicaciones", function () {
         //nombre
         cy.get("#locationName").type(this.location.nombreValido);
         //direccion
-        cy.get("#locationAddress").type(this.location.direccionValido).wait(2000).type("{downarrow}").wait(500).type("{enter}");
+        cy.get("#locationAddress").type(this.location.direccionValido)
+        .wait(900)
+        .type("{downarrow}")
+        .wait(200)
+        .type("{enter}");
         //telefono
         cy.get('.ng-untouched > .p-inputtext').type(this.location.telefonoValido);
         cy.wait(sleepLargo)
