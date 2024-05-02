@@ -5,7 +5,7 @@
 export const environment =
 {
   production: false,
-  apiUrl: 'http://adm.reportnow.com.mx:1336',
+  apiUrl: 'http://localhost:4200',
   
 };
 
