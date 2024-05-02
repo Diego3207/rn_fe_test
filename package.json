@@ -8,8 +8,7 @@
         "build": "ng build",
         "test": "ng test",
         "lint": "ng lint",
-        "e2e": "ng e2e",
-        "report":"cypress run --spec cypress/e2e/Testing/*.cy.js"
+        "e2e": "ng e2e"
     },
     "private": true,
     "dependencies": {
@@ -31,7 +30,6 @@
         "@types/socket.io-client": "^3.0.0",
         "angular-csv-ext": "^1.0.5",
         "chart.js": "^3.3.2",
-        "cypress": "^13.7.3",
         "flag": "^5.0.1",
         "html-to-pdfmake": "^2.4.24",
         "jspdf": "^2.5.1",
@@ -62,7 +60,6 @@
         "@types/jasmine": "~3.10.0",
         "@types/node": "^12.11.1",
         "@typescript-eslint/parser": "5.37.0",
-        "cypress-mochawesome-reporter": "^3.8.2",
         "eslint": "^8.23.1",
         "jasmine-core": "~4.0.0",
         "karma": "~6.3.0",

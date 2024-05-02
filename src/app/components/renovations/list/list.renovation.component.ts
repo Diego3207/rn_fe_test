@@ -250,13 +250,15 @@ export class ListRenovationComponent implements OnInit, OnDestroy {
 
     getDateRenovation(quantity,temporality,date:string){
         let fecha = new Date(date)
+        let currentDate = new Date();
         let dateRenovation ;
+
         switch (temporality) {
             case 'año':
-                dateRenovation = this.datePipe.transform(fecha.setFullYear(fecha.getFullYear() + quantity), 'dd-MM-yyyy');
+                dateRenovation =  this.datePipe.transform(new Date((currentDate.getFullYear() + quantity) , fecha.getMonth() , fecha.getDate()), 'dd-MM-yyyy');
                 break;
             case 'mes':
-                dateRenovation = this.datePipe.transform(fecha.setMonth(fecha.getMonth() + quantity), 'dd-MM-yyyy');
+                dateRenovation =  this.datePipe.transform(new Date(currentDate.getFullYear() , (fecha.getDate() > currentDate.getDate() ? currentDate.getMonth() : currentDate.getMonth() + quantity) , fecha.getDate()), 'dd-MM-yyyy');
                 break;
             case 'dia':
                 dateRenovation = this.datePipe.transform(fecha.setDate(fecha.getDate() + quantity), 'dd-MM-yyyy');

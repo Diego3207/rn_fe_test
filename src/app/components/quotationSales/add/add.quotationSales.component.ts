@@ -271,7 +271,7 @@ export class AddQuotationSalesComponent  {
     newProductsArray() {
         return this.formBuilder.group({
             quotationSaleProductProductId: [null,[Validators.required]], //este se debe tomar de lo disponible en inventario
-            quotationSaleProductPrice : [{value:null,disabled:true},[Validators.min(1)]], //si pongo aqui disabled no lo manda en el form
+            quotationSaleProductPrice : [null,[Validators.min(1)]], //si pongo aqui disabled no lo manda en el form
             quotationSaleProductQuantity:[null,[Validators.required ,Validators.min(1), Validators.max(99999999)]], 
             quotationSaleProductDiscount:[null,[Validators.min(1)]],
             quotationSaleProductIsPercentageDiscount :false,
@@ -283,7 +283,7 @@ export class AddQuotationSalesComponent  {
     newServicesArray() {
         return this.formBuilder.group({
             quotationSaleServiceServiceId:[null,[Validators.required]],
-            quotationSaleServicePrice:[{value:null,disabled:true},[Validators.required ,Validators.min(1)]],//este se debe tomar del catalogo de precios
+            quotationSaleServicePrice:[null,[Validators.required ,Validators.min(1)]],//este se debe tomar del catalogo de precios
             quotationSaleServiceQuantity:[null,[Validators.required ,Validators.min(1), Validators.max(99999999)]],  //[min]="1" [max]="99999999"
             quotationSaleServiceDiscount:[null,[Validators.min(1)]],
             quotationSaleServiceIsPercentageDiscount: false,
