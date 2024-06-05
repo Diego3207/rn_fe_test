@@ -13,7 +13,8 @@ import { DialogModule } from 'primeng/dialog';
 import { RippleModule } from 'primeng/ripple';
 import { ToastModule } from 'primeng/toast';
 import { TagModule } from 'primeng/tag';
-import { TooltipModule } from 'primeng/tooltip'; 
+import { TooltipModule } from 'primeng/tooltip';
+
 
 @NgModule({
 	imports: [

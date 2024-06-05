@@ -20,7 +20,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { ImageModule } from 'primeng/image';
 import { TableModule } from 'primeng/table';
 import { CheckboxModule } from 'primeng/checkbox';
-
+import { InputNumberModule } from 'primeng/inputnumber';
 
 
 
@@ -46,8 +46,8 @@ import { CheckboxModule } from 'primeng/checkbox';
 		CalendarModule,
 		ImageModule,
 		TableModule,
-		CheckboxModule
-
+		CheckboxModule,
+		InputNumberModule
 	],
 	declarations: [AddIncidenceComponent],
 	providers: [ProviderService, MessageService, ConfirmationService]

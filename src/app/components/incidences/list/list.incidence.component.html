@@ -7,6 +7,8 @@
             <p-toolbar styleClass="mb-4">
                 <ng-template pTemplate="left">
                     <div class="my-2">
+                        <button pButton pRipple pTooltip="Descargar CSV"  icon="pi pi-file-excel" class="p-button-warning mr-2" (click)="generateCSV()" ></button>
+
                         <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success mr-2" [routerLink]="['/incidences/add/']"></button>
                         <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger" (click)="delete(1,null)" [disabled]="!selectedIncidences || !selectedIncidences.length"></button>
                     </div>

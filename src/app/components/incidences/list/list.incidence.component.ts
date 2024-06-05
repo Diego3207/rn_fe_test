@@ -5,9 +5,13 @@ import { ConfirmationService, MessageService, LazyLoadEvent, SelectItem, FilterM
 import { MiscService } from 'src/app/service/misc.service';
 import { forkJoin, of } from 'rxjs';
 import { catchError  } from 'rxjs/operators';
+import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
+import { CurrencyPipe, DatePipe } from '@angular/common'; 
+
 
 @Component({
-    templateUrl: './list.incidence.component.html'
+    templateUrl: './list.incidence.component.html',
+    providers: [DatePipe, CurrencyPipe]
 })
 export class ListIncidenceComponent implements OnInit, OnDestroy {
     selectedIncidences: Incidence[] = [];
@@ -34,6 +38,8 @@ export class ListIncidenceComponent implements OnInit, OnDestroy {
         private incidenceService: IncidenceService, 
         private cdref:ChangeDetectorRef,
         private messageService: MessageService, 
+        private datePipe: DatePipe,
+
         private confirmationService: ConfirmationService ) 
 	{
         
@@ -237,5 +243,60 @@ export class ListIncidenceComponent implements OnInit, OnDestroy {
         const endIndex = Math.min(startIndex + limit - 1, totalRows);
         return `Mostrando del ${startIndex} al ${endIndex} de ${totalRows}`;
     }
+    generateCSV(){
 
+        this.incidenceService.getAll(0,1,'[{"id":"asc"}]')
+        .subscribe(data => {
+            //incidenceCostumerId['costumerName']
+            //incidenceSourceInformation
+            //incidenceDescription
+            //incidenceType
+            //incidenceQuadrant
+            //incidenceStartDate
+            //incidenceEndDate
+            //incidenceValidationEvent
+
+            console.log(data);
+
+            let records = data['object']['records'];
+
+            if(records.length > 0){
+                let dataCSV = [];
+                records.forEach((obj) => {
+
+                    let row = {
+                        cliente : obj.incidenceCostumerId['costumerName'],
+                        fuente_de_información : obj['incidenceSourceInformation'],
+                        descripcion : obj['incidenceDescription'],
+                        tipo: obj['incidenceType'],
+                        cuadrante : obj['incidenceQuadrant'],
+                        fecha_inicio :  this.datePipe.transform(new Date(obj['incidenceStartDate']), 'yyyy-MM-dd HH:mm:ss'),  
+                        fecha_fin :  this.datePipe.transform(new Date(obj['incidenceEndDate']), 'yyyy-MM-dd HH:mm:ss'),  
+                        validacion:  obj['incidenceValidationEvent']
+                    }
+                    dataCSV.push(row);
+                });
+
+                let csvOptions = {
+                    fieldSeparator: ',',
+                    quoteStrings: '"',
+                    decimalseparator: '.',
+                    showLabels: true,
+                    useBom: false,
+                    noDownload: false,
+                    headers:  Object.keys(dataCSV[0])
+                };
+                new  AngularCsv(dataCSV, "ReporteIncidencias", csvOptions);
+              
+
+            }else{
+
+                this.messageService.add({ severity: 'warn', key: 'msg', summary: 'Error', detail: 'Sin registros', life: 3000 });
+            }
+
+        }, (err: any) => {
+            this.messageService.add({ severity: 'error', key: 'msg', summary: 'Error', detail: 'Error al cargar CSV', life: 3000 });
+            this.miscService.endRquest();
+          });
+    }
 }

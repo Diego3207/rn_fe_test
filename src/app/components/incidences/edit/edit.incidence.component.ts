@@ -29,14 +29,17 @@ export class EditIncidenceComponent implements OnInit, OnDestroy {
     listCostumer: any[] = [];
     listSource: any[] = [];
     listType: any[] = [];
+    listValidation: any[] = [];
    // listDevices: any[] = [];
     listFilteredDevices: any[] = [];
     listInvolved : any[] = [];
     uploadedFiles: any[] = []; //lista de archivos por cargar
     listPhones :any[]= [];
+    listChannels :any[]= [];
     dateStart : any = '';
     dateEnd : any = '';
-
+    items :any[]= [];
+    listGenre :any[]= [];
 
     constructor(
         private formBuilder: FormBuilder,
@@ -72,16 +75,17 @@ export class EditIncidenceComponent implements OnInit, OnDestroy {
         incidenceStartDateAttention: this.datePipe.transform(new Date(), 'yyyy-MM-dd  HH:mm:ss'), // se pone al cargar el formulario
         incidenceInformantData:[{disabled:true,value:null}, [Validators.required]],
         incidenceType: [{disabled:true,value:null}, [Validators.required]],
+        incidenceTypeDescription: [{disabled:true,value:null}, [Validators.required]],
         incidenceQuadrant: {disabled:true,value:''},
         incidenceStartDate: [{disabled:true,value:null}, [Validators.required]],
         incidenceEndDate: [{disabled:true,value:null}, [Validators.required]],
         incidenceCoordinations: this.formBuilder.array([],[this.isCoordinationDuplicated]),
         incidenceDescription:[{disabled:true,value:null},Validators.required],
-        incidenceDescriptionInvolvedPeople: {disabled:true,value:''},
-        incidenceDescriptionInvolvedVehicles: {disabled:true,value:''},
+        incidenceVehicles: this.formBuilder.array([]),
+        incidencePeoples: this.formBuilder.array([]),
         incidenceObservation:{disabled:true,value:''},
         //incidenceUserAttendedId:[this.sessionService.getUserId(),[Validators.required]],
-        incidenceIsPositive: [{disabled:true,value:null}, [Validators.required]],
+        incidenceValidationEvent: [{disabled:true,value:null}, [Validators.required]],
         incidenceEndDateAttention: {disabled:true,value:null}, // se pone al momento de guardar la incidencia
         }, formOptions);
 
@@ -93,9 +97,64 @@ export class EditIncidenceComponent implements OnInit, OnDestroy {
       this.listType = [ 
         {label:'Operativa',value:'operativa'},
         {label:'Preventiva',value:'preventiva'},
-        {label:'Informativa',value:'informativa'}
+        {label:'Informativa',value:'informativa'},
+        {label:'Robo de activo',value:'robo de activo'}
       ];
-  
+      this.listValidation = [ 
+        {label:'Positivo',value:'positivo'},
+        {label:'Falso positivo',value:'falso positivo'},
+        {label:'No corroborado',value:'no corroborado'},
+        {label:'Activo con servicio activo',value:'activo'},
+        {label:'Activo con servicio inactivo',value:'inactivo'}
+      ];
+      this.listChannels = [ 
+        {label:'Llamada Telefónica',value:'llamada'},
+        {label:'WhatsApp',value:'whatsapp'},
+        {label:'Telegram',value:'telegram'},
+        {label:'SMS',value:'sms'},
+        {label:'Correo Electrónico',value:'email'}
+      ];
+      this.listGenre = [ 
+        {label:'Femenino',value:'femenino'},
+        {label:'Masculino',value:'masculino'},
+        {label:'No especificado',value:'no especificado'}
+      ];
+
+      this.items = [
+        { name: 'Aguascalientes'},
+        { name: 'Baja California'},
+        { name: 'Baja California Sur'},
+        { name: 'Campeche'},
+        { name: 'CDMX'},
+        { name: 'Coahuila'},
+        { name: 'Colima'},
+        { name: 'Chiapas'},
+        { name: 'Chihuahua'},
+        { name: 'Durango'},
+        { name: 'Guanajuato'},
+        { name: 'Guerrero'},
+        { name: 'Hidalgo'},
+        { name: 'Jalisco'},
+        { name: 'México'},
+        { name: 'Michoacán'},
+        { name: 'Morelos'},
+        { name: 'Nayarit'},
+        { name: 'Nuevo León'},
+        { name: 'Oaxaca'},
+        { name: 'Puebla'},
+        { name: 'Querétaro'},
+        { name: 'Quintana Roo'},
+        { name: 'San Luis Potosí'},
+        { name: 'Sinaloa'},
+        { name: 'Sonora'},
+        { name: 'Tabasco'},
+        { name: 'Tamaulipas'},
+        { name: 'Tlaxcala'},
+        { name: 'Veracruz'},
+        { name: 'Yucatán'},
+        { name: 'Zacatecas'}
+      ]; 
+
       this.getInfo();
 
       
@@ -118,27 +177,80 @@ export class EditIncidenceComponent implements OnInit, OnDestroy {
       event.preventDefault(); //
       this.router.navigate(['/incidences']);
     }
+
     newCoordinationArray() 
     {
       return this.formBuilder.group({
           
-          incidenceCoordinationDependencyPhoneId:[{disabled:true,value:null},[Validators.required]]
+          incidenceCoordinationDependencyPhoneId:[{disabled:true,value:null},[Validators.required]],
+          incidenceCoordinationCommunicationChannel:[{disabled:true,value:null},[Validators.required]]
+      });
+    }
+    
+    newPeopleArray() 
+    {
+      return this.formBuilder.group({
+          incidencePeopleName: {disabled:true,value:' '},   
+          incidencePeopleGenre: {disabled:true,value:'no especificado'}, 
+          incidencePeopleAge: {disabled:true,value:0}, 
+          incidencePeopleBirthDate: {disabled:true,value:null}, 
+          incidencePeopleBirthPlace: {disabled:true,value:' '},
+          incidencePeopleSigns: {disabled:true,value:' '},
+          incidencePeopleAddress: {disabled:true,value:' '},
+      });
+    }
+
+    newVehicleArray() 
+    {
+      return this.formBuilder.group({
+          incidenceVehicleBrand:{disabled:true,value:' '},   
+          incidenceVehicleModel: {disabled:true,value:' '},
+          incidenceVehiclePlateNumber: {disabled:true,value:' '},
+          incidenceVehicleColor: {disabled:true,value:' '},
+          incidenceVehicleOthers: {disabled:true,value:' '}
       });
     }
     
     infoCoordinationsArray(): FormArray {
       return this.form.get('incidenceCoordinations') as FormArray;
     }
-    
-    addRow()
-    {
-        this.infoCoordinationsArray().push(this.newCoordinationArray());
-           
+
+    infoPeoplesArray(): FormArray {
+      return this.form.get('incidencePeoples') as FormArray;
     }
-    removeRow(index:number)
-    {
-        this.infoCoordinationsArray().removeAt(index); 
+
+    infoVehiclesArray(): FormArray {
+      return this.form.get('incidenceVehicles') as FormArray;
     }
+  
+    addRow(type){
+      switch (type) {
+          case 'coordination':
+              this.infoCoordinationsArray().push(this.newCoordinationArray());  
+              break;
+          case 'people':
+              this.infoPeoplesArray().push(this.newPeopleArray()); 
+              break;
+          case 'vehicle':
+              this.infoVehiclesArray().push(this.newVehicleArray()); 
+              break;
+        }
+    }
+
+    removeRow(type,index:number){
+      switch (type) {
+          case 'coordination':
+            this.infoCoordinationsArray().removeAt(index); 
+              break;
+          case 'people':                
+              this.infoPeoplesArray().removeAt(index); 
+              break;
+          case 'vehicle':
+              this.infoVehiclesArray().removeAt(index);
+              break;
+      }
+  }
+
     isCoordinationDuplicated(control: FormArray ) 
     {
         const uniqueValues = new Set();
@@ -189,7 +301,7 @@ export class EditIncidenceComponent implements OnInit, OnDestroy {
             }
             
             //Agregamos los datos de phones
-            let labelx = x.dependencyPhoneDependencyId['dependencyDescription']+" / Tel: "+ x.dependencyPhoneNumber +" / Via: "+x.dependencyPhoneCommunicationChannel;
+            let labelx = x.dependencyPhoneDependencyId['dependencyDescription']+" / Tel: "+ x.dependencyPhoneNumber;
             let phone = {label:labelx, value:x.id };
               nuevoObjeto[x.dependencyPhoneDependencyId['dependencyDependencyCategoryId']['dependencyCatergoryDescription']].phones.push(phone);
             
@@ -208,12 +320,24 @@ export class EditIncidenceComponent implements OnInit, OnDestroy {
             data['incidenceCostumerId'] = data['incidenceCostumerId']['costumerName'];
             data['incidenceEndDate'] = new Date(data['incidenceEndDate']);
             data['incidenceStartDate'] = new Date(data['incidenceEndDate']);
-            this.listInvolved = data['incidenceInvolvedDevices'];
-            //this.uploadedFiles = data['incidenceEvidences']
+            
 
-            //agregar filas para vias de coordinacion
+            this.listInvolved = data['incidenceInvolvedDevices'];
+            //console.log(data['incidenceEvidences']);
+            
+            //agregar filas
             for (let i=0; i < data['incidenceCoordinations'].length; i++){
-              this.addRow();    
+              this.addRow('coordination');    
+            }
+
+            for (let i=0; i < data['incidencePeoples'].length; i++){
+              data['incidencePeoples'][i]['incidencePeopleBirthDate'] = new Date(data['incidencePeoples'][i]['incidencePeopleBirthDate']);
+             // console.log(data['incidencePeoples'][i]['incidencePeopleBirthDate']);
+              this.addRow('people');    
+            }
+
+            for (let i=0; i < data['incidenceVehicles'].length; i++){
+              this.addRow('vehicle');    
             }
 
             for (let i=0; i < data['incidenceEvidences'].length; i++){

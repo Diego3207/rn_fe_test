@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import { ListAComponent } from './list.a.component';
 import { ListARoutigModule } from './list.a-routing.module';
 
@@ -12,4 +13,7 @@ import { ListARoutigModule } from './list.a-routing.module';
 	],
 	declarations: [ListAComponent]
 })
-export class ListAModule { }
+export class ListAModule 
+{ 
+	//comentario de prueba en el codigo
+}

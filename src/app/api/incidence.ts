@@ -5,6 +5,7 @@ export interface Incidence {
     incidenceStartDateAttention: Date,
     incidenceInformant: string,
     incidenceType: string,
+    incidenceTypeDescription: string,
     incidenceQuadrant: string,
     incidenceStartDate: Date,
     incidenceEndDate: Date,
@@ -12,7 +13,7 @@ export interface Incidence {
     incidenceDescriptionInvolvedVehicles: string,
     incidenceDependencyId: number,
     incidenceObservation: string,
-    incidenceIsPositive: string,
+    incidenceValidationEvent: string,
     incidenceEndDateAttention: string,
     incidenceActive: boolean
 }

@@ -122,9 +122,9 @@ export class ListTrackerComponent implements OnInit, OnDestroy {
     list(){
         this.trackerService.getAll(this.limit,this.page,this.sort)
         .subscribe((data: any)=>{
-            console.log(data);
             if(data != null)
             {
+                console.log(data);
                 this.trackers = data['object']['records'];                    
                 this.totalRows = data['object']['totalRecords'];
 
@@ -153,6 +153,7 @@ export class ListTrackerComponent implements OnInit, OnDestroy {
         this.trackerService.getFilter(texto,this.limit, this.page,this.sort) // le sumo +1 ya que en sails le resto uno a la pagina (en sails quitare ese -1 )
             .subscribe((data: any)=>{
                 if(data != null){
+                    console.log(data);
                     this.trackers = data['object']['records'];                    
                     this.totalRows = data['object']['totalRecords'];
     
@@ -280,7 +281,7 @@ export class ListTrackerComponent implements OnInit, OnDestroy {
         let keys = [];
         let lines = text.replace(/"+/g,'').split(/[\r\n]+/);
         lines.pop(); //eliminar ultimo elemento del array (ya eque esta vacia la ultima posicion)
-        keys = ['trackerSupplyId','trackerImei','trackerMaximumVoltage','trackerMinimumVoltage'];
+        keys = ['trackerSupplyId','trackerImei','trackerMaximumVoltage','trackerMinimumVoltage','trackerCategory'];
         lines.forEach((obj) => {
             let element = {};
             obj.split(',').forEach((obj, index) => {
@@ -298,7 +299,7 @@ export class ListTrackerComponent implements OnInit, OnDestroy {
             let keys =  Object.keys(obj);
             let keysTrackerCSV = keys.slice(0, 7);
             let tracker = {};
-            let keysTracker = ['trackerSupplyId','trackerImei','trackerMaximumVoltage','trackerMinimumVoltage'];
+            let keysTracker = ['trackerSupplyId','trackerImei','trackerMaximumVoltage','trackerMinimumVoltage','trackerCategory'];
             keysTrackerCSV.forEach((element, index) => 
             {
                 tracker[keysTracker[index]] = obj[element];   
@@ -317,7 +318,7 @@ export class ListTrackerComponent implements OnInit, OnDestroy {
             const ptt = this.trackerService.create(obj).pipe(
                 catchError((error) => 
                 {
-                    let text = (error.error.code == undefined) ? error.error.split("}")[0] :error.error.code +"\n"+error.error.problems ;
+                    let text = (error.error.code == undefined) ? error.error.error :error.error.code +"\n"+error.error.problems ;
 
                     this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al crear rastreador con el IMEI "+obj.trackerSupplyId, detail:text });
                     return of(null);

@@ -18,9 +18,13 @@ export class AddTrackerComponent  {
     @ViewChildren('search') searchElementRef!: QueryList<ElementRef>;
     form: FormGroup | any;
     listSIMs: any[] = [];
+    listSimsRaw: any[] = [];
     listSupplies: any[] = [];
     listSuppliesRaw: any[] = [];
     listSimCards: any[] = [];
+    listTrackerCategories: any[] = [];
+    simCardSupplyId: number;
+
 
     constructor(    
         private formBuilder: FormBuilder,
@@ -45,6 +49,7 @@ export class AddTrackerComponent  {
             trackerSupplyId: [null,[Validators.required]],
             trackerImei: [null, [Validators.required,Validators.maxLength(16)]],
             trackerSimCardId: null,
+            trackerCategory: [null,[Validators.required]],
             trackerMaximumVoltage: 0.00,
             trackerMinimumVoltage: 0.00,
          }, formOptions);
@@ -58,7 +63,23 @@ export class AddTrackerComponent  {
                     this.form.controls.trackerImei.setValue(element.supplyKey);
                 }
             });
-        });        
+        }); 
+
+        this.listTrackerCategories = [ 
+            {label:'Fijo',value:'fijo'},
+            {label:'Móvil',value:'movil'},
+            {label:'Pulso',value:'pulso'}
+
+        ];      
+
+        this.form.get("trackerSimCardId").valueChanges.subscribe(selectedValue => 
+            {
+                this.listSimsRaw['object'].forEach(element => {
+                    if(element.id == selectedValue ){
+                        this.simCardSupplyId = element.supplyId;
+                    }
+                });
+            });
     }
 
     ngOnDestroy() {
@@ -89,7 +110,23 @@ export class AddTrackerComponent  {
 
         this.trackerService.create(this.form.value)
         .subscribe(data =>{
-            this.miscService.endRquest();  
+
+
+            //Actualizamos el estado del suministro SIM CARD a vendido
+            console.log(this.simCardSupplyId.toString());
+                this.supplyService.update({
+                'id': this.simCardSupplyId.toString(), 
+                'supplyStatus': 'vendido'
+                }).subscribe(data =>{
+                    this.messageService.add({ severity: 'success',key: 'msg', summary: 'Operación exitosa',  life: 3000 });
+                },  (err : any)=> {
+                    this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error', detail:err.error.error , life: 3000 });
+                });
+            //////////////////////////////
+
+
+            this.miscService.endRquest();
+	    this.messageService.add({ severity: 'success',key: 'msg', summary: 'Operación exitosa',  life: 3000 });  
             this.router.navigate(['/trackers']);
             
         },  (err : any)=> {
@@ -137,9 +174,10 @@ export class AddTrackerComponent  {
 
             if(dataSims != null )
             {                 
-                dataSims['object'].forEach(element => {
+		this.listSimsRaw = dataSims;                
+		dataSims['object'].forEach(element => {
                     this.listSimCards.push({'label':  "ICCID: "+element['iccid'],'value': element['id']});
-                    console.log(element);   
+		    console.log(element);
                 });
             }else{
                 this.messageService.add({ severity: 'warn', key: 'msg', summary: 'Advertencia', detail: 'Sin  SIMs disponibles para relacionar', life: 4000 });

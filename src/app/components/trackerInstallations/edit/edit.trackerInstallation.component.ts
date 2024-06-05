@@ -506,7 +506,7 @@ export class EditTrackerInstallationComponent implements OnInit, OnDestroy {
         );
         forkJoin([trackers,vehicles]).subscribe(([dataTrackers,dataVehicles])=>
         {
-          console.log(dataTrackers);
+         // console.log(dataTrackers);
           if(dataTrackers != null){
             this.listTrackers = [];      
             dataTrackers['object'].forEach(element => {

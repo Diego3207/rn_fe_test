@@ -105,7 +105,6 @@ export class AddDependencyComponent  {
         return this.formBuilder.group({
             dependencyPhoneNumber: [null,[Validators.required]],
             dependencyPhoneExtension: ['',[Validators.maxLength(50)]],
-            dependencyPhoneCommunicationChannel: [null,[Validators.required,Validators.maxLength(150)]],
             dependencyPhoneHaveContact: false,
            //dependencyPhoneContact: this.formBuilder.array([]),
           // dependencyPhoneContact:  this.newPhoneContact() ,

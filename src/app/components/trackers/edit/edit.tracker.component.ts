@@ -21,6 +21,7 @@ export class EditTrackerComponent implements OnInit, OnDestroy {
     listSupplies: any[] = [];
     listSuppliesRaw: any[] = [];
     listSimCards: any[] = [];
+    listTrackerCategories :any[] = [];
 
    
     constructor(
@@ -51,11 +52,24 @@ export class EditTrackerComponent implements OnInit, OnDestroy {
             trackerSupplyId: [null,[Validators.required]],
             trackerImei: [null, [Validators.required,Validators.maxLength(16)]],
             trackerSimCardId: null,
+            trackerCategory: [null,[Validators.required]],
             trackerMaximumVoltage: 0.00,
             trackerMinimumVoltage: 0.00,
          }, formOptions);
          
+				 
+         this.listTrackerCategories = [
+	   
+										
+				
+            {label:'Fijo',value:'fijo'},
+            {label:'Móvil',value:'movil'},
+            {label:'Pulso',value:'pulso'}
+        ];
+				 
+	   
 
+				
          this.getData();
 
          this.form.get("trackerSupplyId").valueChanges.subscribe(selectedValue => 

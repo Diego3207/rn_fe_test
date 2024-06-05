@@ -30,6 +30,8 @@
         "@types/socket.io-client": "^3.0.0",
         "angular-csv-ext": "^1.0.5",
         "chart.js": "^3.3.2",
+        "cypress": "^13.11.0",
+        "cypress-mochawesome-reporter": "^3.8.2",
         "flag": "^5.0.1",
         "html-to-pdfmake": "^2.4.24",
         "jspdf": "^2.5.1",

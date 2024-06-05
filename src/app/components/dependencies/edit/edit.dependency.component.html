@@ -81,15 +81,7 @@
                                                     <div *ngIf="form.controls.dependencyPhones.controls[phoneIndex].controls.dependencyPhoneExtension.invalid">
                                                         <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.dependencyPhones.controls[phoneIndex].controls.dependencyPhoneExtension.errors?.['maxlength']" >*Longitud máxima 50</small>
                                                     </div>
-                                                </div> 
-                                                <div class="field col">
-                                                    <label htmlFor="extension"  class="font-semibold">Vía de comunicación</label>
-                                                    <p-autoComplete [dropdown]="true" formControlName="dependencyPhoneCommunicationChannel"  [suggestions]="listFilteredChannel" (completeMethod)="filterChannel($event)"></p-autoComplete>
-                                                    <div *ngIf="form.controls.dependencyPhones.controls[phoneIndex].controls.dependencyPhoneCommunicationChannel.invalid">
-                                                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.dependencyPhones.controls[phoneIndex].controls.dependencyPhoneCommunicationChannel.errors?.['required']" >*Campo requerido</small>
-                                                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.dependencyPhones.controls[phoneIndex].controls.dependencyPhoneCommunicationChannel.errors?.['maxlength']" >*Longitud máxima 50</small>
-                                                    </div>
-                                                </div>     
+                                                </div>  
                                                 <div class="field col flex justify-content-evenly flex-wrap">
                                                     <p-checkbox formControlName="dependencyPhoneHaveContact" label="¿Esta ligado a una persona ?"   class="font-semibold" [binary]="true" inputId="ny"></p-checkbox>
                                                     <button pButton pRipple type="button"  (click)="removeRow(phoneIndex,phone)"  icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"></button>                                                

@@ -71,52 +71,76 @@
             [(selection)]="selectedElements" selectionMode="multiple"
             [responsive]="true"
             [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="scroll"  [tableStyle]="{'min-width': '50rem'}"   >
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th style="width: 3rem">
-                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                        </th>
-                        <th pSortableColumn="id">
-                            Id <p-sortIcon field="id"></p-sortIcon>
-                        </th>
-                        <th pSortableColumn="trackerImei">
-                            Imei <p-sortIcon field="trackerImei"></p-sortIcon>
-                        </th>
-                        <th pSortableColumn="trackerSimCardId['simCardIccid']">
-                            Iccid <p-sortIcon field="trackerSimCardId['simCardIccid']"></p-sortIcon>
-                        </th>
-                        <th pSortableColumn="trackerSimCardId['simCardNumber']">
-                            Número <p-sortIcon field="trackerSimCardId['simCardNumber']"></p-sortIcon>
-                        </th>
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <th>
-                        </th>
-                        <th>
-                            <p-columnFilter type="numeric"  [showButtons]="false" field="id"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
-                        </th>
-                        <th>
-                            <p-columnFilter type="text" field="trackerImei" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
-                        </th>
-                        <th>
-                            <p-columnFilter type="text" field="trackerSimCardId['simCardIccid']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
-                        </th>
-                        <th>
-                            <p-columnFilter type="text" field="trackerSimCardId['simCardNumber']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
-                        </th>
-                        <th></th>
-                    </tr> 
-                </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 3rem">
+                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                    </th>
+                    <th pSortableColumn="trackerId">
+                        ID<p-sortIcon field="trackerId"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="trackerImei">
+                       IMEI <p-sortIcon field="trackerImei"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="trackerSimCardIccid">
+                        ICCID   <p-sortIcon field="trackerSimCardIccid"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="trackerSimCardNumber">
+                        NUMERO   <p-sortIcon field="trackerSimCardNumber"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="trackerCategory">
+                        CATEGORIA <p-sortIcon field="trackerCategory"></p-sortIcon>
+                     </th>
+                     <th pSortableColumn="trackerCostumerName">
+                        CLIENTE   <p-sortIcon field="trackerCostumerName"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="trackerStatus">
+                       ESTADO  <p-sortIcon field="trackerStatus"></p-sortIcon>
+                    </th>
+                    
+
+                    <th></th>
+                </tr>
+                <tr>
+                    <th>
+                    </th>
+                    <th>
+                        <p-columnFilter type="numeric"  [showButtons]="false" field="trackerId"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter type="text" field="trackerImei" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                    </th>
+                  <th>
+                        <p-columnFilter type="text" field="trackerSimCardIccid" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter type="text" field="trackerSimCardNumber" [matchModeOptions]="matchModeOptionsNumber" ></p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter type="text" field="trackerCategory" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter type="text" field="trackerCostumerName" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter type="text" field="trackerStatus" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                    </th>
+                   
+                    <th></th>
+                </tr> 
+            </ng-template>
                 <ng-template pTemplate="body" let-tracker>
                     <tr>
                         <td>
                             <p-tableCheckbox [value]="tracker"></p-tableCheckbox>
                         </td>
-                        <td>{{tracker.id}}</td>
+                        <td>{{tracker.trackerId}}</td>
                         <td>{{tracker.trackerImei}}</td>
-                        <td>{{tracker.trackerSimCardId['simCardIccid']}}</td>
-                        <td>{{tracker.trackerSimCardId['simCardNumber']}}</td>
+                        <td>{{tracker.trackerSimCardIccid }}</td>
+                        <td>{{tracker.trackerSimCardNumber}}</td>
+                        <td>{{tracker.trackerCategory | uppercase }}</td>
+                        <td>{{tracker.trackerCostumerName }}</td>                      
+                        <td>{{tracker.trackerStatus | uppercase}}</td>
                     
                         <td>
                             <div class="flex">
@@ -130,4 +154,3 @@
         </div>
     </div>
 </div>
-

@@ -5,7 +5,6 @@ export interface DependencyPhone {
     dependencyPhoneDependencyContactId: string,
     dependencyPhoneNumber : string,
     dependencyPhoneExtension:string,
-    dependencyPhoneCommunicationChannel: string,
     dependencyPhoneActive:boolean
 }
 

@@ -7,10 +7,11 @@ import { MiscService } from 'src/app/service/misc.service';
 import { catchError  } from 'rxjs/operators';
 import { forkJoin, of } from 'rxjs';
 import { ReportService }    from 'src/app/service/report.service';
-
+import { DatePipe, CurrencyPipe, formatDate  } from '@angular/common';
 
 @Component({
-    templateUrl: './list.saleOrder.component.html'
+    templateUrl: './list.saleOrder.component.html',
+    providers: [DatePipe, CurrencyPipe]
 })
 export class ListSaleOrderComponent implements OnInit, OnDestroy {
     selectedSaleOrders: SaleOrder[] = [];
@@ -38,6 +39,7 @@ export class ListSaleOrderComponent implements OnInit, OnDestroy {
         private quotationSaleService:QuotationSaleService,
         private messageService: MessageService, 
         private cdref:ChangeDetectorRef,
+        private datePipe: DatePipe,
         private confirmationService: ConfirmationService ) 
 	{
         
@@ -258,6 +260,35 @@ export class ListSaleOrderComponent implements OnInit, OnDestroy {
             this.miscService.endRquest();
         });            
     }
-	
+
+    cancelSaleOrder(idSale) {
+        this.confirmationService.confirm({
+            message: '¿Seguro que desea cancelar esta orden de venta?',
+            header :'Cancelar orden de venta' ,
+            icon: 'pi pi-info-circle',
+            acceptLabel: 'Aceptar',
+            rejectLabel:'Cancelar',
+            accept: () => {
+                this.confirmationCancel(idSale);
+            }
+        });
+    }
+
+	confirmationCancel(idSale){
+        console.log("aca tambien");
+        this.miscService.startRequest();
+        this.saleOrderService.update({
+        'id': idSale.toString(), 
+        'saleOrderStatus': 'cancelada',
+        'saleOrderCancelDate': this.datePipe.transform(new Date(), 'yyyy-MM-dd  HH:mm:ss'),
+        }).subscribe(data =>{
+            this.messageService.add({ severity: 'success', key: 'msg',summary: 'Operación exitosa', detail: 'Orden de venta cancelada exitosamente', life: 3000 });
+            this.miscService.endRquest();
+            this.list();
+        },  (err : any)=> {
+            this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error', detail:err.error.error , life: 3000 });
+            this.miscService.endRquest(); 
+        });
+    }
   
 }

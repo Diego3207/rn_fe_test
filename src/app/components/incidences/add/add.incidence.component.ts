@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ElementRef, ViewChildren, NgZone, QueryList } from '@angular/core';
 import { IncidenceService } from 'src/app/service/incidence.service';
 import { CostumerService } from 'src/app/service/costumer.service';
 import { DependencyPhoneService } from 'src/app/service/dependencyPhone.service';
@@ -6,6 +6,8 @@ import { IncidenceEvidenceService } from 'src/app/service/indicenceEvidence.serv
 import { IncidenceInvolvedDeviceService } from 'src/app/service/incidenceInvolvedDevice.service';
 import { MonitoringDeviceService } from 'src/app/service/monitoringDevice.service';
 import { IncidenceCoordinationService } from 'src/app/service/incidenceCoordination.service';
+import { IncidencePeopleService } from 'src/app/service/incidencePeople.service';
+import { IncidenceVehicleService } from 'src/app/service/incidenceVehicle.service';
 import { IncidenceBackDeviceService } from 'src/app/service/incidenceBackDevice.service';
 import { Router } from '@angular/router';
 import { MiscService } from 'src/app/service/misc.service';
@@ -26,7 +28,7 @@ import { MonitoringDevice } from 'src/app/api/monitoringDevice';
 })
 
 export class AddIncidenceComponent {
-
+  @ViewChildren('search') searchElementRef!: QueryList<ElementRef>;
   @ViewChild('fileUpload') fileUpload: FileUpload;
   files : any[] = [];
   uploadedFiles: any[] = []; //lista de archivos por cargar
@@ -34,11 +36,14 @@ export class AddIncidenceComponent {
   listCostumer: any[] = [];
   listSource: any[] = [];
   listType: any[] = [];
+  listValidation: any[] = [];
   listDevices: any[] = [];
   listFilteredDevices: any[] = [];
   selectedRegister: MonitoringDevice[] = [];
   listPhones :any[]= [];
-
+  listChannels :any[]= [];
+  listGenre :any[]= [];
+  items :any[]= [];
 
 
   form: FormGroup | any;
@@ -49,7 +54,10 @@ export class AddIncidenceComponent {
     private incidenceInvolvedDeviceService: IncidenceInvolvedDeviceService,
     private incidenceBackDeviceService: IncidenceBackDeviceService,
     private monitoringDeviceService: MonitoringDeviceService,
-    private incidenceCoordinationService :  IncidenceCoordinationService ,
+    private incidenceCoordinationService :  IncidenceCoordinationService,
+    private incidencePeopleService :  IncidencePeopleService,
+    private incidenceVehicleService :  IncidenceVehicleService,
+    private ngZone: NgZone,
     private costumerService: CostumerService,
     private messageService: MessageService,
     private miscService: MiscService,
@@ -61,8 +69,32 @@ export class AddIncidenceComponent {
   }
 
   ngAfterViewInit(): void {
+    this.searchElementRef.changes.subscribe(inputs => {
+      // Detecta cuando se agregan nuevos elementos al FormArray
+
+      inputs.forEach((input,index) => {
+        // Aquí puedes realizar cualquier acción que desees para los nuevos elementos creados.
+        console.log(index);
+        // Binding autocomplete to search input control
+        let autocomplete = new google.maps.places.Autocomplete(
+            input.nativeElement
+        );
     
-  }
+        autocomplete.addListener('place_changed', () => {
+            this.ngZone.run(() => {
+            //get the place result
+            let place: google.maps.places.PlaceResult = autocomplete.getPlace();
+    
+            //verify result
+            if (place.geometry === undefined || place.geometry === null) {
+                return;
+            }
+            this.form.controls.incidencePeoples.controls[index].controls.incidencePeopleAddress.setValue(place.formatted_address);
+            });
+        }); 
+      });
+    });
+} 
 
   ngOnInit(): void {
     const formOptions: AbstractControlOptions = { validators: Validators.nullValidator };
@@ -72,16 +104,17 @@ export class AddIncidenceComponent {
       incidenceStartDateAttention: this.datePipe.transform(new Date(), 'yyyy-MM-dd  HH:mm:ss'), // se pone al cargar el formulario
       incidenceInformantData:[null, [Validators.required]],
       incidenceType: [null, [Validators.required]],
+      incidenceTypeDescription: ' ',
       incidenceQuadrant: '',
       incidenceStartDate: [null, [Validators.required]],
       incidenceEndDate: [null, [Validators.required]],
       incidenceCoordinations: this.formBuilder.array([],[Validators.required,Validators.minLength(1),this.isCoordinationDuplicated]),
       incidenceDescription:[null,Validators.required],
-      incidenceDescriptionInvolvedPeople: '',
-      incidenceDescriptionInvolvedVehicles: '',
+      incidenceVehicles: this.formBuilder.array([]),
+      incidencePeoples: this.formBuilder.array([]),
       incidenceObservation: '',
       incidenceUserAttendedId:[this.sessionService.getUserId(),[Validators.required]],
-      incidenceIsPositive: [null, [Validators.required]],
+      incidenceValidationEvent: [null, [Validators.required]],
       incidenceEndDateAttention: null, // se pone al momento de guardar la incidencia
       
     }, formOptions);
@@ -99,11 +132,66 @@ export class AddIncidenceComponent {
       {label:'Personal del centro de monitoreo',value:'monitoreo'},
       {label:'Cliente',value:'cliente'}
     ];
+    this.listGenre = [ 
+      {label:'Femenino',value:'femenino'},
+      {label:'Masculino',value:'masculino'},
+      {label:'No especificado',value:'no especificado'}
+    ];
     this.listType = [ 
       {label:'Operativa',value:'operativa'},
       {label:'Preventiva',value:'preventiva'},
-      {label:'Informativa',value:'informativa'}
+      {label:'Informativa',value:'informativa'},
+      {label:'Robo de activo',value:'robo de activo'}
     ];
+    this.listValidation = [ 
+      {label:'Positivo',value:'positivo'},
+      {label:'Falso positivo',value:'falso positivo'},
+      {label:'No corroborado',value:'no corroborado'},
+      {label:'Activo con servicio activo',value:'activo'},
+      {label:'Activo con servicio inactivo',value:'inactivo'}
+    ];
+    this.listChannels = [ 
+      {label:'Llamada Telefónica',value:'llamada'},
+      {label:'WhatsApp',value:'whatsapp'},
+      {label:'Telegram',value:'telegram'},
+      {label:'SMS',value:'sms'},
+      {label:'Correo Electrónico',value:'email'}
+    ];
+
+    this.items = [
+      { name: 'Aguascalientes'},
+      { name: 'Baja California'},
+      { name: 'Baja California Sur'},
+      { name: 'Campeche'},
+      { name: 'CDMX'},
+      { name: 'Coahuila'},
+      { name: 'Colima'},
+      { name: 'Chiapas'},
+      { name: 'Chihuahua'},
+      { name: 'Durango'},
+      { name: 'Guanajuato'},
+      { name: 'Guerrero'},
+      { name: 'Hidalgo'},
+      { name: 'Jalisco'},
+      { name: 'México'},
+      { name: 'Michoacán'},
+      { name: 'Morelos'},
+      { name: 'Nayarit'},
+      { name: 'Nuevo León'},
+      { name: 'Oaxaca'},
+      { name: 'Puebla'},
+      { name: 'Querétaro'},
+      { name: 'Quintana Roo'},
+      { name: 'San Luis Potosí'},
+      { name: 'Sinaloa'},
+      { name: 'Sonora'},
+      { name: 'Tabasco'},
+      { name: 'Tamaulipas'},
+      { name: 'Tlaxcala'},
+      { name: 'Veracruz'},
+      { name: 'Yucatán'},
+      { name: 'Zacatecas'}
+    ];  
 
     this.list();
   }
@@ -121,27 +209,80 @@ export class AddIncidenceComponent {
     }
     this.save();
   }
+
   newCoordinationArray() 
   {
     return this.formBuilder.group({
         
-        incidenceCoordinationDependencyPhoneId:[null,[Validators.required]]
+        incidenceCoordinationDependencyPhoneId:[null,[Validators.required]],
+        incidenceCoordinationCommunicationChannel:[null,[Validators.required]]
+    });
+  }
+
+  newPeopleArray() 
+  {
+    return this.formBuilder.group({
+        incidencePeopleName: ' ',   
+        incidencePeopleGenre: 'no especificado',
+        incidencePeopleAge: 0, 
+        incidencePeopleBirthDate: null, 
+        incidencePeopleBirthPlace: ' ',
+        incidencePeopleSigns: ' ',
+        incidencePeopleAddress: ' ',
+    });
+  }
+
+  newVehicleArray() 
+  {
+    return this.formBuilder.group({
+        incidenceVehicleBrand:' ',   
+        incidenceVehicleModel: ' ',
+        incidenceVehiclePlateNumber: ' ',
+        incidenceVehicleColor: ' ',
+        incidenceVehicleOthers: ' '
     });
   }
   
   infoCoordinationsArray(): FormArray {
     return this.form.get('incidenceCoordinations') as FormArray;
   }
+
+  infoPeoplesArray(): FormArray {
+    return this.form.get('incidencePeoples') as FormArray;
+  }
+
+  infoVehiclesArray(): FormArray {
+    return this.form.get('incidenceVehicles') as FormArray;
+  }
   
-  addRow()
-  {
-      this.infoCoordinationsArray().push(this.newCoordinationArray());
-         
+  addRow(type){
+    switch (type) {
+        case 'coordination':
+            this.infoCoordinationsArray().push(this.newCoordinationArray());  
+            break;
+        case 'people':
+            this.infoPeoplesArray().push(this.newPeopleArray()); 
+            break;
+        case 'vehicle':
+            this.infoVehiclesArray().push(this.newVehicleArray()); 
+            break;
+      }
   }
-  removeRow(index:number)
-  {
-      this.infoCoordinationsArray().removeAt(index); 
+
+  removeRow(type,index:number){
+      switch (type) {
+          case 'coordination':
+            this.infoCoordinationsArray().removeAt(index); 
+              break;
+          case 'people':                
+              this.infoPeoplesArray().removeAt(index); 
+              break;
+          case 'vehicle':
+              this.infoVehiclesArray().removeAt(index);
+              break;
+      }
   }
+
   isCoordinationDuplicated(control: FormArray ) 
   {
       const uniqueValues = new Set();
@@ -375,14 +516,52 @@ export class AddIncidenceComponent {
           actions.push(ptt);
         });
         }
+      
+      //Guarda las coordinaciones
        if (this.form.value['incidenceCoordinations'].length > 0){
 
           this.form.value['incidenceCoordinations'].forEach(obj => { 
             
-            obj['incidenceCoordinationIncidenceId'] =  (data['newId']).toString();;
+            obj['incidenceCoordinationIncidenceId'] =  (data['newId']).toString();
             obj['incidenceCoordinationDependencyPhoneId'] = obj['incidenceCoordinationDependencyPhoneId'].toString();
+            obj['incidenceCoordinationCommunicationChannel'] = obj['incidenceCoordinationCommunicationChannel'];
 
             const ptt = this.incidenceCoordinationService.create(obj).pipe(
+                catchError((error) => {
+                    throw this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al guardar telefono ",detail:  error.error.error });
+                    return of(null);
+                })
+            );		
+            actions.push(ptt);
+          });
+        }
+
+        //Guarda las personas involucradas
+        if (this.form.value['incidencePeoples'].length > 0){
+
+          this.form.value['incidencePeoples'].forEach(obj => { 
+            
+            obj['incidencePeopleIncidenceId'] =  (data['newId']).toString();
+            obj['incidencePeopleBirthDate'] = this.datePipe.transform(obj['incidencePeopleBirthDate'], 'yyyy-MM-dd');
+
+            const ptt = this.incidencePeopleService.create(obj).pipe(
+                catchError((error) => {
+                    throw this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al guardar telefono ",detail:  error.error.error });
+                    return of(null);
+                })
+            );		
+            actions.push(ptt);
+          });
+        }
+
+        //Guarda los vehiculos involucrados
+        if (this.form.value['incidenceVehicles'].length > 0){
+
+          this.form.value['incidenceVehicles'].forEach(obj => { 
+            
+            obj['incidenceVehicleIncidenceId'] =  (data['newId']).toString();
+
+            const ptt = this.incidenceVehicleService.create(obj).pipe(
                 catchError((error) => {
                     throw this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al guardar telefono ",detail:  error.error.error });
                     return of(null);
@@ -466,7 +645,7 @@ export class AddIncidenceComponent {
         }
         
         //Agregamos los datos de phones
-        let labelx = x.dependencyPhoneDependencyId['dependencyDescription']+" / Tel: "+ x.dependencyPhoneNumber +" / Via: "+x.dependencyPhoneCommunicationChannel;
+        let labelx = x.dependencyPhoneDependencyId['dependencyDescription']+" / Tel: "+ x.dependencyPhoneNumber;
         let phone = {label:labelx, value:x.id };
           nuevoObjeto[x.dependencyPhoneDependencyId['dependencyDependencyCategoryId']['dependencyCatergoryDescription']].phones.push(phone);
         

@@ -107,6 +107,7 @@
                         <td>
                             <div class="flex">
                                 <button pTooltip="Reanudar Orden de venta" *ngIf="saleOrder.saleOrderStatus == 'nueva' || saleOrder.saleOrderStatus == 'pendiente' " [routerLink]="['/saleOrders/resume/', saleOrder.id]" pButton pRipple icon="pi pi-arrow-circle-up" class="p-button-rounded p-button-help  p-button-text  p-mr-4" ></button>
+                                <!--<button pButton pRipple pTooltip="Cancelar Venta"  *ngIf="saleOrder.saleOrderStatus == 'terminada' " icon="pi pi-times-circle" class="p-button-rounded p-button-warning  p-button-text p-mr-3" (click)="cancelSaleOrder(saleOrder.id)" ></button>-->
                                 <button pTooltip="Generar PDF" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-secondary  p-button-text  p-mr-4" (click)="importPDF(saleOrder)" ></button>
                                 <button pTooltip="Eliminar orden de venta" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-text" (click)="delete(2,saleOrder)"></button>
                             </div>

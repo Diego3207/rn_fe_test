@@ -21,7 +21,7 @@ import { ImageModule } from 'primeng/image';
 import { TableModule } from 'primeng/table';
 import { DividerModule } from 'primeng/divider';
 import { ChipModule } from 'primeng/chip';
-
+import { InputNumberModule } from 'primeng/inputnumber';
 
 
 @NgModule({
@@ -32,7 +32,7 @@ import { ChipModule } from 'primeng/chip';
 		ButtonModule,
 		InputTextModule,
 		ToastModule,
-
+		InputNumberModule,
 		ToastModule,
 		RippleModule,
 		RadioButtonModule,

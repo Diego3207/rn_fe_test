@@ -123,7 +123,6 @@ export class EditDependencyComponent implements OnInit, OnDestroy {
             dependencyPhoneNumber: [null,[Validators.required]],
             dependencyPhoneExtension: ['',[Validators.maxLength(50)]],
             dependencyPhoneHaveContact: false,
-            dependencyPhoneCommunicationChannel: [null,[Validators.required,Validators.maxLength(150)]],
             //dependencyPhoneContact: this.formBuilder.array([]),
             //dependencyPhoneContact:  this.newPhoneContact() ,
             dependencyPhoneContact: this.formBuilder.array([this.newPhoneContact()]),

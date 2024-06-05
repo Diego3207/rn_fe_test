@@ -10,6 +10,7 @@ import { QuotationSaleProductService } from 'src/app/service/quotationSaleProduc
 import { QuotationSalePackageService } from 'src/app/service/quotationSalePackage.service';
 import { QuotationSaleServiceService } from 'src/app/service/quotationSaleService.service';
 import { QuotationSaleRecordService } from 'src/app/service/quotationSaleRecord.service';
+import { SaleOrderRenovationService } from 'src/app/service/saleOrderRenovation.service';
 import { MiscService } from 'src/app/service/misc.service';
 import { MessageService  } from 'primeng/api';
 import { AbstractControlOptions, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
@@ -47,6 +48,7 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
     idSaleOrder: number;
     form: FormGroup | any;
     formGroup: FormGroup | undefined;
+    dateRenovation:string;
    
     constructor(
         private formBuilder: FormBuilder,
@@ -62,6 +64,7 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
         private quotationSalePackageService:QuotationSalePackageService,
         private quotationSaleServiceService:QuotationSaleServiceService,
         private quotationSaleRecordService: QuotationSaleRecordService,
+        private saleOrderRenovationService: SaleOrderRenovationService,
         private ngZone: NgZone,
         private route: ActivatedRoute,
         private datePipe: DatePipe,
@@ -96,7 +99,7 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
       this.form = this.formBuilder.group
       ({
         id:[this.id, Validators.required],
-        saleOrderQuotationSaleId: [null,[Validators.required]],
+        saleOrderQuotationSaleId: [{value:null, disabled:true}, [Validators.required]],
         saleOrderDate: [null,[Validators.required]],
         saleOrderShippingDate: [null,[Validators.required]],
         saleOrderShippingAddress: [null,[Validators.required]],
@@ -111,6 +114,15 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
       {
         this.getFilter(selectedValue);
       });
+
+      this.form.get("saleOrderShippingDate").valueChanges.subscribe(selectedDate => 
+        {
+          this.listServices.forEach(e => {
+              if(e.temporalityQuantity != null || 0 ){
+                  this.getDateRenovation(e.temporalityQuantity,e.temporality,selectedDate);
+              }
+          });
+        });
 
     }
 
@@ -134,6 +146,21 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
       this.router.navigate(['/saleOrders']);
     }
 
+    getDateRenovation(quantity, temporality, date:Date){
+      console.log(quantity, temporality, date);
+        let dateShopping = new Date(date)
+        switch (temporality) {
+            case 'año':
+                this.dateRenovation =  this.datePipe.transform(dateShopping.setFullYear(dateShopping.getFullYear() + quantity), 'yyyy-MM-dd HH:mm:ss');
+                break;
+            case 'mes':
+                this.dateRenovation = this.datePipe.transform(dateShopping.setMonth(dateShopping.getMonth() + quantity), 'yyyy-MM-dd HH:mm:ss');
+                break;
+           case 'dia':
+                this.dateRenovation = this.datePipe.transform(dateShopping.setDate(dateShopping.getDate() + quantity), 'yyyy-MM-dd HH:mm:ss');
+                break;
+        }
+    }
 
     private save()  
     {
@@ -143,22 +170,39 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
       //Iteramos el objeto de formulario para guardar el valor en las variables arriba declaradas
       Object.keys(this.form.value).forEach(element => 
       {
-        propertiesSaleOrder[element] = this.form.value[element];                       
+        propertiesSaleOrder[element] = this.form.value[element];           
       });
 
        //Parseamos los id a string y actualizamos el formato de fecha
-       propertiesSaleOrder['saleOrderQuotationSaleId'] = (propertiesSaleOrder['saleOrderQuotationSaleId']).toString();
+        if (propertiesSaleOrder['saleOrderQuotationSaleId']) propertiesSaleOrder['saleOrderQuotationSaleId'] = (propertiesSaleOrder['saleOrderQuotationSaleId']).toString();
         if (propertiesSaleOrder['saleOrderCfdiId']) propertiesSaleOrder['saleOrderCfdiId'] = (propertiesSaleOrder['saleOrderCfdiId']).toString();
         if (propertiesSaleOrder['saleOrderPayWayId']) propertiesSaleOrder['saleOrderPayWayId'] = (propertiesSaleOrder['saleOrderPayWayId']).toString();
         if (propertiesSaleOrder['saleOrderPayMethodId']) propertiesSaleOrder['saleOrderPayMethodId'] = (propertiesSaleOrder['saleOrderPayMethodId']).toString();
         if (propertiesSaleOrder['saleOrderDate']) propertiesSaleOrder['saleOrderDate'] = this.datePipe.transform(propertiesSaleOrder['saleOrderDate'], 'yyyy-MM-dd HH:mm:ss');
         if (propertiesSaleOrder['saleOrderShippingDate']) propertiesSaleOrder['saleOrderShippingDate'] = this.datePipe.transform(propertiesSaleOrder['saleOrderShippingDate'], 'yyyy-MM-dd HH:mm:ss');
        
+      //Método para agregar elementos a la tabla de renovacion
+      /////////////////////
+      if(this.dateRenovation != null) {
+      let renovationProperties = {};
+      renovationProperties['saleOrderRenovationDateRenovation'] = this.dateRenovation;
+      renovationProperties['saleOrderRenovationSaleOrdertId'] = (propertiesSaleOrder['id']).toString();
+
+      this.saleOrderRenovationService.create(renovationProperties)
+        .subscribe(data => {
+          this.miscService.endRquest();
+          this.messageService.add({ severity: 'success', key: 'msg', summary: 'Operación exitosa', life: 3000 })
+        }, (err: any) => {
+          this.messageService.add({ severity: 'error', key: 'msg', summary: 'Error', detail: 'Problemas al guardar', life: 3000 });
+          this.miscService.endRquest();
+        });
+
+      /////////
+      }
       //Actualizamos la orden de Compra
       this.saleOrderService.update(propertiesSaleOrder)
       .subscribe(data => 
       {
-        //Método para actualizar la tabla de suministros con los ID seleccionados
         let actions = [];
 
         //Método para actualizar la tabla de suministros con los ID seleccionados
@@ -189,8 +233,6 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
         Object.keys(result).forEach(key => 
         {
           let listRecord = this.quantities.filter(obj => obj.quotationSaleRecordProductId.id == key && obj.quotationSaleRecordSupplyId == null);
-          
-          console.log(listRecord);
 
           for(var i=0; i < result[key].length ; i++)
           {
@@ -290,12 +332,12 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
         //Envia las cotizaciones
         if(dataQuotationSales != null)
         {                    
-            dataQuotationSales['object'].forEach(element => {
-              /*if(element['quotationSaleStatus'] == 'nueva')
-              {*/
-                this.listQuotationSale.push({'label': "ID:"+ element['quotation_sale_id']+" "+ element['quotation_sale_description'],'value': element['quotation_sale_id'].toString()});
-              //}
-            });
+          dataQuotationSales['object'].forEach(element => {
+            /*if(element['quotationSaleStatus'] == 'nueva')
+            {*/
+              this.listQuotationSale.push({'label': "ID:"+ element['quotation_sale_id']+" "+ element['quotation_sale_description'],'value': element['quotation_sale_id'].toString()});
+            //}
+          });
         }
        
         //Envia los Cfids
@@ -323,15 +365,14 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
         //Llena el formulario
         if(dataSaleOrderInfo != null)
         {
-          console.log(dataSaleOrderInfo.id);
           this.idSaleOrder = dataSaleOrderInfo.id;
           dataSaleOrderInfo.saleOrderShippingDate = new Date(dataSaleOrderInfo.saleOrderShippingDate);
           dataSaleOrderInfo.saleOrderDate = new Date(dataSaleOrderInfo.saleOrderDate);
-          this.listQuotationSale.push({label: dataSaleOrderInfo['saleOrderQuotationSaleId']['quotationSaleDescription'] , value : dataSaleOrderInfo['saleOrderQuotationSaleId']['id'] }); 
+          this.listQuotationSale.push({label: dataSaleOrderInfo['saleOrderQuotationSaleId']['quotationSaleFolio'] , value : dataSaleOrderInfo['saleOrderQuotationSaleId']['id'] }); 
           dataSaleOrderInfo['saleOrderQuotationSaleId'] = dataSaleOrderInfo['saleOrderQuotationSaleId']['id'];
           
           this.supplies = dataSaleOrderInfo.saleOrderSupplies;
-          
+          console.log(dataSaleOrderInfo);
           await this.form.patchValue(dataSaleOrderInfo); //Agrega la data a los inputs
         }
 
@@ -421,6 +462,8 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
 
               if(dataServices != null )
               { 
+                
+                  console.log(dataServices);
                   dataServices['object']['records'].forEach(element => {
                     this.listServices.push({
                       "id": element.quotationSaleServiceServiceId.id , 
@@ -457,6 +500,7 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
                   
               }  
 
+
             this.miscService.endRquest(); 
           },
 
@@ -477,7 +521,6 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
 
   //traer los suministros de la orden de venta
   getAllProducts(value, quantity){
-    console.log(this.selectedRegister);
     this.visible = true;
     this.size = quantity;
     if(value != null ) {
@@ -547,4 +590,6 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
         this.miscService.endRquest(); 
     });
   }
+
+
 }

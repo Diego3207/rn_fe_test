@@ -75,8 +75,15 @@
         <div class="card p-fluid">
             <form [formGroup]="form" (ngSubmit)="onSubmit()">
                 <div class="field">
-                    <label class="font-semibold">Cotización</label>
-                    <p-dropdown [options]="listQuotationSale" appendTo="body" formControlName="saleOrderQuotationSaleId" optionValue="value" optionLabel="label"></p-dropdown>
+                    <label class="font-semibold">Folio</label>
+                    <p-dropdown 
+                        [options]="listQuotationSale" 
+                        appendTo="body" 
+                        formControlName="saleOrderQuotationSaleId" 
+                        [disabled]="true"
+                        optionValue="value" 
+                        optionLabel="label">
+                    </p-dropdown>
                     <div *ngIf="form.controls.saleOrderQuotationSaleId.invalid">
                         <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.saleOrderQuotationSaleId.errors?.['required']" >*Campo requerido</small>
                         <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.saleOrderQuotationSaleId.errors?.['maxlength']" >*Longitud máxima 100</small>
@@ -117,6 +124,7 @@
                         <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.saleOrderShippingDate.errors?.['maxlength']" >*Longitud máxima 100</small>
                     </div>
                 </div>
+
                 <div class="field">
                     <label for="saleOrderShippingAddress" class="font-semibold">Dirección de Envío</label>
                     <input 

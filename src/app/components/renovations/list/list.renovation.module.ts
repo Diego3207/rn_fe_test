@@ -12,6 +12,7 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { DialogModule } from 'primeng/dialog';
 import { RippleModule } from 'primeng/ripple';
 import { ToastModule } from 'primeng/toast';
+import { TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
 	imports: [
@@ -24,6 +25,7 @@ import { ToastModule } from 'primeng/toast';
 		DialogModule,
 		RippleModule,
 		ToastModule,
+		TooltipModule
 	],
 	declarations: [ListRenovationComponent],
 	providers: [ProviderService, MessageService, ConfirmationService]

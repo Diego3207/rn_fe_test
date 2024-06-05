@@ -33,7 +33,23 @@
                             <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.trackerImei.errors?.['maxlength']" >*Longitud máxima 16</small>
                         </div>
                     </div>
-                    
+                    <div class="field">
+                        <label for="line" class="font-semibold">Categoria</label>
+                        <p-dropdown 
+                            formControlName="trackerCategory" 
+                            [options]="listTrackerCategories" 
+                            placeholder="Seleciona una opción"
+                            [filter]="true" 
+                            filterBy="label" 
+                            [showClear]="true"  
+                            optionLabel="label" 
+                            optionValue="value">
+                        </p-dropdown>
+                        <div *ngIf="form.controls.trackerCategory.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.trackerCategory.errors?.['required']" >*Campo requerido</small>
+                        </div>
+                    </div>
+
                     <div class="field">
                         <label for="line" class="font-semibold">Tarjeta SIM</label>
                         <p-dropdown 
