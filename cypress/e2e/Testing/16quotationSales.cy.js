@@ -78,6 +78,7 @@ describe("Cotizaciones de venta",function(){
         cy.get('.col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label').last().click();
         //escribir "PAQUETE"
         cy.get('.p-dropdown-filter')
+        .type(this.variable.paqueteValida)
         .type("{downarrow}")
         .wait(200)
         .type("{enter}");
@@ -94,6 +95,12 @@ describe("Cotizaciones de venta",function(){
         cy.wait("@añadir").its("response.statusCode").should("eq",201);
         cy.url().should("eq","http://localhost:4200/#/quotationSales");
         cy.wait(sleepLargo)
+        //id de la tabla del listado de ubicaciones
+        cy.get('[psortablecolumn="quotationSaleFolio"]').click();
+        //primer fila, columna nombre
+        cy.get('.p-datatable-tbody > tr.ng-star-inserted > :nth-child(3)')
+        .contains("3 Cámaras JC450")
+        .should("be.visible");
     })
     it("Aceptar cotizacion valida",function(){
         //módulo administración
@@ -112,6 +119,12 @@ describe("Cotizaciones de venta",function(){
         cy.get('.p-confirm-dialog-accept').click();
         cy.url().should("eq","http://localhost:4200/#/quotationSales");
         cy.wait(sleepLargo)
+        //id de la tabla del listado de ubicaciones
+        cy.get('[psortablecolumn="quotationSaleFolio"]').click();
+        //primer fila, columna nombre
+        cy.get('.p-datatable-tbody > :nth-child(1) > :nth-child(7)')
+        .contains("aceptada")
+        .should("be.visible");
     })
     it("Crear cotizacion de venta inválida por exceso de caracteres y duplicados",function(){
         //módulo administración

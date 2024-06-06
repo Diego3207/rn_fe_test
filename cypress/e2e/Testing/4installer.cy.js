@@ -30,6 +30,12 @@ describe("Instaladores",function(){
         cy.wait("@añadir").its("response.statusCode").should("eq",201);
         cy.url().should("eq","http://localhost:4200/#/installers");
         cy.wait(sleepLargo)
+        //id de la tabla del listado de ubicaciones
+        cy.get('.p-highlight > .p-element').click();
+        //primer fila, columna nombre
+        cy.get('.p-datatable-tbody > :nth-child(1) > :nth-child(3)')
+        .contains("Gerardo Bravo")
+        .should("be.visible");
     })
     it("Añadir Instalador inválido por exceso de caracteres",function(){
        //módulo instalaciones

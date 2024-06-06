@@ -29,12 +29,19 @@ describe("Ubicaciones", function () {
         //telefono
         cy.get('.ng-untouched > .p-inputtext').type(this.location.telefonoValido);
         cy.wait(sleepLargo)
+        //cy.intercept("POST", "http://localhost:1337/location/add").as("añadirUbicacion");
         cy.intercept("POST", "http://localhost:1337/location/add").as("añadirUbicacion");
         //boton guardar
         cy.get('.p-button-primary').click();
         cy.wait("@añadirUbicacion").its("response.statusCode").should("eq", 201);
         cy.url().should("eq", "http://localhost:4200/#/location");
         cy.wait(sleepLargo)
+        //id de la tabla del listado de ubicaciones
+        cy.get('.p-highlight > .p-element').click();
+        //primer fila, columna nombre
+        cy.get('.p-datatable-tbody > :nth-child(1) > :nth-child(4)')
+        .contains("Oficina")
+        .should("be.visible");
     });
     it("Añadir ubicación inválido por exceso de caracteres", function () {
         //sección añadir producto

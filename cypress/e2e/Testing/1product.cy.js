@@ -61,6 +61,12 @@ describe("Añadir producto", function () {
         cy.wait("@añadirProducto").its("response.statusCode").should("eq", 201);
         cy.url().should("eq", "http://localhost:4200/#/product");
         cy.wait(sleepLargo);
+        //id de la tabla del listado de ubicaciones
+        cy.get('.p-highlight > .p-element').click();
+        //primer fila, columna nombre
+        cy.get('.p-datatable-tbody > :nth-child(1) > :nth-child(4)')
+        .contains("Telcel")
+        .should("be.visible");
     });
     
     it("Añadir Producto inválido por campos sin llenar", function () {

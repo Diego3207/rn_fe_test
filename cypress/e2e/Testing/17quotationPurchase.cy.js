@@ -70,6 +70,12 @@ describe("Cotizaciones de compra",function(){
         cy.wait("@añadirProducto").its("response.statusCode").should("eq", 201);
         cy.url().should("eq", "http://localhost:4200/#/quotationPurchases");
         cy.wait(sleepLargo);
+        //id de la tabla del listado de ubicaciones
+        cy.get('.p-highlight > .p-element').click();
+        //primer fila, columna nombre
+        cy.get('.p-datatable-tbody > tr.ng-star-inserted > :nth-child(3)')
+        .contains("1 chip")
+        .should("be.visible");
     })
     it("Procesar cotización de compra valida",function(){
         //módulo administración
@@ -78,8 +84,8 @@ describe("Cotizaciones de compra",function(){
         cy.get('.p-element.ng-tns-c21-20').click();
         //compra
         cy.get('.ng-tns-c21-24.ng-tns-c21-20 > .p-element').click();
-        //estatus
-        cy.get('[psortablecolumn="quotationPurchaseStatus"]').click();
+        //id
+        cy.get('.p-highlight > .p-element').click();
         //procesar
         cy.get('.flex > .p-button-success > .p-button-icon').first().click();
         //tiempo de entrega
@@ -100,6 +106,12 @@ describe("Cotizaciones de compra",function(){
         cy.wait("@añadirProducto").its("response.statusCode").should("eq", 200);
         cy.url().should("eq", "http://localhost:4200/#/quotationPurchases");
         cy.wait(sleepLargo);
+        //id de la tabla del listado de ubicaciones
+        cy.get('.p-highlight > .p-element').click();
+        //primer fila, columna nombre
+        cy.get('.p-datatable-tbody > :nth-child(1) > :nth-child(5)')
+        .contains("aceptada")
+        .should("be.visible");
     })
     it("Crear cotizacion de compra invalida por campos vacíos",function(){
         //módulo administración

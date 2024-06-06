@@ -40,6 +40,12 @@ describe("Dispositivos",function(){
         cy.wait("@añadir").its("response.statusCode").should("eq",201);
         cy.url().should("eq","http://localhost:4200/#/monitoringDevices");
         cy.wait(sleepLargo);
+        //id de la tabla del listado de ubicaciones
+        cy.get('.p-highlight > .p-element').click();
+        //primer fila, columna nombre
+        cy.get('.p-datatable-tbody > .ng-star-inserted > :nth-child(3)')
+        .contains("AT")
+        .should("be.visible");
     })
     it("Añadir dispositivo inválido por exceso de caracteres",function(){
         //módulo operativo

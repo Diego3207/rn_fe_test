@@ -79,6 +79,12 @@ describe("Orden de compra",function(){
         cy.wait("@añadirProducto").its("response.statusCode").should("eq", 201);
         cy.url().should("eq", "http://localhost:4200/#/orders");
         cy.wait(sleepLargo);
+        //id de la tabla del listado de ubicaciones
+        cy.get('.p-highlight > .p-element').click();
+        //primer fila, columna nombre
+        cy.get('.p-datatable-tbody > :nth-child(1) > :nth-child(3)')
+        .contains("1 chip")
+        .should("be.visible");
     })
     it("Abastecer compra válida con 1 producto y 1 servicio",function(){
         //?CREAR ORDEN DE COMPRA
@@ -132,6 +138,12 @@ describe("Orden de compra",function(){
         cy.wait(sleepLargo);
         cy.url().should("eq", "http://localhost:4200/#/orders");
         cy.wait(sleepLargo);
+        //id de la tabla del listado de ubicaciones
+        cy.get('.p-highlight > .p-element').click();
+        //primer fila, columna nombre
+        cy.get('.p-datatable-tbody > tr.ng-star-inserted > :nth-child(5)')
+        .contains("abastecida")
+        .should("be.visible");
     })
     it("Crear orden de compra invalida por exceso de caracteres y por productos duplicados",function(){
         //?CREAR ORDEN DE COMPRA
