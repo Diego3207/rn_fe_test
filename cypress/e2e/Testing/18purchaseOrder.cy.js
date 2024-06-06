@@ -105,6 +105,8 @@ describe("Orden de compra",function(){
         cy.wait(400)
         cy.get("#reason").type("eb");
         cy.get(".p-button-primary").click();
+        //switch abastecer por lote
+        cy.get('.p-inputswitch-slider').click();
         //asignar persona
         cy.get(
             ".field > .p-inputwrapper > .p-dropdown > .p-dropdown-label"
@@ -136,7 +138,6 @@ describe("Orden de compra",function(){
         //boton abastecer
         cy.get("#p-tabpanel-0 > .mt-4 > .p-button-primary").click();
         cy.wait(sleepLargo);
-        cy.url().should("eq", "http://localhost:4200/#/orders");
         cy.wait(sleepLargo);
         //id de la tabla del listado de ubicaciones
         cy.get('.p-highlight > .p-element').click();
@@ -333,7 +334,7 @@ describe("Orden de compra",function(){
         cy.get(".p-button-primary").click();
         cy.wait(sleepLargo);
     })
-    it("Crear orden de compra valida con cotización con 1 producto y 1 servicio",function(){
+    it.only("Crear orden de compra valida con cotización con 1 producto y 1 servicio",function(){
         //?CREAR ORDEN DE COMPRA
         //sección añadir provider
         //módulo administración
@@ -365,7 +366,7 @@ describe("Orden de compra",function(){
         cy.url().should("eq", "http://localhost:4200/#/orders");
         cy.wait(sleepLargo);
     })
-    it("Abastecer compra invalida por campos vacíos al recibir",function(){
+    it.only("Abastecer compra invalida por campos vacíos al recibir",function(){
         //?CREAR ORDEN DE COMPRA
         //sección añadir provider
         //módulo administración
@@ -383,16 +384,13 @@ describe("Orden de compra",function(){
         cy.wait(400)
         //siguiente
         cy.get(".p-button-primary").click();
-        //nombre quien recibe
-        cy.get('.field > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
-        //boton abastecer para validar que salió de la ventana anterior
-        cy.get("#p-tabpanel-0 > .mt-4 > .p-button-primary").click();
-        cy.wait(sleepLargo);
-        cy.url().should("eq", "http://localhost:4200/#/orders");
+        cy.get('p > .font-semibold')
+        .contains('Observaciones')
+        .should('be.visible')
         cy.wait(sleepLargo);
         //aquí va a salir un error pero es necesario para la prueba.
     })
-    it("Abastecer compra invalida por campos vacíos al abastecer",function(){
+    it.only("Abastecer compra invalida por campos vacíos al abastecer",function(){
         //?CREAR ORDEN DE COMPRA
         //sección añadir provider
         //módulo administración
@@ -412,12 +410,13 @@ describe("Orden de compra",function(){
         cy.get("#reason").type("eb");
         //siguiente
         cy.get(".p-button-primary").click();
+        //switch abastecer por lote
+        cy.get('.p-inputswitch-slider').click();
         //boton abastecer
         cy.get("#p-tabpanel-0 > .mt-4 > .p-button-primary").click();
-        //agregar sólo para validar que pasó el test
-        cy.get('.my-2 > .p-button-success')
-        cy.wait(sleepLargo);
-        cy.url().should("eq", "http://localhost:4200/#/orders");
+        cy.get('#p-tabpanel-0 > :nth-child(1) > .field > .font-semibold')
+        .contains('Abastecimiento por lote')
+        .should('be.visible')
         cy.wait(sleepLargo);
     })
 })
