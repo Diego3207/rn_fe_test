@@ -83,8 +83,8 @@ describe("Orden de venta",function(){
         cy.get('.p-element.ng-tns-c21-21').click();
         //de compra
         cy.get('.ng-tns-c21-26.ng-tns-c21-21 > .p-element').click();
-        //estado
-        cy.get('[psortablecolumn="purchaseOrderStatus"]').click();
+        //id
+        cy.get(':nth-child(1) > .p-highlight').click();
         //boton abastecer
         cy.get(":nth-child(1) > :nth-child(6) > .flex > .p-button-success")
             .first()

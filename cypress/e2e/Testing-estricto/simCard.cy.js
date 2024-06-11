@@ -64,8 +64,8 @@ describe("Sim card",function(){
         cy.get('.p-element.ng-tns-c21-21').click();
         //de compra
         cy.get('.ng-tns-c21-26.ng-tns-c21-21 > .p-element').click();
-        //estado
-        cy.get('[psortablecolumn="purchaseOrderStatus"]').click();
+        //id
+        cy.get(':nth-child(1) > .p-highlight').click();
         //boton abastecer
         cy.get(":nth-child(1) > :nth-child(6) > .flex > .p-button-success")
             .first()
@@ -74,6 +74,8 @@ describe("Sim card",function(){
         cy.wait(400)
         cy.get("#reason").type("eb");
         cy.get(".p-button-primary").click();
+        //switch abastecer por lote
+        cy.get('.p-inputswitch-slider').click();
         //asignar persona
         cy.get(
             ".field > .p-inputwrapper > .p-dropdown > .p-dropdown-label"
