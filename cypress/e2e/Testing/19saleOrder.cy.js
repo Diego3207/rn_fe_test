@@ -10,7 +10,7 @@ describe("Orden de venta",function(){
         cy.get("#password").type("123456");
         cy.get('[label="CONTINUAR"]').click();
     })
-    it("Crear orden de compra valida sin cotización con 2 producto: 2 sim card, 4 qbit",function(){
+    it("Crear orden de compra valida sin cotización con 2 producto: sim card, qbit",function(){
         //?CREAR ORDEN DE COMPRA
         //sección añadir provider
         //módulo administración
@@ -74,7 +74,7 @@ describe("Orden de venta",function(){
         cy.get(".p-button-primary").click();
         cy.wait(sleepLargo);
     })
-    it("Abastecer compra válida con 1 producto y 1 servicio",function(){
+    it("Abastecer compra válida con 2 productos",function(){
         //?CREAR ORDEN DE COMPRA
         //sección añadir provider
         //módulo administración

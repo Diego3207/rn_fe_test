@@ -1,0 +1,24 @@
+CREATE 
+VIEW cruddesarrollo.view_trackers AS
+    SELECT 
+        t.tracker_id AS id,
+        t.tracker_id AS trackerId,
+        t.tracker_imei AS trackerImei,
+        IFNULL(ssc.supply_key, 'Sin asignar') AS trackerSimCardIccid,
+        IFNULL(sc.sim_card_number, 'Sin aginar') AS trackerSimCardNumber,
+        t.tracker_category AS trackerCategory,
+        IFNULL(c.costumer_name, 'Sin vender') AS trackerCostumerName,
+        t.tracker_status AS trackerStatus,
+        t.createdAt AS trackerDate,
+        '' AS createdAt,
+        '' AS updatedAt
+    FROM
+        ((((((cruddesarrollo.trackers t
+        LEFT JOIN cruddesarrollo.sim_cards sc ON ((sc.sim_card_id = t.tracker_sim_card_id)))
+        LEFT JOIN cruddesarrollo.supplies ssc ON ((ssc.supply_id = sc.sim_card_supply_id)))
+        LEFT JOIN cruddesarrollo.supplies st ON ((st.supply_id = t.tracker_supply_id)))
+        LEFT JOIN cruddesarrollo.sale_orders so ON ((so.sale_order_id = st.supply_sale_order_id)))
+        LEFT JOIN cruddesarrollo.quotation_sales qs ON ((qs.quotation_sale_id = so.sale_order_quotation_sale_id)))
+        LEFT JOIN cruddesarrollo.costumers c ON ((c.costumer_id = qs.quotation_sale_customer_id)))
+    WHERE
+        (t.tracker_active = 1)

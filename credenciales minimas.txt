@@ -156,7 +156,7 @@ insert into providers value
 
 insert into products value
 (1716311578288,1716311578288,1,"Telcel","sim card","N/A",2000.00,36,"dia","Defectos de fabricación","circulante",1,2),
-(1716414276362,1716414276362,2,"Concox","qbit","N/A",2000.00,36,"dia","Defectos de fabricación","circulante",1,2);
+(1716414276362,1716414276362,2,"Concox","qbit","N/A",2000.00,36,"dia","Defectos de fabricación","circulante",1,1);
 
 insert into services value
 (1716491236412,1716491236412,1,"Material e instalación",100,"dia",1500.00,1);
@@ -171,8 +171,8 @@ insert into provider_services value
 (1716591506934,1716591506934,1,1,"año",1,1,3,1);
 
 insert into provider_products value
-(1716508612942,1716591506929,1,1,"año",1,1,3,1),
-(1716591506932,1716591506932,2,1,"año",1,1,3,2);
+(1716508612942,1718133704643,1,1,"año",1,1,3,3),
+(1716591506932,1718133704644,2,1,"año",1,1,3,2);
 
 insert into provider_locations value
 (1716508612937,1716591506927,1,"sdf","R. Guilherme - Costa e Silva, Joinville - SC, 89218-501, Brasil",1,3);
