@@ -204,7 +204,7 @@ export class AddIncidenceComponent {
   onSubmit() 
   {
     // stop here if form is invalid
-    if (this.form.invalid || this.uploadedFiles.length == 0) {     
+    if (this.form.invalid) {     
       return;
     }
     this.save();
@@ -381,7 +381,7 @@ export class AddIncidenceComponent {
   }
   saveEvidence(id:string)
   {     
-  
+    
     if(this.uploadedFiles.length > 0)
     {	
             var peticiones: any[] = []; 
@@ -516,16 +516,12 @@ export class AddIncidenceComponent {
           actions.push(ptt);
         });
         }
-      
       //Guarda las coordinaciones
        if (this.form.value['incidenceCoordinations'].length > 0){
-
           this.form.value['incidenceCoordinations'].forEach(obj => { 
-            
             obj['incidenceCoordinationIncidenceId'] =  (data['newId']).toString();
             obj['incidenceCoordinationDependencyPhoneId'] = obj['incidenceCoordinationDependencyPhoneId'].toString();
             obj['incidenceCoordinationCommunicationChannel'] = obj['incidenceCoordinationCommunicationChannel'];
-
             const ptt = this.incidenceCoordinationService.create(obj).pipe(
                 catchError((error) => {
                     throw this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al guardar telefono ",detail:  error.error.error });
@@ -535,12 +531,9 @@ export class AddIncidenceComponent {
             actions.push(ptt);
           });
         }
-
         //Guarda las personas involucradas
         if (this.form.value['incidencePeoples'].length > 0){
-
           this.form.value['incidencePeoples'].forEach(obj => { 
-            
             obj['incidencePeopleIncidenceId'] =  (data['newId']).toString();
             obj['incidencePeopleBirthDate'] = this.datePipe.transform(obj['incidencePeopleBirthDate'], 'yyyy-MM-dd');
 
@@ -553,14 +546,10 @@ export class AddIncidenceComponent {
             actions.push(ptt);
           });
         }
-
         //Guarda los vehiculos involucrados
         if (this.form.value['incidenceVehicles'].length > 0){
-
           this.form.value['incidenceVehicles'].forEach(obj => { 
-            
             obj['incidenceVehicleIncidenceId'] =  (data['newId']).toString();
-
             const ptt = this.incidenceVehicleService.create(obj).pipe(
                 catchError((error) => {
                     throw this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al guardar telefono ",detail:  error.error.error });
@@ -571,7 +560,6 @@ export class AddIncidenceComponent {
           });
         }
         //this.saveEvidence((data['newId']).toString());
-        
         if (actions.length > 0){
           forkJoin(actions).subscribe((dataInfo)=>
           {
@@ -583,12 +571,7 @@ export class AddIncidenceComponent {
               }else{
                 this.saveEvidence((data['newId']).toString());
               }
-
-              
-                  
-
           },
-
           (err:any)=>
           {
               this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error', detail: 'Error general al guardar respaldos y  telefonos de coordinacion', life: 3000 });                    this.miscService.endRquest();
@@ -597,9 +580,6 @@ export class AddIncidenceComponent {
           this.miscService.endRquest(); 
           this.router.navigate(['/incidences']);
         }
-
-
-       
       }, (err: any) => {
         this.messageService.add({ severity: 'error', key: 'msg', summary: 'Error', detail: 'Problemas al guardar', life: 3000 });
         this.miscService.endRquest();

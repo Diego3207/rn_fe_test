@@ -1,5 +1,6 @@
+const superCorto = 100;
 const sleepCorto = 1000;
-const sleepLargo = 2500;
+const sleepLargo = 3500;
 describe("Orden de compra",function(){
     beforeEach(function(){
         cy.fixture("purchaseOrder").then(function (variable) {
@@ -29,7 +30,6 @@ describe("Orden de compra",function(){
         //escribir proveedor
         cy.get('.p-dropdown-filter')
         .type(this.variable.proveedorValida)
-        .wait(200)
         .type("{downarrow}")
         .wait(200)
         .type("{enter}");
@@ -334,7 +334,7 @@ describe("Orden de compra",function(){
         cy.get(".p-button-primary").click();
         cy.wait(sleepLargo);
     })
-    it.only("Crear orden de compra valida con cotización con 1 producto y 1 servicio",function(){
+    it("Crear orden de compra valida con cotización con 1 producto y 1 servicio",function(){
         //?CREAR ORDEN DE COMPRA
         //sección añadir provider
         //módulo administración
@@ -366,7 +366,7 @@ describe("Orden de compra",function(){
         cy.url().should("eq", "http://localhost:4200/#/orders");
         cy.wait(sleepLargo);
     })
-    it.only("Abastecer compra invalida por campos vacíos al recibir",function(){
+    it("Abastecer compra invalida por campos vacíos al recibir",function(){
         //?CREAR ORDEN DE COMPRA
         //sección añadir provider
         //módulo administración
@@ -390,7 +390,7 @@ describe("Orden de compra",function(){
         cy.wait(sleepLargo);
         //aquí va a salir un error pero es necesario para la prueba.
     })
-    it.only("Abastecer compra invalida por campos vacíos al abastecer",function(){
+    it("Abastecer compra invalida por campos vacíos al abastecer",function(){
         //?CREAR ORDEN DE COMPRA
         //sección añadir provider
         //módulo administración

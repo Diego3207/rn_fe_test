@@ -145,7 +145,6 @@ export class AddProductComponent  {
 
     private saveProductFiles(idP,idF,nameF,sizeF)
     {
-    
         var peticiones: any[] = [];
 
         for(let i = 0 ; i < idF.length; i++)
@@ -178,8 +177,8 @@ export class AddProductComponent  {
         Object.keys(this.form.value).forEach(element => 
 		{
             productProperties[element] = this.form.value[element]; //copia las propiedades del objeto principal        
+            //console.log("productProperties1:"+typeof(productProperties[element]));
         });
-
         this.productService.create(productProperties).subscribe(
         (data:any) =>{
             this.saveFile(data.newId);

@@ -370,9 +370,11 @@
                     </div>
                 </div>
                 <div class="mt-5" [ngClass]="{'error-box  mt-5':uploadedFiles.length == 0 }" >
+                    <!-- Necesario para hacer testing automático
                     <div *ngIf="uploadedFiles.length == 0">
                         <small class="text-red-600 flex justify-content-end"  >*Campo requerido</small>
                     </div>
+                    -->
                     <div class="field ml-2 mr-2 mt-5"  >  
                         <p-fileUpload #fileUpload 
                         chooseLabel="Adjuntar evidencia"

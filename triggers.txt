@@ -1,6 +1,6 @@
 Tabla supplies
 AFTER INSERT
-CREATE DEFINER=`rn_admin`@`localhost` TRIGGER `supplies_AFTER_INSERT` AFTER INSERT ON `supplies` FOR EACH ROW BEGIN
+CREATE DEFINER=`root`@`localhost` TRIGGER `supplies_AFTER_INSERT` AFTER INSERT ON `supplies` FOR EACH ROW BEGIN
  declare quantityProducts  integer default 0;
  declare quantitySupplies  integer default 0;
  
@@ -25,7 +25,7 @@ CREATE DEFINER=`rn_admin`@`localhost` TRIGGER `supplies_AFTER_INSERT` AFTER INSE
 END
 
 AFTER UPDATE
-CREATE DEFINER=`rn_admin`@`localhost` TRIGGER `supplies_AFTER_UPDATE` AFTER UPDATE ON `supplies` FOR EACH ROW BEGIN
+CREATE DEFINER=`root`@`localhost` TRIGGER `supplies_AFTER_UPDATE` AFTER UPDATE ON `supplies` FOR EACH ROW BEGIN
 declare quantityProducts  integer default 0;
 declare quantitySupplies  integer default 0;
 declare quotationSaleId  integer default 0;
@@ -58,7 +58,7 @@ END IF;
 END
 
 BEFORE DELETE
-CREATE DEFINER=`rn_admin`@`localhost` TRIGGER `supplies_BEFORE_DELETE` BEFORE DELETE ON `supplies` FOR EACH ROW BEGIN
+CREATE DEFINER=`root`@`localhost` TRIGGER `supplies_BEFORE_DELETE` BEFORE DELETE ON `supplies` FOR EACH ROW BEGIN
 	UPDATE purchase_orders SET purchase_order_quotation_purchase_id = 0 WHERE purchase_order_quotation_purchase_id = OLD.supply_purchase_order_id;
 	UPDATE quotation_purchases SET quotation_purchase_status = 'nueva' WHERE quotation_purchase_id = 
     (select purchase_order_quotation_purchase_id from purchase_orders where purchase_order_quotation_purchase_id = OLD.supply_purchase_order_id);

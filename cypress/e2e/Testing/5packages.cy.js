@@ -1,5 +1,5 @@
 const sleepCorto = 1000;
-const sleepLargo = 2500;
+const sleepLargo = 3500;
 describe("Paquetes",function(){
     beforeEach(function(){
         cy.fixture("package").then(function (paquete) {

@@ -1,5 +1,4 @@
-CREATE 
-VIEW cruddesarrollo.view_trackers AS
+CREATE VIEW cruddesarrollo.view_trackers AS
     SELECT 
         t.tracker_id AS id,
         t.tracker_id AS trackerId,

@@ -117,7 +117,6 @@ export class ListProductComponent implements OnInit, OnDestroy {
     {
         this.productService.getAll(this.limit,this.page,this.sort)
         .subscribe((data: any)=>{
-            console.log(data);
             if(data != null)
             {
                 this.products = data['object']['records'];                    
@@ -140,10 +139,20 @@ export class ListProductComponent implements OnInit, OnDestroy {
             }
             this.miscService.endRquest();
         });
+        console.log("limit: "+this.limit);
+        console.log("page: "+this.page);
+        console.log("sort: "+this.sort);
     }
     
     filtrer(texto: any)
     {
+        console.log(texto);
+        console.log("--------------------------");
+        console.log(this.limit);
+        console.log("--------------------------");
+        console.log(this.page);
+        console.log("--------------------------");
+        console.log(this.sort);
         this.productService.getFilter(texto,this.limit, this.page,this.sort) // le sumo +1 ya que en sails le resto uno a la pagina (en sails quitare ese -1 )
         .subscribe((data: any)=>{
             if(data != null){
@@ -154,6 +163,7 @@ export class ListProductComponent implements OnInit, OnDestroy {
                 this.messageService.add({severity:'warn', key: 'msg',summary:'Sin registros',life: 3000});
             }
             this.miscService.endRquest();
+            console.log("texto: "+texto);
 
         },  (err : any) => {
             // Entra aquí si el servicio entrega un código http de error EJ: 404, 

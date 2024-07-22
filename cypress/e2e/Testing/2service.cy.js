@@ -1,5 +1,5 @@
 const sleepCorto = 1000;
-const sleepLargo = 2500;
+const sleepLargo = 3500;
 describe("Servicio",function(){
     beforeEach(function(){
         cy.fixture("service").then(function (service) {

@@ -54,6 +54,8 @@ describe("Incidencias",function(){
         //descripcion hechos
         cy.get(':nth-child(8) > :nth-child(2) > .ng-untouched').type(this.incidences.descripcionValido);
         cy.wait(sleepLargo);
+        //agregar personas
+        cy.get(':nth-child(9) > .flex > p-button.p-element > .p-ripple').click();
         //personas involucradas
         cy.get(':nth-child(9) > div > .ng-untouched').type(this.incidences.personaInvolucradaValido);
         //vehiculos involucrados
@@ -233,7 +235,7 @@ describe("Incidencias",function(){
         cy.wait("@añadir").its("response.statusCode").should("eq",201);
         cy.url().should("eq","http://localhost:4200/#/incidences");
     })
-    it.only("Añadir Incidencia inválido por enviar equipo sin falla",function(){
+    it("Añadir Incidencia inválido por enviar equipo sin falla",function(){
         //módulo operativo
         cy.get('.p-element.ng-tns-c21-44').click();
         //módulo incidencias

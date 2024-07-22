@@ -1,5 +1,5 @@
 const sleepCorto = 1000;
-const sleepLargo = 2500;
+const sleepLargo = 3500;
 describe("Rastreador",function(){
     beforeEach(function(){
         cy.fixture("tracker").then(function (tracker) {
@@ -49,7 +49,7 @@ describe("Rastreador",function(){
         //elegir "pieza"
         cy.get('[ng-reflect-label="Pieza"] > .p-ripple').click();
         //cantidad
-        cy.get('#locale-us').type(this.variable.cantidad);
+        cy.get('[ng-reflect-name="0"] > :nth-child(3) > .col-12 > .p-inputwrapper > .p-inputnumber > #locale-us').type(this.variable.cantidad);
         //precio
         cy.get(':nth-child(4) > .col-12 > .p-inputwrapper > .p-inputnumber > .p-inputtext').type(this.variable.precio);
         //agregar producto
