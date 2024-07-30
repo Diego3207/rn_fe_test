@@ -1,12 +1,12 @@
 <p-confirmDialog  #confirm [style]="{width: '50vw'}" rejectButtonStyleClass="p-button-outlined"></p-confirmDialog>
 <p-dialog [(visible)]="visible" header="Proceso de importacion" [modal]="true" [style]="{ width: '50vw' }"  [closable]="false" [draggable]="false" [resizable]="false">
-    <p-fileUpload #fileUpload 
-        name="file" 
+    <p-fileUpload #fileUpload
+        name="file"
         chooseLabel="Seleccionar archivo"
         cancelLabel ="Cancelar"
         uploadLabel = "Enviar"
         (onBeforeUpload) = "sendData($event)"
-        [multiple]="false" 
+        [multiple]="false"
         (onClear)="clearCSV()"
         accept=".csv"
         (onSelect)="importData($event)"
@@ -14,7 +14,7 @@
         cancelStyleClass ="p-button-secondary"
         [maxFileSize]=100000000>
         <ng-template pTemplate="content">
-           
+
                 <small>*Adjuntar archivo</small>
                 <table cellspacing="0" cellpadding="0">
                     <tr>
@@ -27,11 +27,11 @@
                     </tr>
                   </table>
                     <div></div>
-                   
-                
-          
+
+
+
         </ng-template>
-    </p-fileUpload> 
+    </p-fileUpload>
     <ng-template pTemplate="footer">
         <p-button icon="pi pi-times" (click)="visible = false" label="Cerrar" styleClass="p-button-outlined p-button-primary"></p-button>
 
@@ -48,27 +48,28 @@
                         <button pButton pRipple label="Importar" icon="pi pi-upload" class="p-button-warning  m-2" (click)="showDialog()"></button>
                         <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success m-2" [routerLink]="['/simCards/add/']"></button>
                         <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger m-2" (click)="delete(1,null)" [disabled]="!selectedSimCards || !selectedSimCards.length"></button>
+                        <button pButton pRipple label="Activar/Desactivar" icon="pi pi-power-off" class="p-button-info m-2" (click)="activarDesactivar(1,null)" [disabled]="!selectedSimCards || !selectedSimCards.length"></button>
                     </div>
                 </ng-template>
             </p-toolbar>
 
-            <p-table #dt 
-            [value]="simCards"  
+            <p-table #dt
+            [value]="simCards"
             [lazy]="true"
             [resetPageOnSort]="false"
             [multiSortMeta]="[{field: 'id', order: 1}]"
-            sortMode="multiple" 
-            (onLazyLoad)="load($event)" 
+            sortMode="multiple"
+            (onLazyLoad)="load($event)"
             [lazyLoadOnInit]="true"
-            [paginator]="true" 
+            [paginator]="true"
             [totalRecords]="totalRows"
-            [rowsPerPageOptions]="[10,25,50]" 
-            [loading]="loading"    
+            [rowsPerPageOptions]="[10,25,50]"
+            [loading]="loading"
             [showCurrentPageReport]="true"
             currentPageReportTemplate="{{ getPageRange(page, limit, totalRows) }}"
             [(selection)]="selectedSimCards" selectionMode="multiple"
             [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="scroll" [breakpoint]="'760px'" [tableStyle]="{'minx-width': '50rem'}">
-                
+
                 <ng-template pTemplate="header">
                     <tr>
                         <th>
@@ -81,7 +82,7 @@
                             ID<p-sortIcon field="id"></p-sortIcon>
                         </th>
                         <th >
-                            ICCID 
+                            ICCID
                         </th>
                         <th pSortableColumn="simCardNumber">
                             NÚMERO <p-sortIcon field="simCardNumber"></p-sortIcon>
@@ -95,6 +96,9 @@
                         <th pSortableColumn="simCardStatus">
                             ESTADO <p-sortIcon field="simCardStatus"></p-sortIcon>
                         </th>
+                        <th >
+                            CARRIER STATUS
+                        </th>
                         <th>
                             <!-- Espacio para que se vea bien las columnas -->
                         </th>
@@ -107,30 +111,33 @@
                             <!-- Espacio para que se vea bien las columnas -->
                         </th>
                         <th>
-                            <p-columnFilter type="numeric"  [showButtons]="false" field="id"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
+                            <p-columnFilter type="numeric"  [showButtons]="false" field="id" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="simCard.simCardSupplyId['supplyKey']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="simCard.simCardSupplyId['supplyKey']" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="simCardNumber" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="simCardNumber"  [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="simCardTsp" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="simCardTsp" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="simCardServicePlan" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="simCardServicePlan" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="simCardStatus" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="simCardStatus" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            
                         </th>
                         <th>
                             <!-- Espacio para que se vea bien las columnas -->
                         </th>
-                    </tr> 
+                    </tr>
                 </ng-template>
 
-                <ng-template pTemplate="body" let-simCard let-expanded="expanded"> 
+                <ng-template pTemplate="body" let-simCard let-expanded="expanded">
                     <tr>
                         <td>
 							<button type="button" pButton pRipple [pRowToggler]="simCard" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
@@ -144,8 +151,10 @@
                         <td>{{simCard.simCardTsp}}</td>
                         <td>{{simCard.simCardServicePlan}}</td>
                         <td>{{simCard.simCardStatus}}</td>
+                        <td>{{simCard.jasperStatus}}</td>
                         <td>
                             <div class="flex">
+                                <button [pTooltip]="simCard.jasperStatus == 'Desactivada' ? 'Activar SIM Card' : 'Desactivar SIM Card'" pButton pRipple icon="pi pi-power-off" class="p-button-rounded p-button-text" [ngClass]="simCard.jasperStatus == 'Desactivada' ? 'p-button-success' : 'p-button-danger'" (click)="activarDesactivar(2, simCard)"></button>
                                 <button pTooltip="Editar SIM Card" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-info p-button-text" [routerLink]="['/simCards/edit/', simCard.id]"></button>
                                 <button pTooltip="Eliminar SIM Card" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-text" (click)="delete(2,simCard)"></button>
                             </div>

@@ -48,7 +48,7 @@ export class AddProviderComponent  {
 
           inputs.forEach((input,index) => {
             // Aquí puedes realizar cualquier acción que desees para los nuevos elementos creados.
-            console.log(index);
+            //console.log(index);
             // Binding autocomplete to search input control
             let autocomplete = new google.maps.places.Autocomplete(
                 input.nativeElement
@@ -127,7 +127,7 @@ export class AddProviderComponent  {
     onSubmit() 
 	{
         if (this.form.invalid ) {
-            console.log(this.form);
+            //console.log(this.form);
             this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error',  detail:'Revisar formulario', life: 3000 });
 
             return;
@@ -269,6 +269,7 @@ export class AddProviderComponent  {
             
         });
        
+
         this.providerService.create(provider)
         .subscribe(data =>{
             const actions = [];
@@ -319,6 +320,7 @@ export class AddProviderComponent  {
             
             this.form.value['providerServices'].forEach(service => {
                 
+                console.log(service);
                 service['providerServiceProviderId'] = (data['newId']).toString();
                 service['providerServiceServiceId'] = (service['providerServiceServiceId']).toString();
                 const ptt = this.providerServiceService.create(service).pipe(

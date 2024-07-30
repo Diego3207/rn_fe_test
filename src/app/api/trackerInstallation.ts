@@ -9,6 +9,7 @@ export interface TrackerInstallation {
     trackerInstallationAccessories : string,
     trackerInstallationLocation : string,
     trackerInstallationIsUninstalled: boolean,
+    trackerInstallationObservation: null,
     trackerInstallationActive: number,
 }
 

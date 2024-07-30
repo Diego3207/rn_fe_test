@@ -47,8 +47,8 @@
                             <ng-template pTemplate="body" let-quotationPurchaseProducts  let-i="rowIndex">
                                 <tr   [pEditableRow]="quotationPurchaseProducts" [formGroupName]="i">
                                     <td>
-                                        <div class="">
-                                            <p-dropdown [style]="{'max-width':'17rem'}" [options]="listProducts" [pTooltip]="getLabel(form.controls.quotationPurchaseProducts.controls[i].controls.quotationPurchaseProductProductId.value,'product')"  [filter]="true" appendTo="body" placeholder="Selecciona uno" formControlName="quotationPurchaseProductProductId"   optionValue="value" filterBy="labelFilter"   optionLabel="label"   [showClear]="true" >
+                                        <div class="col-12">
+                                            <p-dropdown  [options]="listProducts" [pTooltip]="getLabel(form.controls.quotationPurchaseProducts.controls[i].controls.quotationPurchaseProductProductId.value,'product')"  [filter]="true" appendTo="body" placeholder="Selecciona uno" formControlName="quotationPurchaseProductProductId"   optionValue="value" filterBy="labelFilter"   optionLabel="label"   [showClear]="true" >
                                                 <ng-template let-product pTemplate="item">
                                                    
                                                         <div>{{ product.label }}</div>
@@ -111,8 +111,8 @@
                             <ng-template pTemplate="body" let-quotationPurchaseServices  let-i="rowIndex">
                                 <tr   [pEditableRow]="quotationPurchaseServices" [formGroupName]="i">
                                     <td>
-                                        <div class="">
-                                            <p-dropdown  [options]="listServices"  [filter]="true" appendTo="body" placeholder="Selecciona uno" formControlName="quotationPurchaseServiceServiceId"   optionValue="value"  optionLabel="label"  [pTooltip]="getLabel(form.controls.quotationPurchaseServices.controls[i].controls.quotationPurchaseServiceServiceId.value,'service')" [style]="{'max-width':'17rem'}" [showClear]="true" ></p-dropdown>
+                                        <div class="col-12">
+                                            <p-dropdown  [options]="listServices"  [filter]="true" appendTo="body" placeholder="Selecciona uno" formControlName="quotationPurchaseServiceServiceId"   optionValue="value"  optionLabel="label"  [pTooltip]="getLabel(form.controls.quotationPurchaseServices.controls[i].controls.quotationPurchaseServiceServiceId.value,'service')"  [showClear]="true" ></p-dropdown>
                                             <div *ngIf="form.controls.quotationPurchaseServices.controls[i].controls.quotationPurchaseServiceServiceId.invalid">
                                                 <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.quotationPurchaseServices.controls[i].controls.quotationPurchaseServiceServiceId.errors?.['required']">*Campo requerido</small>
                                             </div>

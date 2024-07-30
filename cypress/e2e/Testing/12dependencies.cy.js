@@ -36,15 +36,6 @@ describe("Directorio/Dependencias",function(){
         cy.get('#number > .p-inputtext').type(this.dependencies.numeroValido);
         //extension
         cy.get('#extension').type(this.dependencies.extensionValido);
-        /*
-        //via comunicacion
-        cy.get('.p-autocomplete-input')
-        .type(this.dependencies.viaComunicacionValido)
-        .wait(200)
-        .type("{downarrow}")
-        .wait(200)
-        .type("{enter}");
-        */
         //ligado a una persona
         cy.get('.p-checkbox-box').click();
         //nombre

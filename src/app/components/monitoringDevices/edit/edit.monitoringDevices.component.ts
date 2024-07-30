@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MiscService } from 'src/app/service/misc.service';
 import { MonitoringDeviceService } from 'src/app/service/monitoringDevice.service';
 import { CostumerService } from 'src/app/service/costumer.service';
+import { OperationalAreaService } from 'src/app/service/operationalArea.service';
 import { ActivatedRoute,Router } from '@angular/router';
 import { ConfirmationService, MessageService  } from 'primeng/api';
 import { AbstractControlOptions, FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -18,10 +19,13 @@ export class EditMonitoringDeviceComponent implements OnInit, OnDestroy {
     form: FormGroup | any;
     typeDevices: any[] =  [];
     listCostumers: any[] = [];
+    listOperationalAreas : any[] = [];
+
     constructor(
         private formBuilder: FormBuilder,
         private monitoringDeviceService: MonitoringDeviceService, 
         private costumerService: CostumerService,
+        private operationalAreaService: OperationalAreaService,
         private messageService: MessageService, 
         private miscService:MiscService,
         private route: ActivatedRoute,
@@ -43,6 +47,7 @@ export class EditMonitoringDeviceComponent implements OnInit, OnDestroy {
             id:[this.id, Validators.required],
             monitoringDeviceName: [null, [Validators.required, Validators.maxLength(255)]],
             monitoringDeviceCostumerId: [null, Validators.required],
+            monitoringDeviceOperationalAreaId: null,
             monitoringDeviceType: [null, Validators.required],
             monitoringDeviceProvider: [null, Validators.required],
          }, formOptions);
@@ -52,12 +57,15 @@ export class EditMonitoringDeviceComponent implements OnInit, OnDestroy {
           { name: 'Panel'},
           { name: 'Sensor'},
           { name: 'Botón de Pánico'},
-        ];
-        this.monitoringDeviceService.getById(this.id)
-        .subscribe(data => {
-           this.form.patchValue(data);
-            console.log(data);
-        })		
+        ];	
+
+        this.form.get("monitoringDeviceCostumerId").valueChanges.subscribe(selectedValue => 
+          {
+            if(selectedValue != null){
+            
+              this.getFilter(selectedValue);
+            }
+          });
     }
 
     ngOnDestroy() {
@@ -90,6 +98,7 @@ export class EditMonitoringDeviceComponent implements OnInit, OnDestroy {
 
     //Parseamos los id a string
     propertiesMonitoringDevice['monitoringDeviceCostumerId'] = (propertiesMonitoringDevice['monitoringDeviceCostumerId']).toString();
+    if(propertiesMonitoringDevice['monitoringDeviceOperationalAreaId']) propertiesMonitoringDevice['monitoringDeviceOperationalAreaId'] = (propertiesMonitoringDevice['monitoringDeviceOperationalAreaId']).toString();
 
     this.monitoringDeviceService.update(propertiesMonitoringDevice)
     .subscribe(data =>
@@ -126,8 +135,16 @@ export class EditMonitoringDeviceComponent implements OnInit, OnDestroy {
         {
             dataCostumers['object']['records'].forEach(element => {
                 this.listCostumers.push({'label': element['id']+" "+ element['costumerName'],'value': element['id']});
-                console.log(this.listCostumers);
             });
+
+            //Se anida el patch value 
+            this.monitoringDeviceService.getById(this.id)
+            .subscribe(data => {
+              if(data['monitoringDeviceOperationalAreaId'] != null) data['monitoringDeviceOperationalAreaId'] = data['monitoringDeviceOperationalAreaId']['id'];
+              this.form.patchValue(data);
+            })	
+
+            console.log("listOperationalAreas -> ", this.listOperationalAreas);
         }
 
         this.miscService.endRquest(); 
@@ -140,4 +157,24 @@ export class EditMonitoringDeviceComponent implements OnInit, OnDestroy {
       });
           
   }
+
+  getFilter(value){
+    if(value != null ) {
+      this.operationalAreaService.getFilter('[{"value":"'+ value+'","matchMode":"equals","field":"operationalAreaCustomerId"}]',0,1,'[{"id":"asc"}]')
+      .subscribe( (data:any )=>
+      {            
+            this.listOperationalAreas = (data == null ? []: data['object']['records']);
+            /*for(let i=0; i < this.deviceSave.length ; i++){
+              var item = this.listMonitoringDevices.find((element) => element.id == this.deviceSave[i].ticketMonitoringdeviceMonitoringDeviceId);
+              this.selectedRegister.push(item);
+            }*/
+         
+      },
+      (err : any) =>
+      {
+          this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error al cargar listado de dispositivos ' , detail:err.message, life: 3000 });
+          this.miscService.endRquest();
+      });
+    }
+  } 
 }

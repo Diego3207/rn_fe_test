@@ -115,10 +115,6 @@
                     <div class="field">
                         <label for="saleOrderShippingDate" class="font-semibold">Fecha de contratación</label>
                         <p-calendar id="saleOrderShippingDate" formControlName="saleOrderShippingDate" [showIcon]="true"></p-calendar>
-                        <div *ngIf="form.controls.saleOrderShippingDate.invalid">
-                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.saleOrderShippingDate.errors?.['required']" >*Campo requerido</small>
-                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.saleOrderShippingDate.errors?.['maxlength']" >*Longitud máxima 100</small>
-                        </div>
                     </div>
 
                     <div class="field">

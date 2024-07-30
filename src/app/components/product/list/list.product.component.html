@@ -13,22 +13,22 @@
                 </ng-template>
             </p-toolbar>
 
-            <p-table #dt 
-            [value]="products"  
+            <p-table #dt
+            [value]="products"
             [lazy]="true"
             [resetPageOnSort]="false"
             [multiSortMeta]="[{field: 'id', order: 1}]"
-            sortMode="multiple" 
-            (onLazyLoad)="load($event)" 
+            sortMode="multiple"
+            (onLazyLoad)="load($event)"
             [lazyLoadOnInit]="true"
-            [paginator]="true" 
+            [paginator]="true"
             [totalRecords]="totalRows"
-            [rowsPerPageOptions]="[10,25,50]" 
+            [rowsPerPageOptions]="[10,25,50]"
             [showCurrentPageReport]="true"
             currentPageReportTemplate="{{ getPageRange(page, limit, totalRows) }}"
             [(selection)]="selectedProducts" selectionMode="multiple"
             [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="scroll" [breakpoint]="'760px'"  [tableStyle]="{'minx-width': '50rem'}" >
-                
+
                 <ng-template pTemplate="header">
                     <tr>
                         <th>
@@ -49,14 +49,14 @@
                         <th pSortableColumn="productDescription">
                             DESCRIPCIÓN <p-sortIcon field="productDescription"></p-sortIcon>
                         </th>
-                        <th >   <!-- 
+                        <th >   <!--
                                     PENDIENTE: calcular el dato de estatus en invetario para poder filtrar y ordenar
                                     inventoryStatus
                                 -->
-                            ESTADO 
+                            ESTADO
                         </th>
                         <th > </th>
-                       
+
                     </tr>
                    <tr>
                         <th>
@@ -66,34 +66,34 @@
                             <!-- Espacio para que se vea bien las columnas -->
                         </th>
                         <th>
-                            <p-columnFilter type="numeric"  [showButtons]="false" field="id"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
+                            <p-columnFilter type="numeric"  [showButtons]="false" field="id"  [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="productBrand" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="productBrand"  [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="productModel" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="productModel"  [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="productDescription" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="productDescription"  [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
                            <!--
-                            
-                            <p-columnFilter type="text" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter> 
+
+                            <p-columnFilter type="text" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                             -->
                         </th>
                         <th>
                             <!-- Espacio para que se vea bien las columnas -->
                         </th>
-                    </tr> 
+                    </tr>
                 </ng-template>
 
-                <ng-template pTemplate="body" let-product let-expanded="expanded"> 
+                <ng-template pTemplate="body" let-product let-expanded="expanded">
                     <tr>
                         <td>
 							<button pTooltip="Desplegar Producto" type="button" pButton pRipple [pRowToggler]="product" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
-						</td> 
+						</td>
                         <td>
                             <p-tableCheckbox [value]="product"></p-tableCheckbox>
                         </td>
@@ -101,8 +101,8 @@
                         <td>{{product.productBrand}}</td>
                         <td>{{product.productModel}}</td>
                         <td>{{product.productDescription}}</td>
-                        <td> 
-                            <p-tag value="outofstock" severity="danger"></p-tag> 
+                        <td>
+                            <p-tag value="outofstock" severity="danger"></p-tag>
                         </td>
                         <td>
                             <div class="flex">
@@ -148,11 +148,11 @@
 											<td>{{ productFile.productFileName }}</td>
                                             <td>{{ productFile.productFileSize + " KB"}} </td>
 											<td>
-                                                <a 
+                                                <a
                                                 pTooltip="Descargar archivo"
-                                                pButton pRipple class="p-button-rounded p-button-primary p-button-text" 
-                                                icon="pi pi-cloud-download" 
-                                                href="{{ fileURL+productFile.productFileDocumentation }}" 
+                                                pButton pRipple class="p-button-rounded p-button-primary p-button-text"
+                                                icon="pi pi-cloud-download"
+                                                href="{{ fileURL+productFile.productFileDocumentation }}"
                                                 download="{{ productFile.productFileName }}">
                                                 </a>
                                             </td>
@@ -172,7 +172,7 @@
 											<td colspan="12">Este producto no tiene archivos</td>
 										</tr>
 									</ng-template>
-								</p-table>								
+								</p-table>
 							</div>
 						</td>
 					</tr>

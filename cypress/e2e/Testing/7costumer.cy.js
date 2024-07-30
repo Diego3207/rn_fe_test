@@ -87,7 +87,7 @@ describe("Clientes", function () {
         cy.get('.p-highlight > .p-element').click();
         //primer fila, columna nombre
         cy.get('.p-datatable-tbody > :nth-child(1) > :nth-child(3)')
-        .contains("MATTEL")
+        .contains("Costumer")
         .should("be.visible");
     });
     it("Añadir cliente inválido por cliente duplicado con error 400", function () {

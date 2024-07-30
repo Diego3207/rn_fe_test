@@ -4,7 +4,7 @@ import { SaleOrderRenovationService } from 'src/app/service/saleOrderRenovation.
 import { AssociationService } from 'src/app/service/association.service';
 import { ConfirmationService, MessageService, LazyLoadEvent, SelectItem, FilterMatchMode  } from 'primeng/api';
 import { MiscService } from 'src/app/service/misc.service';
-import { DatePipe } from '@angular/common'; 
+import { DatePipe } from '@angular/common';
 
 @Component({
     templateUrl: './list.renovation.component.html',
@@ -17,8 +17,8 @@ export class ListRenovationComponent implements OnInit, OnDestroy {
     totalRows: number = 0;
     limit:number = 10 ;
     page:number  ;
-    sort:string = ''; 
-    search:string = ''; 
+    sort:string = '';
+    search:string = '';
     loading: boolean;
     searching: boolean;
     showButton! : boolean;
@@ -34,22 +34,22 @@ export class ListRenovationComponent implements OnInit, OnDestroy {
     constructor(
         private miscService:MiscService,
         private cdref:ChangeDetectorRef,
-        private messageService: MessageService, 
+        private messageService: MessageService,
         private datePipe: DatePipe,
         private saleOrderRenovationService: SaleOrderRenovationService,
         private associationService: AssociationService,
         private renovationService: RenovationService,
-        private confirmationService: ConfirmationService) 
+        private confirmationService: ConfirmationService)
 	{
-        
-    }
-	
 
-    ngOnInit(): void 
+    }
+
+
+    ngOnInit(): void
 	{
         this.matchModeOptionsText = [
-            { label: 'Comienza con', value: FilterMatchMode.STARTS_WITH  },
             { label: 'Contiene', value: FilterMatchMode.CONTAINS },
+            { label: 'Comienza con', value: FilterMatchMode.STARTS_WITH  },
             { label: 'Termina con', value: FilterMatchMode.ENDS_WITH},
             { label: 'Es igual', value: FilterMatchMode.EQUALS },
         ];
@@ -58,16 +58,16 @@ export class ListRenovationComponent implements OnInit, OnDestroy {
             { label: 'Es igual', value: FilterMatchMode.EQUALS },
         ];
         this.matchModeOptionsDate = [
-            { label: 'Contiene', value:  FilterMatchMode.DATE_IS  },   
-            { label: 'No contiene', value: FilterMatchMode.DATE_IS_NOT },  
-            { label: 'Antes', value: FilterMatchMode.DATE_BEFORE },  
-            { label: 'Después', value: FilterMatchMode.DATE_AFTER },           
+            { label: 'Contiene', value:  FilterMatchMode.DATE_IS  },
+            { label: 'No contiene', value: FilterMatchMode.DATE_IS_NOT },
+            { label: 'Antes', value: FilterMatchMode.DATE_BEFORE },
+            { label: 'Después', value: FilterMatchMode.DATE_AFTER },
         ];
     }
 
 
     ngOnDestroy() {
-       
+
     }
 
     load(event: LazyLoadEvent){
@@ -104,7 +104,7 @@ export class ListRenovationComponent implements OnInit, OnDestroy {
         this.search =JSON.stringify(filter);
         this.miscService.startRequest();
         if(filter.length > 0){
-            this.filtrer(this.search);
+            this.filter(this.search);
         }else{
             this.list();
             this.cdref.detectChanges();
@@ -126,11 +126,11 @@ export class ListRenovationComponent implements OnInit, OnDestroy {
             }
             this.miscService.endRquest();
         }, (err : any) => {
-            // Entra aquí si el servicio entrega un código http de error EJ: 404, 
+            // Entra aquí si el servicio entrega un código http de error EJ: 404,
             if( err.status == 416){
                 // success  info  warn  error
                 this.messageService.add({severity:'warn', key: 'msg',summary: err.error.message,life: 3000});
-            
+
             }else{
 
                 //status = 0 , cuando no esta el back arriba
@@ -139,8 +139,8 @@ export class ListRenovationComponent implements OnInit, OnDestroy {
             this.miscService.endRquest();
         });
     }
-    
-    filtrer(texto: any)
+
+    filter(texto: any)
     {
         this.renovationService.getFilter(texto,this.limit, this.page,this.sort) // le sumo +1 ya que en sails le resto uno a la pagina (en sails quitare ese -1 )
         .subscribe((data: any)=>{
@@ -155,14 +155,14 @@ export class ListRenovationComponent implements OnInit, OnDestroy {
             this.miscService.endRquest();
 
         },  (err : any) => {
-            // Entra aquí si el servicio entrega un código http de error EJ: 404, 
+            // Entra aquí si el servicio entrega un código http de error EJ: 404,
             if( err.status == 416){
                 // success  info  warn  error
                 this.messageService.add({severity:'warn', key: 'msg',summary: err.error.message,life: 3000});
-            
+
             }else{
 
-                //status = 0 , 
+                //status = 0 ,
                 this.messageService.add({severity:'error', key: 'msg', summary:  err.error.message,detail: err.name,life: 3000});
             }
             this.miscService.endRquest();
@@ -170,7 +170,7 @@ export class ListRenovationComponent implements OnInit, OnDestroy {
     }
 
     //TODO esta funcion debe ser parte de un helper
-    getPageRange(page: number, limit: number, totalRows: number) 
+    getPageRange(page: number, limit: number, totalRows: number)
     {
         if (!Number.isInteger(page) || page < 1) {
             page = 1;
@@ -190,25 +190,25 @@ export class ListRenovationComponent implements OnInit, OnDestroy {
         this.visible = false;
         //this.coordenates = null;
     }
-    
+
     delete(idRenovation:number) {
         this.confirmationService.confirm({
             message: '¿Está seguro que desea cancelar el servicio seleccionado?',
-            header :'Confirmar' ,
+            header :'CANCELAR' ,
             icon: 'pi pi-info-circle',
             acceptLabel: 'Aceptar',
             rejectLabel:'Cancelar',
             accept: () => {
-                this.cancelService(idRenovation);         
+                this.cancelService(idRenovation);
             }
         });
 
     }
 
     cancelService(idRenovation){
-        let renovationData = {};  
+        let renovationData = {};
 
-        renovationData['id']= idRenovation.toString(); 
+        renovationData['id']= idRenovation.toString();
         renovationData['saleOrderRenovationDateCancellation'] = this.datePipe.transform(new Date(), 'yyyy-MM-dd  HH:mm:ss');
         renovationData['saleOrderRenovationActive']= 0;
 
@@ -219,46 +219,51 @@ export class ListRenovationComponent implements OnInit, OnDestroy {
         this.miscService.endRquest();
         this.messageService.add({ severity: 'success',key: 'msg', summary: 'Operación exitosa',  life: 3000 });
         this.list();
-        }, (err : any) => 
+        }, (err : any) =>
         {
             this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error', detail: 'Problemas al guardar', life: 3000 });
             this.miscService.endRquest();
-        }); 
+        });
     }
 
-    renewService(idSaleOrder, quantity, temporality, date :Date){
 
-        let dateOldRenovation = new Date(date);
+    create(idSaleOrder, quantity, temporality, date :Date) {
+        this.confirmationService.confirm({
+            message: '¿Está seguro que desea renovar el servicio seleccionado?',
+            header :'RENOVAR' ,
+            icon: 'pi pi-info-circle',
+            acceptLabel: 'Aceptar',
+            rejectLabel:'Cancelar',
+            accept: () => {
+                this.createNewRenovation(idSaleOrder, quantity, temporality, date);
+            }
+        });
 
-        switch (temporality) {
-            case 'año':
-                this.dateNewRenovation =  this.datePipe.transform(dateOldRenovation.setFullYear(dateOldRenovation.getFullYear() + quantity), 'yyyy-MM-dd HH:mm:ss');
-                break;
-            case 'mes':
-                this.dateNewRenovation = this.datePipe.transform(dateOldRenovation.setMonth(dateOldRenovation.getMonth() + quantity), 'yyyy-MM-dd HH:mm:ss');
-                break;
-            case 'dia':
-                this.dateNewRenovation = this.datePipe.transform(dateOldRenovation.setDate(dateOldRenovation.getDate() + quantity), 'yyyy-MM-dd HH:mm:ss');
-                break;
+    }
+
+    createNewRenovation(idSaleOrder, quantity, temporality, date :Date){
+        let renovationData = {};
+
+        renovationData['saleOrderRenovationQuotationSaleServiceId'] = idSaleOrder.toString();
+
+        let auxDate = new Date (date);
+        //add the renewal date.
+        if(temporality == "año"){
+            renovationData['saleOrderRenovationDateRenovation'] = this.datePipe.transform(auxDate.setFullYear(auxDate.getFullYear() + quantity), 'yyyy-MM-dd HH:mm:ss').toString();
+        } else if (temporality == "mes"){
+            renovationData['saleOrderRenovationDateRenovation'] = this.datePipe.transform(auxDate.setMonth(auxDate.getMonth() + quantity), 'yyyy-MM-dd HH:mm:ss').toString();
+        } else {
+            renovationData['saleOrderRenovationDateRenovation'] =  this.datePipe.transform(auxDate.setDate(auxDate.getDate() + quantity), 'yyyy-MM-dd HH:mm:ss').toString();
         }
-
-        this.createNewRenovation(idSaleOrder);
-    }
-
-    createNewRenovation(idSaleOrder){
-        let renovationData = {};  
-
-        renovationData['saleOrderRenovationSaleOrdertId']= idSaleOrder.toString(); 
-        renovationData['saleOrderRenovationDateRenovation'] = this.dateNewRenovation;
 
         // create sale orders renovation
         this.saleOrderRenovationService.create(renovationData)
         .subscribe(data =>
         {
         this.miscService.endRquest();
-        this.messageService.add({ severity: 'success',key: 'msg', summary: 'El servicio se renovó exitosamente',  life: 3000 });
+        this.messageService.add({ severity: 'success',key: 'msg', summary: 'El servicio se renovó exitosamente.',  life: 3000 });
         this.list();
-        }, (err : any) => 
+        }, (err : any) =>
         {
             this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error', detail: 'Problemas al guardar', life: 3000 });
             this.miscService.endRquest();
@@ -266,34 +271,35 @@ export class ListRenovationComponent implements OnInit, OnDestroy {
     }
 
     clear(){
-        this.listVehicles = [];    
+        this.listVehicles = [];
     }
 
     getFilter(value){
         this.clear();
         console.log(value);
-       
-        this.miscService.startRequest(); 
+
+        this.miscService.startRequest();
         // list of vehicles assigned to the sales order
         this.associationService.getFilter('[{"value":"'+value+'","matchMode":"equals","field":"associationTrackerServiceQuotationSaleServiceId"}]',0,1,'[{"id":"asc"}]')
         .subscribe(data =>
         {
             //Save data
             data['object']['records'].forEach(element => {
+                console.log(element);
                 this.listVehicles.push({
-                    "idInstallation": element.associationTrackerServiceTrackerInstallationId.id, 
-                    "vehicleBrand": element.associationTrackerServiceVehicleInformation.vehicleBrand + " " + element.associationTrackerServiceVehicleInformation.vehicleModel,
-                    "vehiclePlate": element.associationTrackerServiceVehicleInformation.vehiclePlateNumber,
-                    "trackerImei": element.associationTrackerServiceTrackerInformation.trackerImei
+                    "idInstallation": element.idInstallation,
+                    "vehicleBrand": element.vehicleBrand + " " + element.vehicleModel,
+                    "vehiclePlate": element.vehiclePlate,
+                    "trackerImei": element.trackerImei                    
                 });
             });
-            // keep 
+            // keep
             //this.list();
             this.miscService.endRquest();
             this.messageService.add({ severity: 'success',key: 'msg', summary: 'Consulta de instalaciones exitosa',  life: 3000 });
-        }, (err : any) => 
+        }, (err : any) =>
         {
-            this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error', detail: 'Problemas al guardar', life: 3000 });
+            this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error', detail: 'Problemas en la consulta', life: 3000 });
             this.miscService.endRquest();
         });
         this.miscService.endRquest();

@@ -128,7 +128,7 @@ describe("Proveedor", function () {
         cy.get('.p-highlight > .p-element').click();
         //primer fila, columna nombre
         cy.get('.p-datatable-tbody > :nth-child(1) > :nth-child(3)')
-        .contains("ReportNow")
+        .contains("Provider")
         .should("be.visible");
     });
     it("Añadir Proveedor duplicado con error 400", function () {

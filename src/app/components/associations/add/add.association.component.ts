@@ -1,6 +1,7 @@
 import { Component, ElementRef, NgZone, ViewChild } from '@angular/core';
 import { AssociationService } from 'src/app/service/association.service';
 import { QuotationSaleServiceService } from 'src/app/service/quotationSaleService.service';
+import { RenovationService } from 'src/app/service/renovation.service';
 import { TrackerInstallationService } from 'src/app/service/trackerInstallation.service';
 import { Router } from '@angular/router';
 import { MiscService } from 'src/app/service/misc.service';
@@ -23,6 +24,7 @@ export class AddAssociationComponent {
   constructor(
     private formBuilder: FormBuilder,
     private associationService: AssociationService,
+    private renovationService: RenovationService,
     private messageService: MessageService,
     private miscService: MiscService,
     private quotationSaleServiceService: QuotationSaleServiceService, 
@@ -46,8 +48,8 @@ export class AddAssociationComponent {
 
   getLists(){
     this.miscService.startRequest();
-  
-    const quotationSaleServices = this.quotationSaleServiceService.getAll(0,1,'[{"id":"asc"}]')
+
+    const quotationSaleServices = this.renovationService.getAll(0,1,'[{"id":"asc"}]')
     .pipe(
         catchError((error) => 
         {
@@ -69,11 +71,12 @@ export class AddAssociationComponent {
     forkJoin([ quotationSaleServices,  trackerInstallations ]).subscribe(  ([ dataQuotationSaleServices , dataTrackerInstallations ] )=>
     {
         if(dataQuotationSaleServices != null )
-        {                
+        {          
+          console.log(dataQuotationSaleServices);      
           dataQuotationSaleServices['object']['records'].forEach(element => 
           {
-            if( element['quotationSaleServiceSaleOrderInformation'] != null){
-              this.listServices.push({'label': element['quotationSaleServiceQuotationSaleId']['quotationSaleFolio'] +" "+ element['quotationSaleServiceQuotationSaleId']['quotationSaleDescription'] ,'value': element['id']});
+            if( element['renovationStatus'] == 1){
+              this.listServices.push({'label': element['renovationFolio'] +" "+ element['renovationServiceDescripcion'],'value': element['id']});
             }
           });
         } 
@@ -87,7 +90,7 @@ export class AddAssociationComponent {
               this.listInstallations.push({'label': "ID instalación: " + element['id'] +" IMEI: "+ element['trackerInstallationTrackerId']['trackerImei'] ,'value': element['id']});
             //}
           });
-        }       
+        }      
         
         this.miscService.endRquest();	
     },

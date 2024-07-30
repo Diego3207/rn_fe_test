@@ -14,36 +14,36 @@
                 </ng-template>
             </p-toolbar>
 
-            <p-table #dt 
-            [value]="associations"  
+            <p-table #dt
+            [value]="associations"
             [lazy]="true"
             [resetPageOnSort]="false"
             [multiSortMeta]="[{field: 'id', order: 1}]"
-            sortMode="multiple" 
-            (onLazyLoad)="load($event)" 
+            sortMode="multiple"
+            (onLazyLoad)="load($event)"
             [lazyLoadOnInit]="true"
-            [paginator]="true" 
+            [paginator]="true"
             [totalRecords]="totalRows"
-            [rowsPerPageOptions]="[10,25,50]" 
-            [loading]="loading"    
+            [rowsPerPageOptions]="[10,25,50]"
+            [loading]="loading"
             [showCurrentPageReport]="true"
             currentPageReportTemplate="{{ getPageRange(page, limit, totalRows) }}"
             [(selection)]="selectedassociations" selectionMode="multiple"
             [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="scroll" [breakpoint]="'760px'" [tableStyle]="{'minx-width': '50rem'}">
-                
+
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="width: 3rem">
                             <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                         </th>
-                        <th pSortableColumn="associationTrackerServiceQuotationInformation['quotationSaleFolio']">
-                            Folio <p-sortIcon field="associationTrackerServiceQuotationInformation['quotationSaleFolio']"></p-sortIcon>
+                        <th pSortableColumn="quotationSaleFolio">
+                            FOLIO <p-sortIcon field="quotationSaleFolio"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="associationTrackerServiceQuotationInformation['quotationSaleDescription']">
-                            Descripción <p-sortIcon field="associationTrackerServiceQuotationInformation['quotationSaleDescription']"></p-sortIcon>
+                        <th pSortableColumn="quotationSaleDescription">
+                            DESCRIPIÓN <p-sortIcon field="quotationSaleDescription"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="associationTrackerServiceTrackerInformation['trackerImei']">
-                            Imei <p-sortIcon field="associationTrackerServiceTrackerInformation['trackerImei']"></p-sortIcon>
+                        <th pSortableColumn="trackerImei">
+                            IMEI <p-sortIcon field="trackerImei"></p-sortIcon>
                         </th>
                         <th>
                         </th>
@@ -56,31 +56,31 @@
                             <!-- Espacio para que se vea bien las columnas -->
                         </th>
                         <th>
-                            <p-columnFilter type="text"  [showButtons]="false" field="associationTrackerServiceQuotationInformation['quotationSaleFolio']"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
+                            <p-columnFilter type="text"  [showButtons]="false" [matchMode]="'contains'" field="quotationSaleFolio"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="associationTrackerServiceQuotationInformation['quotationSaleDescription']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="quotationSaleDescription"  [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="associationTrackerServiceTrackerInformation['trackerImei']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="trackerImei" [matchMode]="'contains'"  [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            
+
                         </th>
                         <th>
                             <!-- Espacio para que se vea bien las columnas -->
                         </th>
-                    </tr> 
+                    </tr>
                 </ng-template>
 
-                <ng-template pTemplate="body" let-association let-expanded="expanded"> 
+                <ng-template pTemplate="body" let-association let-expanded="expanded">
                     <tr>
                         <td>
                             <p-tableCheckbox [value]="association"></p-tableCheckbox>
                         </td>
-                        <td>{{association.associationTrackerServiceQuotationInformation['quotationSaleFolio']}}</td>
-                        <td>{{association.associationTrackerServiceQuotationInformation['quotationSaleDescription']}}</td>
-                        <td>{{association.associationTrackerServiceTrackerInformation['trackerImei']}}</td>
+                        <td>{{association.quotationSaleFolio}}</td>
+                        <td>{{association.quotationSaleDescription}}</td>
+                        <td>{{association.trackerImei}}</td>
                         <td>
                             <div class="flex">
                                 <button pTooltip="Editar Ubicación" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-info p-button-text" [routerLink]="['/associations/edit/', association.id]"></button>

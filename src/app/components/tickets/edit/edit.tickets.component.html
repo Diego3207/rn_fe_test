@@ -50,6 +50,7 @@
                                         <th class="col-2">Id</th>
                                         <th class="col-2">Nombre</th>
                                         <th class="col-2">Tipo de dispositivo</th>
+                                        <th class="col-2">Ubicación del dispositivo</th>
                                         <th class="col-2">Proveedor interno</th>
                                     </tr>
                                 </ng-template>
@@ -59,8 +60,9 @@
                                             <p-tableCheckbox [value]="device" [disabled]=true></p-tableCheckbox>
                                         </td>
                                         <td>{{ device.id }}</td>
-                                        <td>{{ device.monitoringDeviceName}}</td>
                                         <td>{{ device.monitoringDeviceType}}</td>
+                                        <td>{{ device.monitoringDeviceName}}</td>
+                                        <td>{{ device.monitoringDeviceOperationalAreaId['id']}}</td>
                                         <td>
                                             <i class="pi" [ngClass]="{ 'text-green-500 pi-check-circle': device.monitoringDeviceProvider == true, 'text-red-500 pi-times-circle': device.monitoringDeviceProvider == false }"></i>
                                         </td>
@@ -95,6 +97,7 @@
                             <ng-template pTemplate="header">
                                 <tr>
                                     <th style="width:20%">TELÉFONO</th>
+                                    <th style="width:45%">VIA DE COMUNICACIÓN</th>
                                     <th style="width:20%"></th>
                                 </tr>
                             </ng-template>
@@ -120,11 +123,26 @@
                                             </div>                                                
                                         </div>
                                     </td>
+
+                                    <td>
+                                        <p-dropdown 
+                                                formControlName="ticketCoordinationCommunicationChannel" 
+                                                [options]="listChannels" 
+                                                placeholder="Seleciona una opción"
+                                                appendTo="body"
+                                                [showClear]="true"  
+                                                optionLabel="label" 
+                                                optionValue="value">
+                                            </p-dropdown>
+                                            <div *ngIf="form.controls.ticketCoordinations.controls[i].controls.ticketCoordinationCommunicationChannel.invalid">
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.ticketCoordinations.controls[i].controls.ticketCoordinationCommunicationChannel.errors?.['required']" >*Campo requerido</small>
+                                            </div>  
+                                    </td>
                                     
                                     <td>
                                         
                                         <div class="flex align-items-center justify-content-center gap-2">
-                                            <button pButton pRipple type="button"  (click)="removeRow(i)" pCancelEditableRow icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"></button>
+                                            <button pButton pRipple type="button"  (click)="removeRow(coordination,i)" pCancelEditableRow icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"></button>
                                         </div>
                                     </td>
                                     

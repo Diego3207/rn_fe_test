@@ -7,16 +7,16 @@
     <div class="grid justify-content-center m-3">
         <div class="col-12 justify-content-between">
             <div class="card">
-                <p-table 
-                #dt 
-                [value]="listVehicles" 
+                <p-table
+                #dt
+                [value]="listVehicles"
                 [tableStyle]="{ 'min-width': '50rem' }">
 
                     <ng-template pTemplate="header" class="grid">
                         <tr>
-                            <th class="col-2">ID. Instalación</th>
-                            <th class="col-2">Marca y Modelo</th>
-                            <th class="col-2">Placas</th>
+                            <th class="col-2">ID INSTALACIÓN</th>
+                            <th class="col-2">MARCA Y MODELO</th>
+                            <th class="col-2">PLACAS</th>
                             <th class="col-2">IMEI</th>
                         </tr>
                     </ng-template>
@@ -47,76 +47,76 @@
 <div class="grid">
     <div class="col-12">
         <div class="card px-6 py-6">
-            <p-table #dt 
-            [value]="renovationServices"  
+            <p-table #dt
+            [value]="renovationServices"
             [lazy]="true"
             [resetPageOnSort]="false"
             [multiSortMeta]="[{field: 'id', order: 1}]"
-            sortMode="multiple" 
-            (onLazyLoad)="load($event)" 
+            sortMode="multiple"
+            (onLazyLoad)="load($event)"
             [lazyLoadOnInit]="true"
-            [paginator]="true" 
+            [paginator]="true"
             [totalRecords]="totalRows"
-            [rowsPerPageOptions]="[10,25,50]" 
+            [rowsPerPageOptions]="[10,25,50]"
             [showCurrentPageReport]="true"
             currentPageReportTemplate="{{ getPageRange(page, limit, totalRows) }}"
             [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="scroll" [breakpoint]="'760px'" [tableStyle]="{'minx-width': '50rem'}">
-                
+
                 <ng-template pTemplate="header">
                     <tr>
                         <th pSortableColumn="renovationFolio">
-                            Folio<p-sortIcon field="renovationFolio"></p-sortIcon>
+                            FOLIO<p-sortIcon field="renovationFolio"></p-sortIcon>
                         </th>
                         <th pSortableColumn="renovationCostumerName">
-                            Cliente <p-sortIcon field="renovationCostumerName"></p-sortIcon>
+                            CLIENTE <p-sortIcon field="renovationCostumerName"></p-sortIcon>
                         </th>
                         <th pSortableColumn="renovationServiceQuantity">
-                            Cantidad <p-sortIcon field="renovationServiceQuantity"></p-sortIcon>
+                            CANTIDAD <p-sortIcon field="renovationServiceQuantity"></p-sortIcon>
                         </th>
                         <th pSortableColumn="renovationServiceDescripcion">
-                            Servicio <p-sortIcon field="renovationServiceDescripcion"></p-sortIcon>
+                            SERVICIO <p-sortIcon field="renovationServiceDescripcion"></p-sortIcon>
                         </th>
                         <th pSortableColumn="renovationRenovationDate">
-                            Fecha de renovación <p-sortIcon field="renovationRenovationDate"></p-sortIcon>
+                            FECHA DE RENOVACIÓN <p-sortIcon field="renovationRenovationDate"></p-sortIcon>
                         </th>
                         <th pSortableColumn="renovationMonth">
-                            Mes de renovación <p-sortIcon field="renovationMonth"></p-sortIcon>
+                            MES DE RENOVACIÓN <p-sortIcon field="renovationMonth"></p-sortIcon>
                         </th>
                         <th pSortableColumn="renovationMonth">
-                            Estado <p-sortIcon field="renovationMonth"></p-sortIcon>
+                            ESTADO <p-sortIcon field="renovationMonth"></p-sortIcon>
                         </th>
                         <th>
-                            Acciones
+
                         </th>
                     </tr>
                    <tr>
                         <th>
-                            <p-columnFilter type="text"  [showButtons]="false" field="renovationFolio"  [matchModeOptions]="matchModeOptionsText" > </p-columnFilter>
+                            <p-columnFilter type="text"  [showButtons]="false" field="renovationFolio"  [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" > </p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" [showButtons]="false" field="renovationCostumerName" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" [showButtons]="false" field="renovationCostumerName" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" [showButtons]="false" field="renovationServiceQuantity" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" [showButtons]="false" field="renovationServiceQuantity" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" [showButtons]="false" field="renovationServiceDescripcion" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" [showButtons]="false" field="renovationServiceDescripcion" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" [showButtons]="false" field="renovationRenovationDate" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" [showButtons]="false" field="renovationRenovationDate" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsDate" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" [showButtons]="false" field="renovationMonth" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" [showButtons]="false" field="renovationMonth" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" [showButtons]="false" field="renovationStatus" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" [showButtons]="false" field="renovationStatus" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
                         </th>
-                    </tr> 
+                    </tr>
                 </ng-template>
 
-                <ng-template pTemplate="body" let-renovationService let-expanded="expanded"> 
+                <ng-template pTemplate="body" let-renovationService  let-i="rowIndex" let-expanded="expanded">
                     <tr>
                         <td>{{renovationService.renovationFolio}}</td>
                         <td>{{renovationService.renovationCostumerName}}</td>
@@ -127,18 +127,18 @@
                         <td>{{renovationService.renovationStatus == 0 ? 'baja' : 'activa'}}</td>
                         <td>
                             <div class="flex">
-                                <button pTooltip="Ver" pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-info p-button-text" (click)="getFilter(renovationService.quotationSaleServiceId)"></button>
-                                <button *ngIf="renovationService.renovationStatus == 1" pButton pRipple pTooltip="Renovar" icon="pi pi-check-circle" class="p-button-rounded p-button-success  p-button-text p-mr-3" (click)="renewService(renovationService.id,renovationService.renovationServiceQuantityTemporality,renovationService.renovationServiceTemporality,renovationService.renovationRenovationDate)" ></button>
+                                <button pTooltip="Instalaciones asociadas" pButton pRipple icon="pi pi-car" class="p-button-rounded p-button-info p-button-text" (click)="getFilter(renovationService.quotationSaleServiceId)"></button>
+                                <button *ngIf="renovationService.renovationStatus == 1" pButton pRipple pTooltip="Renovar" icon="pi pi-check-circle" class="p-button-rounded p-button-success  p-button-text p-mr-3" (click)="create(renovationService.id,renovationService.renovationServiceQuantityTemporality,renovationService.renovationServiceTemporality,renovationService.renovationRenovationDate)" ></button>
                                 <button *ngIf="renovationService.renovationStatus == 1"  pButton pRipple pTooltip="No renovar"  icon="pi pi-times-circle" class="p-button-rounded p-button-warning  p-button-text p-mr-3" (click)="delete(renovationService.renovationId)" ></button>
                             </div>
                         </td>
                     </tr>
-                </ng-template>    
+                </ng-template>
             </p-table>
         </div>
     </div>
 </div>
 
 
-            
+
 

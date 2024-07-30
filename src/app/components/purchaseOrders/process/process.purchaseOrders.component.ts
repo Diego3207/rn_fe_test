@@ -149,7 +149,7 @@ export class ProcessPurchaseOrdersComponent implements OnInit, OnDestroy {
         
         this.miscService.startRequest();
 
-        if (!this.formReceived.invalid  ) {
+        if (!this.formReceived.invalid  &&  (( this.uploadedFiles.length + this.listEvidence.length) > 0 )) {
             let received = this.formReceived.value;
 
             
@@ -193,7 +193,7 @@ export class ProcessPurchaseOrdersComponent implements OnInit, OnDestroy {
                 this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error',  detail:err.message, life: 3000 });
             });
         }else {
-            this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error", detail:"Campos obligatorios"});                        
+            this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error", detail:'Campos obligatorios pendiente'});                        
             this.miscService.endRquest();
         }
     }

@@ -11,14 +11,33 @@
                             <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.serviceDescription.errors?.['maxlength']" >*Longitud máxima 255</small>
                         </div>
                     </div>
-                    <div class="field">
-                        <label for="price" class="font-semibold">Precio</label>
-                        <p-inputNumber   for="price" inputId="locale-us"   mode="currency"  currency="USD" locale="en-US" [minFractionDigits]="2" formControlName="servicePrice" ></p-inputNumber>  
-                        <div *ngIf="form.controls.servicePrice.invalid">
-                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.servicePrice.errors?.['required']">*Campo requerido</small>
-                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.servicePrice.errors?.['max']" >*Cantidad máxima es $9,999,999,999.99</small>
-                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.servicePrice.errors?.['min']" >*Cantidad mínima es $1.00</small>
-                        </div>	 
+                    <div class="grid ">
+                        <div class="col-12 md:col-6 lg:col-6">
+                            <label for="price" class="font-semibold">Tipo de moneda</label> 
+                            <p-dropdown [options]="listCurrencies" appendTo="body" formControlName="serviceCurrency" filterBy="label" [showClear]="true" placeholder="Selecciona uno" optionValue="value" optionLabel="label"  ></p-dropdown>
+    
+                            <div *ngIf="form.controls.serviceCurrency.invalid">
+                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.serviceCurrency.errors?.['required']">*Campo requerido</small>
+                            </div>
+                        </div> 
+                        <div class="col-12 md:col-6 lg:col-6">
+                            <label for="price" class="font-semibold">Precio</label>
+                            <p-inputNumber 
+                                mode="currency" 
+                                currency="USD" 
+                                locale="en-US" 
+                                [minFractionDigits]="2" 
+                                inputId="locale-us"  
+                                id="price" 
+                                formControlName="servicePrice">
+                            </p-inputNumber>  
+                            <div *ngIf="form.controls.servicePrice.invalid">
+                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.servicePrice.errors?.['required']">*Campo requerido</small>
+                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.servicePrice.errors?.['min']" >*Cantidad mínima es $0.00</small>
+                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.servicePrice.errors?.['max']" >*Cantidad máxima es $9,999,999,999.99</small>
+                            </div>
+                        </div> 
+                       
                     </div>
 
                     <div class="grid field"> 

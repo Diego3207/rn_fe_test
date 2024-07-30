@@ -140,7 +140,6 @@ export class EditTrackerInstallationReviewComponent implements OnInit, OnDestroy
     }
  
     removeFile(obj:any){
-        console.log(obj);
         this.uploadedFiles = this.uploadedFiles.filter(e => e.file != obj.file);
         this.fileUpload.files = this.fileUpload.files.filter(e => e != obj.file);
         if(obj.id !== null)

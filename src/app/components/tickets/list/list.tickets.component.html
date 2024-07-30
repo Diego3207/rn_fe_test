@@ -1,4 +1,28 @@
 <p-confirmDialog  #confirm [style]="{width: '50vw'}" rejectButtonStyleClass="p-button-outlined"></p-confirmDialog>
+
+
+<p-dialog header="Comentarios del cierre" [(visible)]="visible" [modal]="true" [style]="{ width: '30vw' }" [draggable]="false" [resizable]="false">
+    <p>Una vez cerrado el ticket ya no podrá editar la información</p>
+    <div class="justify-content-between">
+        <div class=" p-fluid">
+            <form [formGroup]="form" >
+                <div class="field">
+                        <textarea id="reason" rows="5" style="width: 100%; max-width: 100%;" formControlName="ticketEndComment" pInputTextarea></textarea>
+                        <div *ngIf="form.controls.ticketEndComment.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.ticketEndComment.errors?.['required']" >*Campo requerido</small>
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.ticketEndComment.errors?.['maxlength']" >*Longitud máxima 255</small>
+                        </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button icon="pi pi-times" (click)="closeDialogReject()" label="cancelar" styleClass="p-button-outlined"></p-button>
+        <p-button icon="pi pi-check" (click)="rejectQuotation()" label="guardar" styleClass="p-button-primary"></p-button>
+    </ng-template>
+</p-dialog>
+
 <p-toast key="msg"></p-toast>
 
 <div class="grid">
@@ -14,23 +38,23 @@
                 </ng-template>
             </p-toolbar>
 
-            <p-table #dt 
-            [value]="tickets"  
+            <p-table #dt
+            [value]="tickets"
             [lazy]="true"
             [resetPageOnSort]="false"
             [multiSortMeta]="[{field: 'id', order: 1}]"
-            sortMode="multiple" 
-            (onLazyLoad)="load($event)" 
+            sortMode="multiple"
+            (onLazyLoad)="load($event)"
             [lazyLoadOnInit]="true"
-            [paginator]="true" 
+            [paginator]="true"
             [totalRecords]="totalRows"
-            [rowsPerPageOptions]="[10,25,50]" 
-            [loading]="loading"    
+            [rowsPerPageOptions]="[10,25,50]"
+            [loading]="loading"
             [showCurrentPageReport]="true"
             currentPageReportTemplate="{{ getPageRange(page, limit, totalRows) }}"
             [(selection)]="selectedTickets" selectionMode="multiple"
             [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="scroll" [breakpoint]="'760px'" [tableStyle]="{'minx-width': '50rem'}">
-                
+
                 <ng-template pTemplate="header">
                     <tr>
                         <th >
@@ -42,20 +66,26 @@
                         <th pSortableColumn="ticketCostumerId">
                             Folio <p-sortIcon field="ticketCostumerId"></p-sortIcon>
                          </th>
+                         <th pSortableColumn="ticketUserId">
+                            Usuario creador <p-sortIcon field="ticketUserId"></p-sortIcon>
+                        </th>
                          <th pSortableColumn="ticketDate">
                             Fecha de creación <p-sortIcon field="ticketDate"></p-sortIcon>
                          </th>
                         <th pSortableColumn="ticketCostumerId">
                            Cliente <p-sortIcon field="ticketCostumerId"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="ticketUserId">
-                            Monitorista <p-sortIcon field="ticketUserId"></p-sortIcon>
-                        </th>
                         <th pSortableColumn="ticketDescription">
                             Descripción <p-sortIcon field="ticketDescription"></p-sortIcon>
                         </th>
+                        <th pSortableColumn="ticketEndUser">
+                            Usuario finalizador <p-sortIcon field="ticketEndUser"></p-sortIcon>
+                        </th>
                         <th pSortableColumn="ticketEndDate">
-                            Fecha de cierre <p-sortIcon field="ticketEndDate"></p-sortIcon>
+                            Fecha de finalización <p-sortIcon field="ticketEndDate"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="ticketEndComment">
+                            Comentario de finalización <p-sortIcon field="ticketEndComment"></p-sortIcon>
                         </th>
                         <th pSortableColumn="ticketStatus">
                             Estado <p-sortIcon field="ticketStatus"></p-sortIcon>
@@ -68,37 +98,43 @@
                         <th>
                             <!-- expander -->
                         </th>
-                        <th> 
+                        <th>
                             <!-- checkbox -->
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="ticketFolio" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="ticketFolio" [matchMode]="'contains'"  [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="ticketDate" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="ticketUserId['userFullName']" [matchMode]="'contains'"  [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="ticketCostumerId['costumerName']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="ticketDate" [matchMode]="'contains'"  [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="ticketUserId['userFullName']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="ticketCostumerId['costumerName']" [matchMode]="'contains'"  [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="ticketDescription" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="ticketDescription" [matchMode]="'contains'"  [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="ticketEndDate" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="ticketEndUser['userFullName']" [matchMode]="'contains'"  [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="ticketStatus" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="ticketEndDate" [matchMode]="'contains'"  [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="ticketEndComment" [matchMode]="'contains'"  [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="ticketStatus" [matchMode]="'contains'"  [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
                             <!-- Espacio para que se vea bien las columnas -->
                         </th>
-                    </tr> 
+                    </tr>
                 </ng-template>
 
-                <ng-template pTemplate="body" let-ticket let-expanded="expanded"> 
+                <ng-template pTemplate="body" let-ticket let-expanded="expanded">
                     <tr>
                         <td>
 							<button type="button" pButton pRipple [pRowToggler]="ticket" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
@@ -107,16 +143,18 @@
                             <p-tableCheckbox [value]="ticket"></p-tableCheckbox>
                         </td>
                         <td>{{ticket.ticketFolio}}</td>
-                        <td>{{ticket.ticketDate| date: 'dd-MM-yyyy'}}</td>
-                        <td>{{ticket.ticketCostumerId['costumerName']}}</td>
                         <td>{{ticket.ticketUserId['userFullName']}}</td>
+                        <td>{{ticket.ticketDate| date: 'dd-MM-yyyy h:mm a '}}</td>
+                        <td>{{ticket.ticketCostumerId['costumerName']}}</td>
                         <td>{{ticket.ticketDescription}}</td>
-                        <td>{{ticket.ticketEndDate == null ? 'Sin registro' : ticket.ticketEndDate | date: 'dd-MM-yyyy'}}</td>
+                        <td>{{ticket.ticketEndUser == null ? 'Sin registro' : ticket.ticketEndUser['userFullName']}}</td>
+                        <td>{{ticket.ticketEndDate == null ? 'Sin registro' : ticket.ticketEndDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                        <td>{{ticket.ticketEndComment == null ? 'Sin registro' : ticket.ticketEndComment }}</td>
                         <td><p-tag [value]="ticket.ticketStatus" size="large" [severity]="getSeverity(ticket.ticketStatus)"></p-tag></td>
                         <td>
                             <div class="flex">
-                                <button pTooltip="Cerrar Ticket" pButton pRipple icon="pi pi-check-square" class="p-button-rounded p-button-success p-button-text" (click)="closeTicket(ticket.id)"></button>
-                                <button pTooltip="Editar Ticket" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-info p-button-text" [routerLink]="['/tickets/edit/', ticket.id]"></button>
+                                <button pTooltip="Cerrar Ticket" *ngIf="ticket.ticketStatus == 'nuevo' " pButton pRipple icon="pi pi-times-circle" class="p-button-rounded p-button-warning  p-button-text p-mr-3" (click)="openDialogReject(ticket.id)"></button>
+                                <button pTooltip="Editar Ticket" *ngIf="ticket.ticketStatus == 'nuevo' " pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-info p-button-text" [routerLink]="['/tickets/edit/', ticket.id]"></button>
                                 <button pTooltip="Eliminar Ticket" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-text" (click)="delete(2,ticket)"></button>
                             </div>
                         </td>
@@ -127,12 +165,13 @@
 					<tr>
 						<td colspan="12">
 							<div class="p-3" >
-								<p-table [value]="ticket.ticketDevices" dataKey="id">                                     
+								<p-table [value]="ticket.ticketDevices" dataKey="id">
 									<ng-template pTemplate="header" class="grid">
                                         <tr>
                                             <th class="col-2">Id</th>
                                             <th class="col-2">Nombre</th>
                                             <th class="col-2">Tipo de dispositivo</th>
+                                            <th class="col-2">Area Operativa</th>
                                             <th class="col-2">Proveedor interno</th>
                                         </tr>
 									</ng-template>
@@ -141,6 +180,7 @@
                                             <td>{{ ticketDevices.id }}</td>
                                             <td>{{ ticketDevices.monitoringDeviceName}}</td>
                                             <td>{{ ticketDevices.monitoringDeviceType}}</td>
+                                            <td><a [routerLink]="['/operationalAreas/view/', ticketDevices.monitoringDeviceOperationalAreaId ]"><i class="pi pi-eye"></i></a></td>
                                             <td>
                                                 <i class="pi" [ngClass]="{ 'text-green-500 pi-check-circle': ticketDevices.monitoringDeviceProvider == true, 'text-red-500 pi-times-circle': ticketDevices.monitoringDeviceProvider == false }"></i>
                                             </td>
@@ -151,12 +191,12 @@
 											<td colspan="6">No tiene dispositivos asignados.</td>
 										</tr>
 									</ng-template>
-								</p-table>								
+								</p-table>
 							</div>
 						</td>
 					</tr>
 				</ng-template>
-                
+
             </p-table>
         </div>
     </div>

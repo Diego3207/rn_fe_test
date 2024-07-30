@@ -40,7 +40,7 @@ describe("Ubicaciones", function () {
         cy.get('.p-highlight > .p-element').click();
         //primer fila, columna nombre
         cy.get('.p-datatable-tbody > :nth-child(1) > :nth-child(4)')
-        .contains("Oficina")
+        .contains("Location")
         .should("be.visible");
     });
     it("Añadir ubicación inválido por exceso de caracteres", function () {

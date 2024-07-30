@@ -9,4 +9,5 @@ export interface SimCard {
     simCardServicePlan: string,
     simCardStatus: string,
     simCardActive: boolean,
+    jasperStatus: string
 }

@@ -107,4 +107,14 @@ describe('Association Service',()=>{
         const req=httpMock.expectOne("http://localhost:1337/associationTrackerService/list?limit=3&page=1&sort=%5B%7B%22id%22:%22asc%22%7D%5D")
         req.flush([]);
     })
+    it("Deberia filtrar por id",()=>{
+        service.getById(3).subscribe(
+            data=>{
+                expect(data).toEqual(peticion.records)
+            }
+        )
+        const req=httpMock.expectOne('http://localhost:1337/associationTrackerService/find?id=3');
+        expect(req.request.method).toBe('GET');
+        req.flush(peticion.records);
+    })
 })

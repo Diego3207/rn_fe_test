@@ -5,15 +5,15 @@
     <ng-template pTemplate="header">
         <span class="text-xl font-bold">Mapa</span>
     </ng-template>
-    
+
    <div  class="grid justify-content-center m-3">
         <div class="col-12 justify-content-between">
-            <iframe 
+            <iframe
                 #urlMap
-                class="iframe" 
-                height="300" 
-                frameborder="0" 
-                style="width:100%" 
+                class="iframe"
+                height="300"
+                frameborder="0"
+                style="width:100%"
                 allowfullscreen>
             </iframe>
         </div>
@@ -36,23 +36,23 @@
                 </ng-template>
             </p-toolbar>
 
-            <p-table #dt 
-            [value]="locations"  
+            <p-table #dt
+            [value]="locations"
             [lazy]="true"
             [resetPageOnSort]="false"
             [multiSortMeta]="[{field: 'id', order: 1}]"
-            sortMode="multiple" 
-            (onLazyLoad)="load($event)" 
+            sortMode="multiple"
+            (onLazyLoad)="load($event)"
             [lazyLoadOnInit]="true"
-            [paginator]="true" 
+            [paginator]="true"
             [totalRecords]="totalRows"
-            [rowsPerPageOptions]="[10,25,50]" 
-            [loading]="loading"    
+            [rowsPerPageOptions]="[10,25,50]"
+            [loading]="loading"
             [showCurrentPageReport]="true"
             currentPageReportTemplate="{{ getPageRange(page, limit, totalRows) }}"
             [(selection)]="selectedLocations" selectionMode="multiple"
             [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="scroll" [breakpoint]="'760px'" [tableStyle]="{'minx-width': '50rem'}">
-                
+
                 <ng-template pTemplate="header">
                     <tr>
                         <th>
@@ -85,24 +85,24 @@
                             <!-- Espacio para que se vea bien las columnas -->
                         </th>
                         <th>
-                            <p-columnFilter type="numeric"  [showButtons]="false" field="id"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
+                            <p-columnFilter type="numeric"  [showButtons]="false" field="id"   [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="locationName" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="locationName"  [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="locationAddress" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="locationAddress"  [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="locationPhone" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="locationPhone"   [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
                             <!-- Espacio para que se vea bien las columnas -->
                         </th>
-                    </tr> 
+                    </tr>
                 </ng-template>
 
-                <ng-template pTemplate="body" let-location let-expanded="expanded"> 
+                <ng-template pTemplate="body" let-location let-expanded="expanded">
                     <tr>
                         <td>
 							<button type="button" pButton pRipple [pRowToggler]="location" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>

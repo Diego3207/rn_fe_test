@@ -9,8 +9,7 @@
         "test": "ng test",
         "lint": "ng lint",
         "e2e": "ng e2e",
-        "report": "cypress run --spec cypress/e2e/Testing-estricto/*.cy.js",
-        "report1": "cypress run --browser edge --spec cypress/e2e/Testing/*.cy.js"
+        "report": "cypress run --browser edge --spec cypress/e2e/Testing/*.cy.js"
     },
     "private": true,
     "dependencies": {
@@ -24,6 +23,7 @@
         "@angular/platform-browser": "^15.1.0",
         "@angular/platform-browser-dynamic": "^15.1.0",
         "@angular/router": "^15.1.0",
+        "@everapi/currencyapi-js": "^1.0.6",
         "@fullcalendar/angular": "^6.0.3",
         "@fullcalendar/core": "^6.0.3",
         "@fullcalendar/daygrid": "^6.0.3",
@@ -32,7 +32,7 @@
         "@types/socket.io-client": "^3.0.0",
         "angular-csv-ext": "^1.0.5",
         "chart.js": "^3.3.2",
-        "cypress": "^13.11.0",
+        "cypress": "^13.13.1",
         "cypress-mochawesome-reporter": "^3.8.2",
         "flag": "^5.0.1",
         "html-to-pdfmake": "^2.4.24",

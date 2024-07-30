@@ -35,6 +35,7 @@ export class AddPurchaseOrdersComponent  {
     listUnitServices: any[] = [];
     listProducts: any[] = [] ;
     listServices: any[] = [] ;
+    listCurrencies: any[] = [] ;
 
     
 
@@ -65,6 +66,7 @@ export class AddPurchaseOrdersComponent  {
             purchaseOrderDescription:[null,[Validators.required,Validators.maxLength(255)]],
             purchaseOrderQuotationPurchaseId:null,
             purchaseOrderGuaranty:false, 
+            purchaseOrderCurrency: [null,[Validators.required]],
             purchaseOrderProviderId: [null,[Validators.required]], 
             purchaseOrderProducts: this.formBuilder.array([],[this.isProductDuplicated]), 
             purchaseOrderServices: this.formBuilder.array([],[this.isServiceDuplicated]),
@@ -82,7 +84,14 @@ export class AddPurchaseOrdersComponent  {
             { label: 'Anual',value: 'anual'},
             { label: 'Mensual',value: 'mensual'},
             
-        ];       
+        ];      
+        
+        this.listCurrencies = [
+            { label: 'Dólar estadounidense (USD)', value:"USD"},
+            { label: 'Peso mexicano (MXN)', value:"MXN"},
+            //{ label: 'Dólar canadiense (CAD)', value:"CAD"},
+           // { label: 'Euro (EUR)', value:'EUR'}
+        ];
 
         this.list();
     }
@@ -184,7 +193,7 @@ export class AddPurchaseOrdersComponent  {
         for (const item of control.controls) 
 		{
 
-            const obj = item.value. purchaseOrderServiceServiceId
+            const obj = item.value.purchaseOrderServiceServiceId
             if (uniqueValues.has(obj)) 
 			{
 			  return { duplicated: true }; 
@@ -261,6 +270,7 @@ export class AddPurchaseOrdersComponent  {
 
         this.listProducts = [];           
         this.listServices = [];
+       
         this.form.controls.purchaseOrderProducts.clear();
         this.form.controls.purchaseOrderServices.clear();
 
@@ -404,6 +414,7 @@ export class AddPurchaseOrdersComponent  {
             this.form.controls['purchaseOrderQuotationPurchaseId'].setValue(dataInfo['id']);
             this.form.controls['purchaseOrderGuaranty'].setValue(dataInfo['quotationPurchaseGuaranty']);
             this.form.controls['purchaseOrderProviderId'].setValue(dataInfo['quotationPurchaseProviderId']);
+            this.form.controls['purchaseOrderCurrency'].setValue(dataInfo['quotationPurchaseCurrency']);
 
             for (let i=0; i < dataInfo['quotationPurchaseProducts'].length; i++){
                 

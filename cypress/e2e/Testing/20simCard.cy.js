@@ -1,5 +1,6 @@
 const sleepCorto = 1000;
 const sleepLargo = 3500;
+const sleepSuperCorto=100;
 describe("Sim card",function(){
     beforeEach(function(){
         cy.fixture("simCard").then(function (simCard) {
@@ -141,6 +142,13 @@ describe("Sim card",function(){
         cy.wait("@añadirProducto").its("response.statusCode").should("eq", 201);
         cy.url().should("eq", "http://localhost:4200/#/simCards");
         cy.wait(sleepLargo);
+        //id de la tabla
+        cy.get('.p-highlight > .p-element').click();
+        cy.wait(sleepSuperCorto)
+        //primer fila, columna nombre
+        cy.get('.p-datatable-tbody > :nth-child(1) > :nth-child(4)')
+        .contains(this.simCard.iccidValida)
+        .should("be.visible");
     })
     it("Crear sim card invalida por exceso de caracteres",function(){
         //módulo catálogos

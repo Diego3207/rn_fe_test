@@ -37,6 +37,8 @@ export class ProcessQuotationPurchasesComponent implements OnInit, OnDestroy {
     listProviders: Provider[] = [];
     listProducts: any[] = [] ;
     listServices: any[] = [] ;
+    listCurrencies: any[] = [];
+
 
     constructor(
         private formBuilder: FormBuilder,
@@ -67,11 +69,13 @@ export class ProcessQuotationPurchasesComponent implements OnInit, OnDestroy {
 		this.form = this.formBuilder.group
 		({
             id:[this.id, [Validators.required]],
-            quotationPurchaseProviderId: [null,[Validators.required]], 
+            quotationPurchaseProviderId: [{value:null,disabled:true},[Validators.required]], 
             quotationPurchaseTimeDelivery:[null,[Validators.required]] , //DATATIME
             quotationPurchaseGuaranty: false, //BOOLEAN [false,[Validators.required]]
+            quotationPurchaseCurrency:[null,[Validators.required]],
             quotationPurchaseProducts: this.formBuilder.array([],[this.isProductDuplicated]), 
             quotationPurchaseServices: this.formBuilder.array([],[this.isServiceDuplicated]),
+            
          }, formOptions);
         
          this.form.get("quotationPurchaseProviderId").valueChanges.subscribe(selectedValue => {
@@ -89,7 +93,14 @@ export class ProcessQuotationPurchasesComponent implements OnInit, OnDestroy {
             { label: 'Anual',value: 'anual'},
             { label: 'Mensual',value: 'mensual'},
             
-        ];          
+        ]; 
+        
+        this.listCurrencies = [
+            { label: 'Dólar estadounidense (USD)', value:"USD"},
+            { label: 'Peso mexicano (MXN)', value:"MXN"},
+           // { label: 'Dólar canadiense (CAD)', value:"CAD"},
+          //  { label: 'Euro (EUR)', value:'EUR'}
+        ];
 
         this.getInfo();
 		
@@ -354,9 +365,10 @@ export class ProcessQuotationPurchasesComponent implements OnInit, OnDestroy {
        //console.log(this.form);
         let order = {};   
         order['id']= this.form.value['id'];     
-        order['quotationPurchaseProviderId']= (this.form.value['quotationPurchaseProviderId']).toString();
+        //order['quotationPurchaseProviderId']= (this.form.value['quotationPurchaseProviderId']).toString();
         order['quotationPurchaseTimeDelivery'] = this.datePipe.transform(this.form.value['quotationPurchaseTimeDelivery'], 'yyyy-MM-dd HH:mm:ss');
         order['quotationPurchaseGuaranty']= (this.form.value['quotationPurchaseGuaranty']);
+        order['quotationPurchaseCurrency']= (this.form.value['quotationPurchaseCurrency']);
         order['quotationPurchaseDateStatus'] =this.datePipe.transform(new Date(), 'yyyy-MM-dd  HH:mm:ss');
         order['quotationPurchaseStatus']= 'aceptada';
       

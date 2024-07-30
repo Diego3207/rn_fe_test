@@ -13,7 +13,7 @@ const routes: Routes =
         path: '', component: AppLayoutComponent, canActivateChild : [AuthGuard],
         children: [
             { path: '', loadChildren: () => import('./components/dashboards/dashboards.module').then(m => m.DashboardsModule), data:{ module: 'dashboards' } },
-			{ path: 'a', loadChildren: () => import('./components/a/a.module').then(m => m.AModule), data:{ module: 'a' } },
+            { path: 'a', loadChildren: () => import('./components/a/a.module').then(m => m.AModule), data:{ module: 'a' } },
 			{ path: 'users', loadChildren: () => import('./components/users/users.module').then(m => m.UsersModule), data:{ module: 'users' } },
 			{ path: 'branches', loadChildren: () => import('./components/branches/branches.module').then(m => m.BranchesModule), data:{ module: 'branches' } },			
 			{ path: 'providers', loadChildren: () => import('./components/providers/provider.module').then(m => m.ProviderModule), data:{ module: 'provider' } },
@@ -24,8 +24,8 @@ const routes: Routes =
             { path: 'location', loadChildren: () => import('./components/location/location.module').then(m => m.LocationModule), data:{ module: 'location' } },
            // { path: 'quotations', loadChildren: () => import('./components/quotations/quotations.module').then(m => m.QuotationsModule), data:{ module: 'quotations' } },
             { path: 'supply', loadChildren: () => import('./components/supply/supply.module').then(m => m.SupplyModule), data:{ module: 'supply' } },
-			{ path: 'modules', loadChildren: () => import('./components/modules/modules.module').then(m => m.ModulesModule), data:{ module: 'modules' } },
-			{ path: 'roles', loadChildren: () => import('./components/roles/roles.module').then(m => m.RolesModule), data:{ module: 'roles' } },
+			      { path: 'modules', loadChildren: () => import('./components/modules/modules.module').then(m => m.ModulesModule), data:{ module: 'modules' } },
+			      { path: 'roles', loadChildren: () => import('./components/roles/roles.module').then(m => m.RolesModule), data:{ module: 'roles' } },
             { path: 'orders', loadChildren: () => import('./components/purchaseOrders/purchaseOrders.module').then(m => m.PurchaseOrdersModule), data:{ module: 'purchaseOrders' } },
             { path: 'simCards', loadChildren: () => import('./components/simCards/simCards.module').then(m => m.simCardsModule), data:{ module: 'simCards' } },
             { path: 'saleOrders', loadChildren: () => import('./components/saleOrders/saleOrder.module').then(m => m.SaleOrdersModule), data:{ module: 'saleOrders' } },
@@ -40,10 +40,12 @@ const routes: Routes =
             { path: 'tickets', loadChildren: () => import('./components/tickets/tickets.module').then(m => m.TicketModule), data:{ module: 'tickets' } },
             { path: 'directory', loadChildren: () => import('./components/dependencies/dependency.module').then(m => m.DependencyModule), data:{ module: 'directory' } },
             { path: 'incidences', loadChildren: () => import('./components/incidences/incidence.module').then(m => m.IncidenceModule), data:{ module: 'incidences' } },
+            { path: 'operationalAreas', loadChildren: () => import('./components/operationalAreas/operationalArea.module').then(m => m.OperationalAreaModule), data:{ module: 'operationalAreas' } },
             { path: 'renovations', loadChildren: () => import('./components/renovations/renovation.module').then(m => m.RenovationModule), data:{ module: 'renovations' } },
             { path: 'associations', loadChildren: () => import('./components/associations/association.module').then(m => m.AssociationModule), data:{ module: 'associations' } },
             { path: 'trackerUninstalls', loadChildren: () => import('./components/trackerUninstalls/trackerUninstall.module').then(m => m.TrackerUninstallModule), data:{ module: 'trackerUninstalls' } },
             { path: 'trackerInstallationReviews', loadChildren: () => import('./components/trackerInstallationReviews/trackerInstallationReview.module').then(m => m.TrackerInstallationReviewModule), data:{ module: 'trackerInstallationReviews' } },
+
 
         ]
 

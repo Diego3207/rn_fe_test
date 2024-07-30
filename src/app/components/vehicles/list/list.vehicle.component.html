@@ -13,23 +13,23 @@
                 </ng-template>
             </p-toolbar>
 
-            <p-table #dt 
-            [value]="vehicles"  
+            <p-table #dt
+            [value]="vehicles"
             [lazy]="true"
             [resetPageOnSort]="false"
             [multiSortMeta]="[{field: 'id', order: 1}]"
-            sortMode="multiple" 
-            (onLazyLoad)="load($event)" 
+            sortMode="multiple"
+            (onLazyLoad)="load($event)"
             [lazyLoadOnInit]="true"
-            [paginator]="true" 
+            [paginator]="true"
             [totalRecords]="totalRows"
-            [rowsPerPageOptions]="[10,25,50]" 
-            [loading]="loading"    
+            [rowsPerPageOptions]="[10,25,50]"
+            [loading]="loading"
             [showCurrentPageReport]="true"
             currentPageReportTemplate="{{ getPageRange(page, limit, totalRows) }}"
             [(selection)]="selectedVehicles" selectionMode="multiple"
             [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="scroll" [breakpoint]="'760px'" [tableStyle]="{'minx-width': '50rem'}">
-                
+
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="width: 3rem">
@@ -39,10 +39,10 @@
                             ID <p-sortIcon field="id"></p-sortIcon>
                         </th>
                         <th >
-                            GRUPO 
+                            GRUPO
                         </th>
                         <th >
-                            CLIENTE 
+                            CLIENTE
                         </th>
                         <th pSortableColumn="vehicleBrand">
                             MARCA <p-sortIcon field="vehicleBrand"></p-sortIcon>
@@ -68,36 +68,36 @@
                             <!-- Espacio para que se vea bien las columnas -->
                         </th>
                         <th>
-                            <p-columnFilter type="numeric"  [showButtons]="false" field="id"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
+                            <p-columnFilter type="numeric"  [showButtons]="false" field="id"  [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="vehicleCostumerId['costumerGroup']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="vehicleCostumerId['costumerGroup']" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="vehicleCostumerId['costumerName']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="vehicleCostumerId['costumerName']" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="vehicleBrand" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="vehicleBrand" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="vehicleModel" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="vehicleModel" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="vehicleYear" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="vehicleYear" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="vehiclePlateNumber" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="vehiclePlateNumber" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="vehicleVin" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="vehicleVin" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
                             <!-- Espacio para que se vea bien las columnas -->
                         </th>
-                    </tr> 
+                    </tr>
                 </ng-template>
 
-                <ng-template pTemplate="body" let-vehicle let-expanded="expanded"> 
+                <ng-template pTemplate="body" let-vehicle let-expanded="expanded">
                     <tr>
                         <td>
                             <p-tableCheckbox [value]="vehicle"></p-tableCheckbox>

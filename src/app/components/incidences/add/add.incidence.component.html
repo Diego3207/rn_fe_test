@@ -9,7 +9,6 @@
         <div class="card p-fluid ">
             <form [formGroup]="form" (ngSubmit)="onSubmit()">
                 <div class="field ">
-
                     <label for="incidenceCostumerId" class="font-semibold">Cliente</label>
                     <p-dropdown 
                         formControlName="incidenceCostumerId" 
@@ -19,77 +18,141 @@
                         filterBy="costumerName" 
                         [showClear]="true"  
                         optionLabel="costumerName" 
-                        optionValue="id"> 
-
-
-                       >
+                        optionValue="id">
                     </p-dropdown>
                     <div *ngIf="form.controls.incidenceCostumerId.invalid">
                         <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceCostumerId.errors?.['required']" >*Campo requerido</small>
                     </div>
                 </div>  
-                <div class="field ">
 
-                    <label for="incidenceSourceInformation" class="font-semibold">Fuente de información</label>
-                    <p-dropdown 
-                        formControlName="incidenceSourceInformation" 
-                        [options]="listSource" 
-                        placeholder="Seleciona una opción"                       
-                        filterBy="label" 
-                        [showClear]="true"  
-                        optionLabel="label" 
-                        optionValue="value">
-                    </p-dropdown>
-                    <div *ngIf="form.controls.incidenceSourceInformation.invalid">
-                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceSourceInformation.errors?.['required']" >*Campo requerido</small>
-                    </div>
-                </div>   
-                <div class="field ">
-                    <label for="name" class="font-semibold">Datos del informante</label>
-                    <input  pInputText id="name"   type="text"  formControlName="incidenceInformantData" autofocus />
-                    <div *ngIf="form.controls.incidenceInformantData.invalid">
-                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceInformantData.errors?.['required']" >*Campo requerido</small>
-                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceInformantData.errors?.['maxlength']" >*Longitud máxima 255</small>
-                    </div>
-                </div> 
                 
+                <div class="card">
+                    <h5 >Fuente de información</h5>
+                    <div class="field ">
+                        <label for="incidenceSourceInformation" class="font-semibold">Informante</label>
+                        <p-dropdown 
+                            formControlName="incidenceSourceInformation" 
+                            [options]="listSource" 
+                            placeholder="Seleciona una opción"                       
+                            filterBy="label" 
+                            [showClear]="true"  
+                            optionLabel="label" 
+                            optionValue="value">
+                        </p-dropdown>
+                        <div *ngIf="form.controls.incidenceSourceInformation.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceSourceInformation.errors?.['required']" >*Campo requerido</small>
+                        </div>
+                    </div>   
+
+                    <div class="field ">
+                        <label for="name" class="font-semibold">Vía de comunicación del informante</label>
+                        <p-dropdown 
+                            formControlName="incidenceSourceChannel" 
+                            [options]="listSourceChannels" 
+                            placeholder="Seleciona una opción"                       
+                            filterBy="label" 
+                            [showClear]="true"  
+                            optionLabel="label" 
+                            optionValue="value">
+                        </p-dropdown>
+                        <div *ngIf="form.controls.incidenceSourceChannel.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceSourceChannel.errors?.['required']" >*Campo requerido</small>
+                        </div>
+                    </div>   
+
+                    <div class="field ">
+                        <label for="name" class="font-semibold">Datos del informante</label>
+                        <input  pInputText id="name"   type="text"  formControlName="incidenceInformantData" autofocus />
+                        <div *ngIf="form.controls.incidenceInformantData.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceInformantData.errors?.['required']" >*Campo requerido</small>
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceInformantData.errors?.['maxlength']" >*Longitud máxima 255</small>
+                        </div>
+                    </div> 
+                </div>
                
-                <div class="field ">
-                    <label for="incidenceType" class="font-semibold">Clasificación de la incidencia</label>
-                    <p-dropdown 
-                        formControlName="incidenceType" 
-                        [options]="listType" 
-                        placeholder="Seleciona una opción"
-                        filterBy="label" 
-                        [showClear]="true"  
-                        optionLabel="label" 
-                        optionValue="value">
-                    </p-dropdown>
-                    <div *ngIf="form.controls.incidenceType.invalid">
-                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceType.errors?.['required']" >*Campo requerido</small>
-                    </div>
-                </div> 
+                <div class="card">
+                    <h5 >Clasificación de la incidencia</h5>
+					<div class="field ">
+						<label for="incidenceType" class="font-semibold">Tipo de incidencia</label>
+						<p-dropdown 
+							formControlName="incidenceType" 
+							[options]="listType" 
+							placeholder="Seleciona una opción"
+							filterBy="label" 
+							[showClear]="true"  
+							optionLabel="label" 
+							optionValue="value">
+						</p-dropdown>
+						<div *ngIf="form.controls.incidenceType.invalid">
+							<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceType.errors?.['required']" >*Campo requerido</small>
+						</div>
+					</div> 
 
-                <div class="field" *ngIf="form.controls.incidenceType.value == 'robo de activo' ">
-                    <label for="incidenceTypeDescription" class="font-semibold">Descripción robo de activo</label>
-                    <div>
-                        <textarea rows="3" cols="30" pInputTextarea formControlName="incidenceTypeDescription"  style="width: 100%;max-width: 100%;" ></textarea>
-                    </div>
-                </div> 
+					<div class="field" *ngIf="form.controls.incidenceType.value == 'operativa' ">
+						<label for="incidenceClassification" class="font-semibold">Clasificación de la incidencia</label>
+						<p-dropdown 
+							formControlName="incidenceClassification" 
+							[options]="listOperational" 
+							placeholder="Seleciona una opción"
+							filterBy="name" 
+							[showClear]="true"  
+							optionLabel="name" 
+							optionValue="name">
+						</p-dropdown>
+						<div *ngIf="form.controls.incidenceClassification.invalid">
+							<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceClassification.errors?.['required']" >*Campo requerido</small>
+						</div>
+					</div> 
 
-                <div class="field ">
-                    <label for="name" class="font-semibold">Cuadrante</label>
-                    <input  pInputText id="name"   type="text"  formControlName="incidenceQuadrant" autofocus />
-                    <div *ngIf="form.controls.incidenceQuadrant.invalid">
-                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceQuadrant.errors?.['required']" >*Campo requerido</small>
-                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceQuadrant.errors?.['maxlength']" >*Longitud máxima 255</small>
-                    </div>
-                </div>   
+					<div class="field" *ngIf="form.controls.incidenceType.value == 'preventiva' ">
+						<label for="incidenceClassification" class="font-semibold">Clasificación de la incidencia</label>
+						<p-dropdown 
+							formControlName="incidenceClassification" 
+							[options]="listPreventive" 
+							placeholder="Seleciona una opción"
+							filterBy="name" 
+							[showClear]="true"  
+							optionLabel="name" 
+							optionValue="name">
+						</p-dropdown>
+						<div *ngIf="form.controls.incidenceClassification.invalid">
+							<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceClassification.errors?.['required']" >*Campo requerido</small>
+						</div>
+					</div> 
+
+					<div class="field" *ngIf="form.controls.incidenceType.value == 'informativa' ">
+						<label for="incidenceClassification" class="font-semibold">Clasificación de la incidencia</label>
+						<p-dropdown 
+							formControlName="incidenceClassification" 
+							[options]="listInformation" 
+							placeholder="Seleciona una opción"
+							filterBy="name" 
+							[showClear]="true"  
+							optionLabel="name" 
+							optionValue="name">
+						</p-dropdown>
+						<div *ngIf="form.controls.incidenceClassification.invalid">
+							<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceClassification.errors?.['required']" >*Campo requerido</small>
+						</div>
+					</div> 
+
+					<div class="field ">
+						<label for="incidenceDescription" class="font-semibold">Descripción de los hechos</label>
+						<div>
+							<textarea rows="3" cols="30" pInputTextarea formControlName="incidenceDescription"  style="width: 100%;max-width: 100%;" ></textarea>
+						</div>
+						<div *ngIf="form.controls.incidenceDescription.invalid">
+							<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceDescription.errors?.['required']" >*Campo requerido</small>
+						</div>
+					</div> 
           
+                </div>
 
-                <div class="field" *ngIf="form.controls.incidenceCostumerId.value">
-                    <label  class="font-semibold">Dispositivos involucrados</label>
-                    <p-table 
+                <div class="card">
+                    <h5 >Captura de datos</h5>
+					<div class="field" *ngIf="form.controls.incidenceCostumerId.value">
+						<label  class="font-semibold">Dispositivos involucrados</label>
+						<p-table 
                             #dt 
                             [value]="listDevices" 
                             [tableStyle]="{ 'min-width': '50rem' }" 
@@ -111,6 +174,7 @@
                                         <th class="col-2">ID</th>
                                         <th class="col-2">NOMBRE</th>
                                         <th class="col-2">TIPO DE DISPOSITIVO</th>
+                                        <th class="col-2">AREA OPERATIVA</th>
                                         <th class="col-2">PROVEEDOR INTERNO</th>
                                         <th>PRESENTÓ FALLA</th>
                                     </tr>
@@ -127,6 +191,7 @@
                                         </td>
                                         <td>{{ device.monitoringDeviceName}}</td>
                                         <td>{{ device.monitoringDeviceType}}</td>
+                                        <td>{{ device.monitoringDeviceOperationalAreaId['operationalAreaIdentifier']}}</td>
                                         <td>
                                             
                                             <i class="pi" [ngClass]="{ 'text-green-500 pi-check-circle': device.monitoringDeviceProvider == true, 'text-red-500 pi-times-circle': device.monitoringDeviceProvider == false }"></i>
@@ -135,306 +200,302 @@
 
                                     </tr> 
                                 </ng-template>
-                    </p-table>
+						</p-table>
                     
+					</div>
+               
+					<div>
+						<div class="flex flex-wrap gap-2 m-2">
+							<p-button label="Personas involucradas"  (onClick)="addRow('people')" icon="pi pi-plus"  badge="{{form.controls.incidencePeoples.length}}" ></p-button>
+						</div>
+						<div class="card mt-3" formArrayName="incidencePeoples">
+
+							<p-table responsiveLayout="scroll"  [breakpoint]="'760px'" [value]="infoPeoplesArray().controls" dataKey="index" editMode="row" [tableStyle]="{'minx-width': '50rem'}">
+								<ng-template pTemplate="header">
+									<tr>
+										<th style="width:12%">Nombre</th>
+										<th style="width:12%">Sexo</th>
+										<th style="width:12%">Edad</th>
+										<th style="width:12%">Fecha de nacimiento</th>
+										<th style="width:12%">Lugar de nacimiento</th>
+										<th style="width:12%">Domicilio particular</th>
+										<th style="width:12%">Señas particulares</th>
+										<th style="width:12%">Eliminar</th>
+									</tr>
+								</ng-template>
+								<ng-template pTemplate="body" let-incidencePeople  let-i="rowIndex">
+									<tr   [pEditableRow]="incidencePeople" [formGroupName]="i">
+										<td [style]="{'min-width':'250px'}">
+											<div>
+												<input  pInputText type="text" formControlName="incidencePeopleName" >
+											</div>                                        
+										</td>
+										
+										<td>
+											<div>
+												<p-dropdown formControlName="incidencePeopleGenre" [options]="listGenre" placeholder="Selecciona" appendTo="body" [showClear]="true" optionLabel="label" optionValue="value"></p-dropdown>
+											</div>                                        
+										</td>
+
+										<td [style]="{'min-width':'95px'}">
+											<div>
+												<p-inputNumber formControlName="incidencePeopleAge" suffix=" años"> </p-inputNumber>
+											</div>                                        
+										</td>
+
+										<td [style]="{'min-width':'152px'}">
+											<div>
+												<p-calendar formControlName="incidencePeopleBirthDate" appendTo="body" [showIcon]="true"></p-calendar>
+											</div>                                        
+										</td>
+
+										<td [style]="{'min-width':'152px'}">
+											<div>
+												<p-dropdown formControlName="incidencePeopleBirthPlace" [options]="items" [filter]="true" filterBy="name"  placeholder="Selecciona" appendTo="body" [showClear]="true" optionLabel="name" optionValue="name"></p-dropdown>
+											</div>                                        
+										</td>
+
+										<td [style]="{'min-width':'250px'}">
+											<div>
+												<input pInputText #search id="incidencePeopleAddress" type="text" (keydown.enter)="$event.preventDefault()" placeholder="Dirección" formControlName="incidencePeopleAddress" class="font-semibold" maxlength="251" autofocus />
+											</div>                                        
+										</td>
+
+										<td [style]="{'min-width':'250px'}">
+											<div>
+												<input  pInputText type="text" placeholder="Descripción" formControlName="incidencePeopleSigns" >
+											</div>                                        
+										</td>
+
+										<td>
+											<div class="flex align-items-center justify-content-center gap-2">
+												<button pButton pRipple type="button"  (click)="removeRow('people',i)" pCancelEditableRow icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"></button>                                                
+											</div>
+										</td>
+									</tr>
+								</ng-template>
+							</p-table>
+						</div>
+					</div>
+
+					<div>
+						<div class="flex flex-wrap gap-2 m-2">
+							<p-button label="Vehiculos involucrados"  (onClick)="addRow('vehicle')" icon="pi pi-plus"  badge="{{form.controls.incidenceVehicles.length}}" ></p-button>
+						</div>
+						<div class="card mt-3" formArrayName="incidenceVehicles">
+
+							<p-table responsiveLayout="scroll"  [breakpoint]="'760px'" [value]="infoVehiclesArray().controls" dataKey="index" editMode="row" [tableStyle]="{'minx-width': '50rem'}">
+								<ng-template pTemplate="header">
+									<tr>
+										<th style="width:12%">Marca</th>
+										<th style="width:12%">Modelo</th>
+										<th style="width:12%">Placas</th>
+										<th style="width:12%">Color</th>
+										<th style="width:12%">Características</th>
+										<th style="width:12%"></th>
+									</tr>
+								</ng-template>
+								<ng-template pTemplate="body" let-incidenceVehicle  let-i="rowIndex">
+									<tr   [pEditableRow]="incidenceVehicle" [formGroupName]="i">
+										<td>
+											<div class="col-20">
+												<input  pInputText type="text" placeholder="Marca" formControlName="incidenceVehicleBrand" >
+											</div>                                        
+										</td>
+										
+										<td>
+											<div class="col-20">
+												<input  pInputText type="text" placeholder="Modelo" formControlName="incidenceVehicleModel" >
+											</div>                                        
+										</td>
+
+										<td>
+											<div class="col-20">
+												<input  pInputText type="text" placeholder="Placas" formControlName="incidenceVehiclePlateNumber" >
+											</div>                                        
+										</td>
+
+										<td>
+											<div class="col-20">
+												<input  pInputText type="text" placeholder="Color" formControlName="incidenceVehicleColor" >
+											</div>                                        
+										</td>
+
+										<td>
+											<div class="col-20">
+												<input  pInputText type="text" placeholder="Características" formControlName="incidenceVehicleOthers" >
+											</div>                                        
+										</td>
+										
+										<td>
+											<div class="flex align-items-center justify-content-center gap-2">
+												<button pButton pRipple type="button"  (click)="removeRow('vehicle',i)" pCancelEditableRow icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"></button>                                                
+											</div>
+										</td>
+									</tr>
+								</ng-template>
+							</p-table>
+						</div>
+					</div>
+
+					<div class="mt-5" [ngClass]="{'error-box  mt-5':uploadedFiles.length == 0 }" >
+						<div *ngIf="uploadedFiles.length == 0">
+							<small class="text-red-600 flex justify-content-end"  >*Campo requerido</small>
+						</div>
+						<div class="field ml-2 mr-2 mt-5"  >  
+							
+							<p-fileUpload #fileUpload 
+							chooseLabel="Adjuntar evidencia"							
+							[multiple]="true" 
+							accept="video/*,audio/*,image/*"
+							(onSelect)="onUpload($event)"
+							[showUploadButton]="false" 
+							[showCancelButton]="false" 
+							[maxFileSize]=20000000
+							>
+								<ng-template let-file pTemplate="file"></ng-template>
+								<ng-template pTemplate="content">
+
+									<div *ngFor="let file of uploadedFiles; let i = index">
+										<div class="grid border-bottom-1 surface-border m-2 surface-overlay font-bold "  >   
+											<div class="col-12 md:col-3 lg:col-2 align-content-center	 p-fileupload-filename" style="margin: 0.5rem;"> 
+												<p-image *ngIf="file.type.includes('image')" [src]="file.objectURL" class="m-auto" alt="Image" width="150" [preview]="true"></p-image>
+												<span *ngIf="file.type.includes('pdf')" style="font-size: 3rem; color: red"  class="pi pi-file-pdf m-auto"></span>
+												<span *ngIf="file.type.includes('video')" style="font-size: 3rem; color: rgb(7, 7, 7)"  class="pi pi-video m-auto"></span>
+												<span *ngIf="file.type.includes('audio')" style="font-size: 3rem; color: rgb(50, 24, 167)"  class="pi pi-volume-up m-auto"></span>
+
+											</div>                         
+											<div class="col-12 md:col-3 lg:col-3 align-content-center p-fileupload-filename" style="margin: 0.5rem;"> {{ file.name}} </div> 
+											<div class="col-12 md:col-3 lg:col-2 align-content-center p-fileupload-filename" style="margin: 0.5rem;"> {{ (file.size/1024).toFixed(2) }} KB  </div>
+											
+											<div class="col-12 md:col-3 lg:col-1 align-content-center">
+												<button type="button" icon="pi pi-times" pbutton="" (click)="removeFile(file,i)" class="p-element p-button p-component p-button-icon-only" ng-reflect-icon="pi pi-times"  ><span class="p-button-icon pi pi-times" aria-hidden="true"></span></button>
+											</div>
+										</div>
+									</div>
+								</ng-template>
+							</p-fileUpload>
+						</div>
+					</div>
                 </div>
-                
-                <div class="field">
-                    <div class="grid">
-                        
-                        <div class="col-12 md:col-6">
-                            <label for="incidenceInvolvedDevices"  class="font-semibold">Fecha de inicio</label>
-                            <p-calendar formControlName="incidenceStartDate"  [showTime]="true" [showIcon]="true"></p-calendar>
-                            <div *ngIf="form.controls.incidenceStartDate.invalid">
-                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceStartDate.errors?.['required']" >*Campo requerido</small>
-                            </div>
 
-                        </div>
-                        <div class="col-12 md:col-6">
-                            <label for="incidenceInvolvedDevices"  class="font-semibold">Fecha de fin</label>
-                            <p-calendar formControlName="incidenceEndDate" [showTime]="true"  [showIcon]="true"></p-calendar>
-                            <div *ngIf="form.controls.incidenceEndDate.invalid">
-                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceEndDate.errors?.['required']" >*Campo requerido</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="field ">
-                    <label for="incidenceDescription" class="font-semibold">Descripción de los hechos</label>
-                    <div>
-                        <textarea rows="3" cols="30" pInputTextarea formControlName="incidenceDescription"  style="width: 100%;max-width: 100%;" ></textarea>
-                    </div>
-                    <div *ngIf="form.controls.incidenceDescription.invalid">
-                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceDescription.errors?.['required']" >*Campo requerido</small>
-                    </div>
-                </div> 
 
-                <div>
-                    <div class="flex flex-wrap gap-2 m-2">
-                        <p-button label="Personas involucradas"  (onClick)="addRow('people')" icon="pi pi-plus"  badge="{{form.controls.incidencePeoples.length}}" ></p-button>
-                    </div>
-                    <div class="card mt-3" formArrayName="incidencePeoples">
+                <div class="card">
+                    <h5 >Finalizar incidencia</h5>
+					<div [ngClass]="{'error-box  mt-5':form.controls.incidenceCoordinations.errors }" >
+						<div class="flex flex-wrap gap-2 m-2">
+							<p-button label="Vía de coordinación"  (onClick)="addRow('coordination')" icon="pi pi-plus"   badge="{{form.controls.incidenceCoordinations.length}}" ></p-button>
+						</div>
+						<div class="card mt-3" formArrayName="incidenceCoordinations">
+						   
+							<div *ngIf="form.controls.incidenceCoordinations.invalid">
+								<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceCoordinations.errors?.['duplicated']" >*Detalle duplicado</small>
+								<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceCoordinations.errors?.['required']" >*Campo requerido</small>
+								<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceCoordinations.errors?.['minlength']" >*Longitud mínima 1</small>
+							</div>
+							<p-table responsiveLayout="scroll"  [breakpoint]="'760px'" [value]="infoCoordinationsArray().controls" dataKey="index" editMode="row" [tableStyle]="{'minx-width': '50rem'}">
+								<ng-template pTemplate="header">
+									<tr>
+										<th style="width:45%">TELÉFONO</th>
+										<th style="width:45%">VIA DE COMUNICACIÓN</th>
+										<th style="width:10%"></th>
+									</tr>
+								</ng-template>
+								<ng-template pTemplate="body" let-coordination  let-i="rowIndex">
+									<tr   [pEditableRow]="coordination" [formGroupName]="i">
+										<td>
+											<div class="col-12 ">
+											  
+												<p-dropdown appendTo="body" [filter]="true"[options]="listPhones" formControlName="incidenceCoordinationDependencyPhoneId" placeholder="Seleccionar via de coordinacion" [group]="true">
+													<ng-template let-group pTemplate="group">
+														<div class="flex align-items-center">
+															<span class="font-bold uppercase">{{ group.label}}</span>
+														</div>
+													</ng-template>
+												   
+												</p-dropdown>
 
-                        <p-table responsiveLayout="scroll"  [breakpoint]="'760px'" [value]="infoPeoplesArray().controls" dataKey="index" editMode="row" [tableStyle]="{'minx-width': '50rem'}">
-                            <ng-template pTemplate="header">
-                                <tr>
-                                    <th style="width:12%">Nombre</th>
-                                    <th style="width:12%">Sexo</th>
-                                    <th style="width:12%">Edad</th>
-                                    <th style="width:12%">Fecha de nacimiento</th>
-                                    <th style="width:12%">Lugar de nacimiento</th>
-                                    <th style="width:12%">Domicilio particular</th>
-                                    <th style="width:12%">Señas particulares</th>
-                                    <th style="width:12%">Eliminar</th>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="body" let-incidencePeople  let-i="rowIndex">
-                                <tr   [pEditableRow]="incidencePeople" [formGroupName]="i">
-                                    <td [style]="{'min-width':'250px'}">
-                                        <div>
-                                            <input  pInputText type="text" formControlName="incidencePeopleName" >
-                                        </div>                                        
-                                    </td>
-                                    
-                                    <td>
-                                        <div>
-                                            <p-dropdown formControlName="incidencePeopleGenre" [options]="listGenre" placeholder="Selecciona" appendTo="body" [showClear]="true" optionLabel="label" optionValue="value"></p-dropdown>
-                                        </div>                                        
-                                    </td>
+												<div *ngIf="form.controls.incidenceCoordinations.controls[i].controls.incidenceCoordinationDependencyPhoneId.invalid">
+													<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceCoordinations.controls[i].controls.incidenceCoordinationDependencyPhoneId.errors?.['required']" >*Campo requerido</small>
+												</div>                                                
+											</div>
+										</td>
+										<td>
+											<p-dropdown 
+													formControlName="incidenceCoordinationCommunicationChannel" 
+													[options]="listChannels" 
+													placeholder="Seleciona una opción"
+													appendTo="body"
+													[showClear]="true"  
+													optionLabel="label" 
+													optionValue="value">
+												</p-dropdown>
+												<div *ngIf="form.controls.incidenceCoordinations.controls[i].controls.incidenceCoordinationCommunicationChannel.invalid">
+													<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceCoordinations.controls[i].controls.incidenceCoordinationCommunicationChannel.errors?.['required']" >*Campo requerido</small>
+												</div>  
+										</td>
+										
+										<td>
+											
+											<div class="flex align-items-center justify-content-center gap-2">
+												<button pButton pRipple type="button"  (click)="removeRow('coordination',i)" pCancelEditableRow icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"></button>
+											</div>
+										</td>
+										
+									</tr>
+								</ng-template>
+							</p-table>
+						</div>
+					</div>
 
-                                    <td [style]="{'min-width':'95px'}">
-                                        <div>
-                                            <p-inputNumber formControlName="incidencePeopleAge" suffix=" años"> </p-inputNumber>
-                                        </div>                                        
-                                    </td>
+					<div class="field mt-5 ">
+						<label for="incidenceObservation" class="font-semibold">Observaciones</label>
+						<div>
+							<textarea rows="3" cols="30" pInputTextarea formControlName="incidenceObservation"  style="width: 100%;max-width: 100%;" ></textarea>
+						</div>
+						<div *ngIf="form.controls.incidenceObservation.invalid">
+							<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceObservation.errors?.['required']" >*Campo requerido</small>
+						</div>
+					</div> 
+                 
+					<div class="field ">
+						<label for="incidenceValidationEvent" class="font-semibold">Validación</label>
+						<p-dropdown 
+							formControlName="incidenceValidationEvent" 
+							[options]="listValidation" 
+							placeholder="Seleciona una opción"
+							filterBy="label" 
+							[showClear]="true"  
+							optionLabel="label" 
+							optionValue="value">
+						</p-dropdown>
+						<div *ngIf="form.controls.incidenceValidationEvent.invalid">
+							<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceValidationEvent.errors?.['required']" >*Campo requerido</small>
+						</div>
+					</div>
 
-                                    <td [style]="{'min-width':'152px'}">
-                                        <div>
-                                            <p-calendar formControlName="incidencePeopleBirthDate" appendTo="body" [showIcon]="true"></p-calendar>
-                                        </div>                                        
-                                    </td>
+					<div class="field">
+						<div class="grid">
+							
+							<div class="col-12 md:col-6">
+								<label for="incidenceInvolvedDevices"  class="font-semibold">Fecha de inicio</label>
+								<p-calendar formControlName="incidenceStartDate"  [showTime]="true" [showIcon]="true"></p-calendar>
+								<div *ngIf="form.controls.incidenceStartDate.invalid">
+									<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceStartDate.errors?.['required']" >*Campo requerido</small>
+								</div>
 
-                                    <td [style]="{'min-width':'152px'}">
-                                        <div>
-                                            <p-dropdown formControlName="incidencePeopleBirthPlace" [options]="items" [filter]="true" filterBy="name"  placeholder="Selecciona" appendTo="body" [showClear]="true" optionLabel="name" optionValue="name"></p-dropdown>
-                                        </div>                                        
-                                    </td>
+							</div>
+							<div class="col-12 md:col-6">
+								<label for="incidenceInvolvedDevices"  class="font-semibold">Fecha de fin</label>
+								<p-calendar formControlName="incidenceEndDate" [showTime]="true"  [showIcon]="true"></p-calendar>
+								<div *ngIf="form.controls.incidenceEndDate.invalid">
+									<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceEndDate.errors?.['required']" >*Campo requerido</small>
+								</div>
+							</div>
+						</div>
+					</div>
 
-                                    <td [style]="{'min-width':'250px'}">
-                                        <div>
-                                            <input pInputText #search id="incidencePeopleAddress" type="text" (keydown.enter)="$event.preventDefault()" placeholder="Dirección" formControlName="incidencePeopleAddress" class="font-semibold" maxlength="251" autofocus />
-                                        </div>                                        
-                                    </td>
-
-                                    <td [style]="{'min-width':'250px'}">
-                                        <div>
-                                            <input  pInputText type="text" placeholder="Descripción" formControlName="incidencePeopleSigns" >
-                                        </div>                                        
-                                    </td>
-
-                                    <td>
-                                        <div class="flex align-items-center justify-content-center gap-2">
-                                            <button pButton pRipple type="button"  (click)="removeRow('people',i)" pCancelEditableRow icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"></button>                                                
-                                        </div>
-                                    </td>
-                                </tr>
-                            </ng-template>
-                        </p-table>
-                    </div>
-                </div>
-
-                <div>
-                    <div class="flex flex-wrap gap-2 m-2">
-                        <p-button label="Vehiculos involucrados"  (onClick)="addRow('vehicle')" icon="pi pi-plus"  badge="{{form.controls.incidenceVehicles.length}}" ></p-button>
-                    </div>
-                    <div class="card mt-3" formArrayName="incidenceVehicles">
-
-                        <p-table responsiveLayout="scroll"  [breakpoint]="'760px'" [value]="infoVehiclesArray().controls" dataKey="index" editMode="row" [tableStyle]="{'minx-width': '50rem'}">
-                            <ng-template pTemplate="header">
-                                <tr>
-                                    <th style="width:12%">Marca</th>
-                                    <th style="width:12%">Modelo</th>
-                                    <th style="width:12%">Placas</th>
-                                    <th style="width:12%">Color</th>
-                                    <th style="width:12%">Características</th>
-                                    <th style="width:12%"></th>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="body" let-incidenceVehicle  let-i="rowIndex">
-                                <tr   [pEditableRow]="incidenceVehicle" [formGroupName]="i">
-                                    <td>
-                                        <div class="col-20">
-                                            <input  pInputText type="text" placeholder="Marca" formControlName="incidenceVehicleBrand" >
-                                        </div>                                        
-                                    </td>
-                                    
-                                    <td>
-                                        <div class="col-20">
-                                            <input  pInputText type="text" placeholder="Modelo" formControlName="incidenceVehicleModel" >
-                                        </div>                                        
-                                    </td>
-
-                                    <td>
-                                        <div class="col-20">
-                                            <input  pInputText type="text" placeholder="Placas" formControlName="incidenceVehiclePlateNumber" >
-                                        </div>                                        
-                                    </td>
-
-                                    <td>
-                                        <div class="col-20">
-                                            <input  pInputText type="text" placeholder="Color" formControlName="incidenceVehicleColor" >
-                                        </div>                                        
-                                    </td>
-
-                                    <td>
-                                        <div class="col-20">
-                                            <input  pInputText type="text" placeholder="Características" formControlName="incidenceVehicleOthers" >
-                                        </div>                                        
-                                    </td>
-                                    
-                                    <td>
-                                        <div class="flex align-items-center justify-content-center gap-2">
-                                            <button pButton pRipple type="button"  (click)="removeRow('vehicle',i)" pCancelEditableRow icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"></button>                                                
-                                        </div>
-                                    </td>
-                                </tr>
-                            </ng-template>
-                        </p-table>
-                    </div>
-                </div>
-
-                
-                <div [ngClass]="{'error-box  mt-5':form.controls.incidenceCoordinations.errors }" >
-                    <div class="flex flex-wrap gap-2 m-2">
-                        <p-button label="Vía de coordinación"  (onClick)="addRow('coordination')" icon="pi pi-plus"   badge="{{form.controls.incidenceCoordinations.length}}" ></p-button>
-                    </div>
-                    <div class="card mt-3" formArrayName="incidenceCoordinations">
-                       
-                        <div *ngIf="form.controls.incidenceCoordinations.invalid">
-                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceCoordinations.errors?.['duplicated']" >*Detalle duplicado</small>
-                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceCoordinations.errors?.['required']" >*Campo requerido</small>
-                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceCoordinations.errors?.['minlength']" >*Longitud mínima 1</small>
-                        </div>
-                        <p-table responsiveLayout="scroll"  [breakpoint]="'760px'" [value]="infoCoordinationsArray().controls" dataKey="index" editMode="row" [tableStyle]="{'minx-width': '50rem'}">
-                            <ng-template pTemplate="header">
-                                <tr>
-                                    <th style="width:45%">TELÉFONO</th>
-                                    <th style="width:45%">VIA DE COMUNICACIÓN</th>
-                                    <th style="width:10%"></th>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="body" let-coordination  let-i="rowIndex">
-                                <tr   [pEditableRow]="coordination" [formGroupName]="i">
-                                    <td>
-                                        <div class="col-12 ">
-                                          
-                                            <p-dropdown appendTo="body" [filter]="true"[options]="listPhones" formControlName="incidenceCoordinationDependencyPhoneId" placeholder="Seleccionar via de coordinacion" [group]="true">
-                                                <ng-template let-group pTemplate="group">
-                                                    <div class="flex align-items-center">
-                                                        <span class="font-bold uppercase">{{ group.label}}</span>
-                                                    </div>
-                                                </ng-template>
-                                               
-                                            </p-dropdown>
-
-                                            <div *ngIf="form.controls.incidenceCoordinations.controls[i].controls.incidenceCoordinationDependencyPhoneId.invalid">
-                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceCoordinations.controls[i].controls.incidenceCoordinationDependencyPhoneId.errors?.['required']" >*Campo requerido</small>
-                                            </div>                                                
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p-dropdown 
-                                                formControlName="incidenceCoordinationCommunicationChannel" 
-                                                [options]="listChannels" 
-                                                placeholder="Seleciona una opción"
-                                                appendTo="body"
-                                                [showClear]="true"  
-                                                optionLabel="label" 
-                                                optionValue="value">
-                                            </p-dropdown>
-                                            <div *ngIf="form.controls.incidenceCoordinations.controls[i].controls.incidenceCoordinationCommunicationChannel.invalid">
-                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceCoordinations.controls[i].controls.incidenceCoordinationCommunicationChannel.errors?.['required']" >*Campo requerido</small>
-                                            </div>  
-                                    </td>
-                                    
-                                    <td>
-                                        
-                                        <div class="flex align-items-center justify-content-center gap-2">
-                                            <button pButton pRipple type="button"  (click)="removeRow('coordination',i)" pCancelEditableRow icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"></button>
-                                        </div>
-                                    </td>
-                                    
-                                </tr>
-                            </ng-template>
-                        </p-table>
-                    </div>
-                </div>
-                <div class="mt-5" [ngClass]="{'error-box  mt-5':uploadedFiles.length == 0 }" >
-                    <!-- Necesario para hacer testing automático
-                    <div *ngIf="uploadedFiles.length == 0">
-                        <small class="text-red-600 flex justify-content-end"  >*Campo requerido</small>
-                    </div>
-                    -->
-                    <div class="field ml-2 mr-2 mt-5"  >  
-                        <p-fileUpload #fileUpload 
-                        chooseLabel="Adjuntar evidencia"
-                        
-                        [multiple]="true" 
-                        accept="video/*,audio/*,image/*"
-                        (onSelect)="onUpload($event)"
-                        [showUploadButton]="false" 
-                        [showCancelButton]="false" 
-                        [maxFileSize]=20000000
-                        >
-                            <ng-template let-file pTemplate="file"></ng-template>
-                            <ng-template pTemplate="content">
-
-                        <div *ngFor="let file of uploadedFiles; let i = index">
-                            <div class="grid border-bottom-1 surface-border m-2 surface-overlay font-bold "  >   
-                                <div class="col-12 md:col-3 lg:col-2 align-content-center	 p-fileupload-filename" style="margin: 0.5rem;"> 
-                                    <p-image *ngIf="file.type.includes('image')" [src]="file.objectURL" class="m-auto" alt="Image" width="150" [preview]="true"></p-image>
-                                    <span *ngIf="file.type.includes('pdf')" style="font-size: 3rem; color: red"  class="pi pi-file-pdf m-auto"></span>
-                                    <span *ngIf="file.type.includes('video')" style="font-size: 3rem; color: rgb(7, 7, 7)"  class="pi pi-video m-auto"></span>
-                                    <span *ngIf="file.type.includes('audio')" style="font-size: 3rem; color: rgb(50, 24, 167)"  class="pi pi-volume-up m-auto"></span>
-
-                                </div>                         
-                                <div class="col-12 md:col-3 lg:col-3 align-content-center p-fileupload-filename" style="margin: 0.5rem;"> {{ file.name}} </div> 
-                                <div class="col-12 md:col-3 lg:col-2 align-content-center p-fileupload-filename" style="margin: 0.5rem;"> {{ (file.size/1024).toFixed(2) }} KB  </div>
-                                
-                                <div class="col-12 md:col-3 lg:col-1 align-content-center">
-                                    <button type="button" icon="pi pi-times" pbutton="" (click)="removeFile(file,i)" class="p-element p-button p-component p-button-icon-only" ng-reflect-icon="pi pi-times"  ><span class="p-button-icon pi pi-times" aria-hidden="true"></span></button>
-                                </div>
-                            </div>
-                        </div>
-                            </ng-template>
-                        </p-fileUpload>
-
-                    </div>
-                </div>
-                <div class="field mt-5 ">
-                    <label for="incidenceObservation" class="font-semibold">Observaciones</label>
-                    <div>
-                        <textarea rows="3" cols="30" pInputTextarea formControlName="incidenceObservation"  style="width: 100%;max-width: 100%;" ></textarea>
-                    </div>
-                    <div *ngIf="form.controls.incidenceObservation.invalid">
-                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceObservation.errors?.['required']" >*Campo requerido</small>
-                    </div>
-                </div> 
-                <div class="field ">
-                    <label for="incidenceValidationEvent" class="font-semibold">Validación</label>
-                    <p-dropdown 
-                        formControlName="incidenceValidationEvent" 
-                        [options]="listValidation" 
-                        placeholder="Seleciona una opción"
-                        filterBy="label" 
-                        [showClear]="true"  
-                        optionLabel="label" 
-                        optionValue="value">
-                    </p-dropdown>
-                    <div *ngIf="form.controls.incidenceValidationEvent.invalid">
-                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.incidenceValidationEvent.errors?.['required']" >*Campo requerido</small>
-                    </div>
-                </div>
+				</div>
 
                 <div class="col-12 flex justify-content-end mt-4">
                     <button pButton pRipple class="p-button-outlined w-8rem mr-3"  label="Cancelar" (click)="cancel($event)" ></button>

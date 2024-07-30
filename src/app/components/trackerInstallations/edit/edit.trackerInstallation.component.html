@@ -197,7 +197,13 @@
                             </ng-template>
                         </p-table>
                     </div>
-                </div>              
+                </div>      
+                
+                <div class="field">
+                    <label for="trackerInstallationObservation" class="font-semibold">Observaciones</label>
+                    <input id="trackerInstallationObservation" pInputText  type="text"  formControlName="trackerInstallationObservation"/>
+                </div>
+                
                 <div class="col-12 flex justify-content-end mt-4">
                     <button pButton pRipple class="p-button-outlined w-8rem mr-3"  label="Cancelar" (click)="cancel($event)" ></button>
                     <button pButton pRipple class="p-button-primary w-8rem"  label="Guardar" ></button>

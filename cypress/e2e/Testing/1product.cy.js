@@ -206,3 +206,6 @@ describe.only("Buscar producto", function () {
     });
 });
 */
+describe("Eliminar producto",function(){
+
+})

@@ -7,7 +7,7 @@ import {ConfirmationService, MessageService, LazyLoadEvent, SelectItem, FilterMa
 import { forkJoin, of } from 'rxjs';
 import { catchError  } from 'rxjs/operators';
 import { MiscService } from 'src/app/service/misc.service';
-import { DatePipe, CurrencyPipe,formatDate  } from '@angular/common'; 
+import { DatePipe, CurrencyPipe,formatDate  } from '@angular/common';
 
 
 import { PackageService } from 'src/app/service/package.service';
@@ -69,7 +69,7 @@ export class ListQuotationSalesComponent implements OnInit, OnDestroy {
 
 	visible: boolean;
 	id:number = null;
-	
+
 
     constructor(
 		private formBuilder: FormBuilder,
@@ -103,8 +103,8 @@ export class ListQuotationSalesComponent implements OnInit, OnDestroy {
     ngOnInit(): void
 	{
         this.matchModeOptionsText = [
-            { label: 'Comienza con', value: FilterMatchMode.STARTS_WITH  },
             { label: 'Contiene', value: FilterMatchMode.CONTAINS },
+            { label: 'Comienza con', value: FilterMatchMode.STARTS_WITH  },
             { label: 'Termina con', value: FilterMatchMode.ENDS_WITH},
             { label: 'Es igual', value: FilterMatchMode.EQUALS },
         ];
@@ -119,11 +119,11 @@ export class ListQuotationSalesComponent implements OnInit, OnDestroy {
             { label: 'Después', value: FilterMatchMode.DATE_AFTER },
         ];
 
-		const formOptions: AbstractControlOptions = { validators: Validators.nullValidator } ; 
+		const formOptions: AbstractControlOptions = { validators: Validators.nullValidator } ;
 
 		this.form = this.formBuilder.group
 		({
-            quotationSaleReasonStatus:[null, [Validators.required,Validators.maxLength(255)]], 
+            quotationSaleReasonStatus:[null, [Validators.required,Validators.maxLength(255)]],
 			quotationSaleStatus:['rechazada', [Validators.required]],
          }, formOptions);
     }
@@ -167,7 +167,7 @@ export class ListQuotationSalesComponent implements OnInit, OnDestroy {
         this.search =JSON.stringify(filter);
         this.miscService.startRequest();
         if(filter.length > 0){
-            this.filtrer(this.search);
+            this.filter(this.search);
         }else{
             this.list();
             this.cdref.detectChanges();
@@ -182,7 +182,7 @@ export class ListQuotationSalesComponent implements OnInit, OnDestroy {
             icon: 'pi pi-info-circle',
             acceptLabel: 'Aceptar',
             rejectLabel:'Cancelar',
-			key:'dialogDelete',			
+			key:'dialogDelete',
             accept: () => {
                 switch (deleteType) {
                     case 1:
@@ -226,7 +226,7 @@ export class ListQuotationSalesComponent implements OnInit, OnDestroy {
         });
     }
 
-    filtrer(texto: any){
+    filter(texto: any){
         this.quotationSaleService.getFilter(texto,this.limit, this.page,this.sort) // le sumo +1 ya que en sails le resto uno a la pagina (en sails quitare ese -1 )
             .subscribe((data: any)=>{
                 if(data != null){
@@ -313,48 +313,48 @@ export class ListQuotationSalesComponent implements OnInit, OnDestroy {
         return `Mostrando del ${startIndex} al ${endIndex} de ${totalRows}`;
     }
 
-	
-	
+
+
 	openDialogReject(id:number) {
 		this.visible = true;
-		this.id = id;    
+		this.id = id;
 	}
 	closeDialogReject() {
 		this.visible =false;
-		this.form.controls.quotationSaleReasonStatus.setValue(null); 
+		this.form.controls.quotationSaleReasonStatus.setValue(null);
 	}
 
 	rejectQuotation(){
 		if ( !this.form.invalid ) {
-			let quotation = {};   
+			let quotation = {};
 			quotation['id'] = this.id.toString();
 			Object.keys(this.form.value).forEach(element => {
-				quotation[element] = this.form.value[element];				
+				quotation[element] = this.form.value[element];
 			});
 
 			quotation['quotationSaleDateStatus'] = this.datePipe.transform(new Date(), 'yyyy-MM-dd  HH:mm:ss');
 
 			this.quotationSaleService.update(quotation)
 			.subscribe(data =>{
-				this.messageService.add({ severity: 'success',key: 'msg', summary: 'Guardado exitoso',life: 3000 });  
-				
+				this.messageService.add({ severity: 'success',key: 'msg', summary: 'Guardado exitoso',life: 3000 });
+
 				this.closeDialogReject();
-				
+
 				this.list();
-			
+
 			},  (err : any) => {
-				this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error  al guardar', detail: err.message, life: 3000 });  
-				this.miscService.endRquest();  
-			}); 
+				this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error  al guardar', detail: err.message, life: 3000 });
+				this.miscService.endRquest();
+			});
 		} else {
 			this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error',  detail:'Falta agregar motivo de rechazo', life: 3000 });
 			return;
 		}
 
 	}
-	
+
 	importPDF(quotationSale: QuotationSale)
-	{		
+	{
         this.miscService.startRequest();
         this.reportService.quotationSale(quotationSale.id).subscribe((data: any)=>
         {
@@ -362,17 +362,17 @@ export class ListQuotationSalesComponent implements OnInit, OnDestroy {
             const fileURL = URL.createObjectURL(file);
             window.open(fileURL, '_blank');
             this.miscService.endRquest();
-        }, 
+        },
         (err:any)=>
         {
 
             this.messageService.add({severity:'error', key: 'msg', summary:  err.error.message,detail: err.name,life: 3000});
             this.miscService.endRquest();
-        });            
+        });
     }
-    
-    
-	
+
+
+
 	accept( id : number) {
 
         this.confirmationService.confirm({
@@ -381,9 +381,9 @@ export class ListQuotationSalesComponent implements OnInit, OnDestroy {
             icon: 'pi pi-info-circle',
             acceptLabel: 'Aceptar',
             rejectLabel:'Cancelar',
-			key:'dialogAccept',			
+			key:'dialogAccept',
             accept: () => {
-                
+
                 this.processAcceptance(id);
                 this.createSalesOrder(id);
             }
@@ -394,7 +394,6 @@ export class ListQuotationSalesComponent implements OnInit, OnDestroy {
     createSalesOrder(id:number){
         let saleOrder = {};
         saleOrder['saleOrderQuotationSaleId'] = id.toString();
-        saleOrder['saleOrderShippingDate'] = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
         saleOrder['saleOrderTransmitter'] = this.sessionService.getUserId().toString();
         this.saleOrderService.create(saleOrder)
         .subscribe(data => {
@@ -410,36 +409,36 @@ export class ListQuotationSalesComponent implements OnInit, OnDestroy {
          //consultar  informacion de la cotizacion para procesar productos y paquetes
         this.quotationSaleService.getById(id)
         .subscribe(data =>{
-          
+
             let products = [];
 
             data['quotationSaleProducts'].forEach(obj => {
 
                   products.push(
                       {
-                          idProduct:obj.quotationSaleProductProductId, 
-                          quantity:obj.quotationSaleProductQuantity, 
+                          idProduct:obj.quotationSaleProductProductId,
+                          quantity:obj.quotationSaleProductQuantity,
                      }
                   );
-  
+
             });
             data['quotationSalePackages'].forEach(obj => {
                 for(let i = 0 ; i < obj.quotationSalePackageProducts.length; i++)
                     {
                         products.push(
                             {
-                                idProduct:obj.quotationSalePackageProducts[i].packageProductProductId, 
-                                quantity:(obj.quotationSalePackageProducts[i].packageProductQuantity) * obj.quotationSalePackageQuantity, 
+                                idProduct:obj.quotationSalePackageProducts[i].packageProductProductId,
+                                quantity:(obj.quotationSalePackageProducts[i].packageProductQuantity) * obj.quotationSalePackageQuantity,
                             }
                         );
-    
+
                     }
-                
+
             });
 
-            
+
             let actions = [];
-           
+
             products.forEach(obj => {
                //quantity, idProducto
                console.log(obj);
@@ -448,17 +447,17 @@ export class ListQuotationSalesComponent implements OnInit, OnDestroy {
 		        {
 
                     const ptt = this.quotationSaleRecordService.create({quotationSaleRecordQuotationSaleId:id.toString(), quotationSaleRecordProductId : (obj.idProduct).toString()}).pipe(
-                        catchError((error) => 
+                        catchError((error) =>
                         {
                             this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al crear registro en  quotationSaleRecord", detail:error.message });
                             return of(null);
                         })
-                    );	
+                    );
                     actions.push(ptt);
 
                 }
 
-                    
+
             });
 
             let quotation = {};
@@ -467,29 +466,29 @@ export class ListQuotationSalesComponent implements OnInit, OnDestroy {
 
 			quotation['quotationSaleDateStatus'] = this.datePipe.transform(new Date(), 'yyyy-MM-dd  HH:mm:ss');
             const ptt = this.quotationSaleService.update(quotation).pipe(
-                catchError((error) => 
+                catchError((error) =>
                 {
                     this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al actualizar cotización", detail:error.message });
                     return of(null);
                 })
-            );	
+            );
             actions.push(ptt);
 
-    
+
             forkJoin(actions).subscribe(([] :any )=>
             {
-                this.messageService.add({ severity: 'success', key: 'msg',summary: 'Operación exitosa', detail: 'Cotización aceptada exitosamente', life: 3000 }); 
+                this.messageService.add({ severity: 'success', key: 'msg',summary: 'Operación exitosa', detail: 'Cotización aceptada exitosamente', life: 3000 });
                 this.list();
-                this.miscService.endRquest(); 
+                this.miscService.endRquest();
             },
             (err:any)=>
             {
                 this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error', detail: 'Error general en el proceso de aceptar cotización', life: 3000 });
                 this.miscService.endRquest();
             });
-            
+
         });
-         
+
     }
 
 }

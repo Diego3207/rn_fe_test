@@ -168,6 +168,7 @@ export class EditTrackerComponent implements OnInit, OnDestroy {
             if(dataSims != null )
             {               
                 dataSims['object'].forEach(element => {
+                    //console.log(element);
                     this.listSimCards.push({'label':  "ICCID: "+element['iccid'],'value': element['id']});
                 });
             }
@@ -215,6 +216,7 @@ export class EditTrackerComponent implements OnInit, OnDestroy {
 
             if(dataSim != null )
             {  
+                console.log(dataSim);
                this.listSimCards.push({'label':  "ICCID: "+dataSim['simCardSupplyId']['supplyKey'],'value': dataSim['id']});
               
             }else{

@@ -30,7 +30,9 @@ export class EditTicketComponent implements OnInit, OnDestroy {
     selectedRegister: any[] = [];
     disabled: boolean = false;
     listPhones :any[]= [];
-
+    listChannels :any[]= [];
+    deletedCoordinations = [];
+    
 
     constructor(
         private formBuilder: FormBuilder,
@@ -76,6 +78,14 @@ export class EditTicketComponent implements OnInit, OnDestroy {
             this.getFilter(selectedValue);
           }
         });
+
+        this.listChannels = [ 
+          {label:'Llamada Telefónica',value:'llamada'},
+          {label:'WhatsApp',value:'whatsapp'},
+          {label:'Telegram',value:'telegram'},
+          {label:'SMS',value:'sms'},
+          {label:'Correo Electrónico',value:'email'}
+        ];
   	
     }
 
@@ -96,56 +106,125 @@ export class EditTicketComponent implements OnInit, OnDestroy {
       this.router.navigate(['/tickets']);
     }
 
+    infoCoordinationsArray(): FormArray 
+    {
+      return this.form.get('ticketCoordinations') as FormArray;
+    }
+
+    removeRow(object,index:number){
+        this.infoCoordinationsArray().removeAt(index); 
+        if(object.value.id !== null)
+        this.deletedCoordinations.push(object.value.id);
+    }
+  
+    addRow()
+    {
+        this.infoCoordinationsArray().push(this.newCoordinationArray());   
+    }
+
+    newCoordinationArray() 
+    {
+      return this.formBuilder.group({
+          id:null,
+          ticketCoordinationDependencyPhoneId:[null,[Validators.required]],
+          ticketCoordinationCommunicationChannel:[null,[Validators.required]]
+      });
+    }
+
     private save()  
     {
-      let ticketProperties = {};
-      Object.keys(this.form.value).forEach(element => {
-          ticketProperties[element] = this.form.value[element]; //copia las propiedades del objeto principal        
-      });
-  
-      //Parseamos el ID a string
-      ticketProperties['ticketCostumerId'] = (ticketProperties['ticketCostumerId']).toString();
-      ticketProperties['ticketUserId'] = (ticketProperties['ticketUserId']).toString();
-  
+        let ticketProperties = {};
+        Object.keys(this.form.value).forEach(element => {
+            ticketProperties[element] = this.form.value[element]; //copia las propiedades del objeto principal        
+        });
+    
+        //Parseamos el ID a string
+        ticketProperties['ticketCostumerId'] = (ticketProperties['ticketCostumerId']).toString();
+        ticketProperties['ticketUserId'] = (ticketProperties['ticketUserId']).toString();
+    
 
-    this.ticketService.update(ticketProperties)
-    .subscribe(data =>
-    {
-      this.miscService.endRquest();
-      
-      this.messageService.add({ severity: 'success',key: 'msg', summary: 'Operación exitosa',  life: 3000 });
-      this.router.navigate(['/tickets']);  
-    }, (err : any) => 
-    {
-      this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error', detail: 'Problemas al guardar', life: 3000 });
-      this.miscService.endRquest();
-    }); 
-  } 
-      
-  /*list(){
-      this.miscService.startRequest();
-      this.costumerService.getAll(0,1,'[{"id":"asc"}]')
-      .subscribe( (data:any )=>
-      {            
-        this.listCostumers = (data == null ? []: data['object']['records']);
-        this.miscService.endRquest();
+      this.ticketService.update(ticketProperties)
+      .subscribe(data =>
+      {      
+        this.miscService.endRquest(); 
+        this.messageService.add({ severity: 'success',key: 'msg', summary: 'Operación exitosa',  life: 3000 });
 
-        /// se hace patch de la información del OD
-          this.ticketService.getById(this.id)
-          .subscribe(data => {
-            console.log("data", data);
-            this.deviceSave = data.ticketDevices;
-            this.form.patchValue(data);
+        const actions = [];
+        //-update/create
+        this.form.value['ticketCoordinations'].forEach(element => {
             
-          })
-      },
-      (err : any) =>
+            if(element['id'] == null)
+            {
+                // -------- coordinations --------
+                // create
+                
+                element['ticketCoordinationTicketId'] = (this.form.value['id']).toString();
+                element['ticketCoordinationDependencyPhoneId'] = (element['ticketCoordinationDependencyPhoneId']).toString();
+
+                const ptt = this.ticketCoordinationService.create(element).pipe(
+                    catchError((error) => 
+                    {
+                        this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al guardar elemento nuevo contacto", detail:error.message });
+                        return of(null);
+                    })
+                );		
+
+               actions.push(ptt);
+            }else{
+                // update
+                element['ticketCoordinationDependencyPhoneId'] = (element['ticketCoordinationDependencyPhoneId']).toString();
+
+                const ptt = this.ticketCoordinationService.update(element).pipe(
+                    catchError((error) => 
+                    {
+                        this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al actualizar contacto existente", detail:error.message });
+                        return of(null);
+                    })
+                );		
+
+               actions.push(ptt);
+
+            }
+        });
+        //-Disable ("delete")
+        this.deletedCoordinations.forEach(id => {
+            // update
+
+            const ptt = this.ticketCoordinationService.disable(id).pipe(
+                catchError((error) => 
+                {
+                    this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al eliminar contacto existente", detail:error.message });
+                    return of(null);
+                })
+            );		
+
+           actions.push(ptt);
+            
+        });
+
+        //Fork para mandar las peticiones
+        if(actions != null){
+            forkJoin(actions).subscribe(([] :any)=>
+            {
+                this.router.navigate(['/tickets']);
+                this.miscService.endRquest();  
+            },
+            (err : any)=>{
+                //console.log(err.message);
+                this.miscService.endRquest(); //fin del proceso por error
+                this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error general al elementos múltiples ", detail:err.message });
+            }); 
+        } 
+
+
+        this.router.navigate(['/tickets']);  
+      }, (err : any) => 
       {
-          this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error al cargar listado de clientes ' , detail:err.message, life: 3000 });
-          this.miscService.endRquest();
-      });
-     
-  }*/
+        this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error', detail: 'Problemas al guardar', life: 3000 });
+        this.miscService.endRquest();
+      }); 
+    } 
+
 
   list(){
     this.miscService.startRequest();
@@ -197,7 +276,7 @@ export class EditTicketComponent implements OnInit, OnDestroy {
           }
           
           //Agregamos los datos de phones
-          let labelx = x.dependencyPhoneDependencyId['dependencyDescription']+" / Tel: "+ x.dependencyPhoneNumber +" / Via: "+x.dependencyPhoneCommunicationChannel;
+          let labelx = x.dependencyPhoneDependencyId['dependencyDescription']+" / Tel: "+ x.dependencyPhoneNumber ;
           let phone = {label:labelx, value:x.id };
             nuevoObjeto[x.dependencyPhoneDependencyId['dependencyDependencyCategoryId']['dependencyCatergoryDescription']].phones.push(phone);
           
@@ -207,7 +286,7 @@ export class EditTicketComponent implements OnInit, OnDestroy {
         let claves = Object.keys(nuevoObjeto); 
         for(let i=0; i< claves.length; i++){
           this.listPhones.push({label:claves[i] ,items:nuevoObjeto[claves[i]].phones});
-          
+          console.log(this.listPhones);
         }
 
       }
@@ -239,28 +318,6 @@ export class EditTicketComponent implements OnInit, OnDestroy {
       });
     }
   } 
-
-  newCoordinationArray() 
-  {
-    return this.formBuilder.group({
-        
-        ticketCoordinationDependencyPhoneId:[null,[Validators.required]]
-    });
-  }
-  
-  infoCoordinationsArray(): FormArray {
-    return this.form.get('ticketCoordinations') as FormArray;
-  }
-
-  addRow()
-  {
-      this.infoCoordinationsArray().push(this.newCoordinationArray());
-         
-  }
-  removeRow(index:number)
-  {
-      this.infoCoordinationsArray().removeAt(index); 
-  }
 
   isCoordinationDuplicated(control: FormArray ) 
   {

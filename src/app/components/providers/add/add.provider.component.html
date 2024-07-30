@@ -154,7 +154,7 @@
                                                 inputId="locale-us"  
                                                 mode="decimal" 
                                                 locale="en-US" 
-                                                formControlName="providerProductGuaranteeUnit" 
+                                                formControlName="providerServiceGuaranteeUnit" 
                                                 placeholder=0>
                                             </p-inputNumber> 
                                             <div *ngIf="form.controls.providerServices.controls[i].controls.providerServiceGuaranteeUnit.invalid">
@@ -171,7 +171,7 @@
                                                 appendTo="body"
                                                 [showClear]="true"  
                                                 optionLabel="name" 
-                                                optionValue="name">
+                                                optionValue="value">
                                             </p-dropdown>
                                             <div *ngIf="form.controls.providerServices.controls[i].controls.providerServiceGuaranteeUnitMeasure.invalid">
                                                 <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.providerServices.controls[i].controls.providerServiceGuaranteeUnitMeasure.errors?.['required']" >*Campo requerido</small>

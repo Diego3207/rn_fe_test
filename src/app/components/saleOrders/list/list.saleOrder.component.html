@@ -13,22 +13,22 @@
                 </ng-template>
             </p-toolbar>
 
-            <p-table #dt 
-            [value]="saleOrders"  
+            <p-table #dt
+            [value]="saleOrders"
             [lazy]="true"
             [resetPageOnSort]="false"
             [multiSortMeta]="[{field: 'id', order: 1}]"
-            sortMode="multiple" 
-            (onLazyLoad)="load($event)" 
+            sortMode="multiple"
+            (onLazyLoad)="load($event)"
             [lazyLoadOnInit]="true"
-            [paginator]="true" 
+            [paginator]="true"
             [totalRecords]="totalRows"
-            [rowsPerPageOptions]="[10,25,50]" 
+            [rowsPerPageOptions]="[10,25,50]"
             [showCurrentPageReport]="true"
             currentPageReportTemplate="{{ getPageRange(page, limit, totalRows) }}"
             [(selection)]="selectedSaleOrders" selectionMode="multiple"
             [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="scroll" [breakpoint]="'760px'"  [tableStyle]="{'minx-width': '50rem'}" >
-                
+
                 <ng-template pTemplate="header">
                     <tr>
                         <th >
@@ -38,22 +38,22 @@
                             <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                         </th>
                         <th pSortableColumn="id">
-                            Id<p-sortIcon field="id"></p-sortIcon>
+                           ID<p-sortIcon field="id"></p-sortIcon>
                         </th>
                         <th pSortableColumn="saleOrderQuotationSaleId['quotationSaleFolio']">
-                            Folio<p-sortIcon field="saleOrderQuotationSaleId['quotationSaleFolio']"></p-sortIcon>
+                            FOLIO <p-sortIcon field="saleOrderQuotationSaleId['quotationSaleFolio']"></p-sortIcon>
                         </th>
                         <th pSortableColumn="saleOrderQuotationSaleId['quotationSaleDescription']">
-                            Descripción <p-sortIcon field="saleOrderQuotationSaleId['quotationSaleDescription']"></p-sortIcon>
+                            DESCRIPCIÓN <p-sortIcon field="saleOrderQuotationSaleId['quotationSaleDescription']"></p-sortIcon>
                         </th>
                         <th pSortableColumn="saleOrderTransmitter['userFullName']">
-                            Emisor <p-sortIcon field="saleOrderTransmitter['userFullName']"></p-sortIcon>
+                            EMISOR <p-sortIcon field="saleOrderTransmitter['userFullName']"></p-sortIcon>
                         </th>
                         <th pSortableColumn="saleOrderShippingDate">
-                            Fecha de contratación <p-sortIcon field="saleOrderShippingDate"></p-sortIcon>
+                            FECHA DE CONTRATACIÓN <p-sortIcon field="saleOrderShippingDate"></p-sortIcon>
                         </th>
                         <th pSortableColumn="saleOrderStatus">
-                            Estado <p-sortIcon field="saleOrderStatus"></p-sortIcon>
+                            ESTADO <p-sortIcon field="saleOrderStatus"></p-sortIcon>
                         </th>
                         <th>
                             <!-- Espacio para que se vea bien las columnas -->
@@ -67,30 +67,30 @@
                             <!-- Espacio para que se vea bien las columnas -->
                         </th>
                         <th >
-                            <p-columnFilter type="numeric"  [showButtons]="false" field="id"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
+                            <p-columnFilter type="numeric"  [showButtons]="false" field="id"  [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="saleOrderQuotationSaleId['quotationSaleFolio']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="saleOrderQuotationSaleId['quotationSaleFolio']" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="saleOrderQuotationSaleId['quotationSaleDescription']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="saleOrderQuotationSaleId['quotationSaleDescription']" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="saleOrderTransmitter['userFullName']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="saleOrderTransmitter['userFullName']" [matchMode]="'contains'"  [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="saleOrderShippingDate" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="saleOrderShippingDate" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="saleOrderStatus" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="saleOrderStatus" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
                             <!-- Espacio para que se vea bien las columnas -->
                         </th>
-                    </tr> 
+                    </tr>
                 </ng-template>
 
-                <ng-template pTemplate="body" let-saleOrder let-expanded="expanded"> 
+                <ng-template pTemplate="body" let-saleOrder let-expanded="expanded">
                     <tr>
                         <td>
 							<button type="button" pButton pRipple [pRowToggler]="saleOrder" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
@@ -118,7 +118,7 @@
 					<tr>
 						<td colspan="12">
 							<div class="p-3" >
-								<p-table [value]="saleOrder.saleOrderSupplies" dataKey="id">                                     
+								<p-table [value]="saleOrder.saleOrderSupplies" dataKey="id">
 									<ng-template pTemplate="header" class="grid">
                                         <tr>
                                             <th class="col-6">Id. Serie</th>
@@ -136,7 +136,7 @@
 											<td colspan="12">No tiene productos asignados.</td>
 										</tr>
 									</ng-template>
-								</p-table>								
+								</p-table>
 							</div>
 						</td>
 					</tr>

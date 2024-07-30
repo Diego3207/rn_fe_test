@@ -14,7 +14,7 @@ export class DashboardService
     constructor(private http: HttpClient)
     {
     }
-
+    //Dashboard administrtativo
     getModelBrand():Observable<any[]>
     {
         return this.http.get<any[]>(this.backendUrl+"/model-brand");
@@ -44,4 +44,18 @@ export class DashboardService
     {
         return this.http.get<any[]>(this.backendUrl+"/sale-orders");
     }
+
+    //Dashboard de monitoreo
+
+    getTicketStatus():Observable<any[]>
+    {
+        return this.http.get<any[]>(this.backendUrl+"/ticket-status");
+    }
+    getIncidences():Observable<any[]>
+    {
+        return this.http.get<any[]>(this.backendUrl+"/incidence");
+    }
+
+
+
 }

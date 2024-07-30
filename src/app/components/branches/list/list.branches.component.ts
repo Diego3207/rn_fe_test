@@ -18,82 +18,82 @@ import { catchError  } from 'rxjs/operators';
     ]*/
 })
 
-export class ListBranchesComponent implements OnInit, OnDestroy 
+export class ListBranchesComponent implements OnInit, OnDestroy
 {
 	selectedElements: any[] = [];
     confirmDisplaySelected: boolean = false;
     confirmDisplay: boolean = false;
 	content:string;
-        
+
 	totalRows: number = 0;
     limit:number = 10 ;
     page:number  ;
-    sort:string = ''; 
-    search:string = ''; 
+    sort:string = '';
+    search:string = '';
 
 	matchModeOptionsText: SelectItem[];
     matchModeOptionsNumber: SelectItem[];
     matchModeOptionsDate: SelectItem[];
-    
+
 	branches: any[]; //coleccion de la lista
     branch: any; //elemento individual para elminiar
-	
-    constructor(private branchService: BranchService, 
-		private messageService: MessageService, 
-		private confirmationService: ConfirmationService,
-		private cdref: ChangeDetectorRef, private miscService:MiscService ) 
-	{        
-    }	
 
-    ngOnInit(): void 
+    constructor(private branchService: BranchService,
+		private messageService: MessageService,
+		private confirmationService: ConfirmationService,
+		private cdref: ChangeDetectorRef, private miscService:MiscService )
+	{
+    }
+
+    ngOnInit(): void
 	{
 		//TODO refactorizar este codigo
-        this.matchModeOptionsText = 
+        this.matchModeOptionsText =
 		[
-            { label: 'Comienza con', value: FilterMatchMode.STARTS_WITH  },
             { label: 'Contiene', value: FilterMatchMode.CONTAINS },
+		    { label: 'Comienza con', value: FilterMatchMode.STARTS_WITH  },
             { label: 'Termina con', value: FilterMatchMode.ENDS_WITH},
             { label: 'Es igual', value: FilterMatchMode.EQUALS },
         ];
-        this.matchModeOptionsNumber = 
+        this.matchModeOptionsNumber =
 		[
             { label: 'Contiene', value: FilterMatchMode.CONTAINS },
             { label: 'Es igual', value: FilterMatchMode.EQUALS },
         ];
-        this.matchModeOptionsDate = 
+        this.matchModeOptionsDate =
 		[
-            { label: 'Contiene', value:  FilterMatchMode.DATE_IS  },   
-            { label: 'No contiene', value: FilterMatchMode.DATE_IS_NOT },  
-            { label: 'Antes', value: FilterMatchMode.DATE_BEFORE },  
-            { label: 'Después', value: FilterMatchMode.DATE_AFTER },           
+            { label: 'Contiene', value:  FilterMatchMode.DATE_IS  },
+            { label: 'No contiene', value: FilterMatchMode.DATE_IS_NOT },
+            { label: 'Antes', value: FilterMatchMode.DATE_BEFORE },
+            { label: 'Después', value: FilterMatchMode.DATE_AFTER },
         ];
     }
 
-    ngOnDestroy() 
-	{       
+    ngOnDestroy()
+	{
     }
 
     load(event: LazyLoadEvent)
 	{
-        this.page =  (event.first / event.rows) + 1; 
+        this.page =  (event.first / event.rows) + 1;
         this.limit = event.rows;
         let order: {}[] = [];
         let filter = [];
-        
-		event.multiSortMeta.forEach(function (obj) 
+
+		event.multiSortMeta.forEach(function (obj)
 		{
             let h = {};
             h[obj['field']] = (( obj['order'] == 1) ? "asc": "desc");
             order.push(h);
         });
-		
+
         this.sort = JSON.stringify(order);
 
         for(let i in event.filters)
 		{
-           
+
             let obj= event.filters[i];
-           
+
             if(typeof event.filters[i].value === 'boolean')
 			{
                 if(event.filters[i].value != null)
@@ -111,16 +111,16 @@ export class ListBranchesComponent implements OnInit, OnDestroy
                 }
             }
         }
-		
-        this.search =JSON.stringify(filter);		
-        if(filter.length > 0) 
+
+        this.search =JSON.stringify(filter);
+        if(filter.length > 0)
 		{
-            this.filtrer(this.search); //el elememnto es solicitado iltrado
-        }else 
+            this.filter(this.search); //el elememnto es solicitado iltrado
+        }else
 		{
             this.list(); //el elemento es socilictado sin filtro
-        } 
-		
+        }
+
 		this.cdref.detectChanges();
     }
 
@@ -128,57 +128,57 @@ export class ListBranchesComponent implements OnInit, OnDestroy
 	{
         this.miscService.startRequest();
 		this.branchService.getAll(this.limit,this.page,this.sort).subscribe((data: any)=>
-		{            
+		{
 			if(data != null)
-            {			
-				this.branches = data['object']['records'];                    
-                this.totalRows = data['object']['totalRecords'];	
-				this.miscService.endRquest(); 
+            {
+				this.branches = data['object']['records'];
+                this.totalRows = data['object']['totalRecords'];
+				this.miscService.endRquest();
             }
 			else
 			{
 				this.branches = null;
-				this.totalRows = 0;	
-				this.miscService.endRquest(); 				
+				this.totalRows = 0;
+				this.miscService.endRquest();
                 this.messageService.add({severity:'warn', key: 'msg',summary:'Sin registros',life: 3000});
             }
-        }, 
-		err => 
+        },
+		err =>
 		{
-			this.miscService.endRquest(); 
+			this.miscService.endRquest();
             this.messageService.add({severity:'error', key: 'msg', summary: "Error al cargar el catalogo", detail:err.message, life: 3000});
-            
+
         });
     }
-    
-    filtrer(texto: any)
+
+    filter(texto: any)
 	{
         this.miscService.startRequest();
 		this.branchService.getFilter(texto,this.limit, this.page,this.sort).subscribe((data: any)=>
 		{
 			if(data != null)
 			{
-				this.branches = data.object.records;                    
+				this.branches = data.object.records;
 				this.totalRows = data.object.totalRecords;
-				this.miscService.endRquest(); 
+				this.miscService.endRquest();
 			}
 			else
 			{
 				this.branches = null;
 				this.totalRows = 0;
-				this.miscService.endRquest(); 
+				this.miscService.endRquest();
 				this.messageService.add({severity:'warn', key: 'msg',summary:'Sin registros',life: 3000});
 			}
 
-		}, 
-		err => 
+		},
+		err =>
 		{
-			this.miscService.endRquest(); 
+			this.miscService.endRquest();
 			this.messageService.add({severity:'error', key: 'msg', summary: "Error al cargar el catalogo", detail:err.message, life: 3000});
 		});
     }
 
-    delete(deleteType:number, object : any) 
+    delete(deleteType:number, object : any)
     {
         this.confirmationService.confirm
         ({
@@ -187,9 +187,9 @@ export class ListBranchesComponent implements OnInit, OnDestroy
             icon: 'pi pi-info-circle',
             acceptLabel: 'Aceptar',
             rejectLabel:'Cancelar',
-            accept: () => 
+            accept: () =>
             {
-                switch (deleteType) 
+                switch (deleteType)
                 {
                     case 1:
                         this.confirmDeleteSelected();
@@ -202,7 +202,7 @@ export class ListBranchesComponent implements OnInit, OnDestroy
         });
     }
 
-    confirmDelete(id:number) 
+    confirmDelete(id:number)
     {
         this.branchService.disable(id).subscribe((data: any)=>
         {
@@ -210,41 +210,41 @@ export class ListBranchesComponent implements OnInit, OnDestroy
             this.messageService.add({ severity: 'success',key: 'msg', summary: 'Operación exitosa', life: 3000 });
         }, err => {
             this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error al eliminar registro', detail: err.message, life: 3000 });
-        });  
+        });
     }
 
     confirmDeleteSelected() {
-    var peticiones: any[] = []; 
+    var peticiones: any[] = [];
         for(let i = 0 ; i < this.selectedElements.length; i++)
         {
             const ptt = this.branchService.disable(this.selectedElements[i].id).pipe
             (
-            catchError((error) => 
+            catchError((error) =>
             {
                 this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error eliminar un registro", detail:error.message });
                 return of(null);
             })
-            );				
-            peticiones.push(ptt);			        
+            );
+            peticiones.push(ptt);
         }
 
-        forkJoin(peticiones).subscribe((respuestas: any[]) => 
+        forkJoin(peticiones).subscribe((respuestas: any[]) =>
         {
             this.messageService.add({ severity: 'success', key: 'msg',summary: 'Operación exitosa', detail: 'Elementos eliminados exitosamente', life: 3000 });
-            this.selectedElements = [];        
+            this.selectedElements = [];
             this.list();
-        }, 
-        err => 
-        {		
+        },
+        err =>
+        {
             this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error', detail: 'Problemas al eliminar', life: 3000 });
         });
     }
-	
-	getPageRange(page: number, limit: number, totalRows: number) 
-    {       
+
+	getPageRange(page: number, limit: number, totalRows: number)
+    {
         var startIndex = 0;
 		var endIndex = 0;
-		
+
 		if (!Number.isInteger(page) || page < 1) {
             page = 1;
         }
@@ -260,7 +260,7 @@ export class ListBranchesComponent implements OnInit, OnDestroy
 			startIndex = (page - 1) * limit + 1;
 			endIndex = Math.min(startIndex + limit - 1, totalRows);
 		}
-        
+
 		return `Mostrando del ${startIndex} al ${endIndex} de ${totalRows}`;
     }
 }

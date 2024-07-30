@@ -14,6 +14,8 @@ import { MessageModule } from 'primeng/message';
 import { DropdownModule } from 'primeng/dropdown';
 import { FileUploadModule } from 'primeng/fileupload';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { AccordionModule } from 'primeng/accordion';
+
 
 
 @NgModule({
@@ -31,6 +33,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 		DropdownModule,
 		FileUploadModule,
 		InputNumberModule,
+		AccordionModule
 	],
 	declarations: [AddProductComponent],
 	providers: [ProviderService, MessageService, ConfirmationService]
