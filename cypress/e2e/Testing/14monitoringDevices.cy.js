@@ -1,5 +1,5 @@
 const sleepCorto = 1000;
-const sleepLargo = 2500;
+const sleepLargo = 3500;
 describe("Dispositivos",function(){
     beforeEach(function(){
         cy.fixture("monitoringDevices").then(function (monitoringDevices) {
@@ -27,8 +27,11 @@ describe("Dispositivos",function(){
         .type("{downarrow}")
         .wait(200)
         .type("{enter}");
+        //area operativa
+        cy.get(':nth-child(1) > :nth-child(1) > .p-element > .p-radiobutton > .p-radiobutton-box').click()
         //tipo dispositivo
-        cy.get(':nth-child(3) > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
+        cy.get(':nth-child(4) > .p-inputwrapper > .p-dropdown > .p-dropdown-label')
+        .click();
         //elegir primera opcion camara
         cy.get('[ng-reflect-label="Cámara"] > .p-ripple').click();
         //proveedor interno
@@ -39,13 +42,13 @@ describe("Dispositivos",function(){
         cy.get('.p-button-primary').click();
         cy.wait("@añadir").its("response.statusCode").should("eq",201);
         cy.url().should("eq","http://localhost:4200/#/monitoringDevices");
-        cy.wait(sleepLargo);
         //id de la tabla del listado de ubicaciones
         cy.get('.p-highlight > .p-element').click();
         //primer fila, columna nombre
         cy.get('.p-datatable-tbody > .ng-star-inserted > :nth-child(3)')
-        .contains("AT")
+        .contains(this.monitoringDevices.nombreValido)
         .should("be.visible");
+        cy.wait(sleepLargo);
     })
     it("Añadir dispositivo inválido por exceso de caracteres",function(){
         //módulo operativo
@@ -56,7 +59,6 @@ describe("Dispositivos",function(){
         cy.get('.p-button-success').click();
         //nombre
         cy.get('#monitoringDeviceName').type(this.monitoringDevices.nombreInvalido);
-        cy.wait(sleepLargo)
         //boton guardar
         cy.get('.p-button-primary').click();
         cy.url().should("eq","http://localhost:4200/#/monitoringDevices/add");

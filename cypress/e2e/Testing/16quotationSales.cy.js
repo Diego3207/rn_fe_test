@@ -1,5 +1,5 @@
 const sleepCorto = 1000;
-const sleepLargo = 2500;
+const sleepLargo = 3500;
 describe("Cotizaciones de venta",function(){
     beforeEach(function(){
         cy.fixture("quotationSales").then(function (variable) {
@@ -85,7 +85,7 @@ describe("Cotizaciones de venta",function(){
         //cantidad
         cy.get(':nth-child(3) > .col-12 > .p-inputwrapper > .p-inputnumber > #locale-us').last().type(this.variable.cantidadValida);
         //descuento
-        cy.get(':nth-child(4) > .col-12 > .p-inputwrapper > .p-inputnumber > #locale-us').last().type(this.variable.descuentoValida);
+        cy.get(':nth-child(4) > .col-12 > .p-inputwrapper > .p-inputnumber > #locale-us').last().type("3");
         //descuento general
         //cy.get('.mt-5 > .p-inputwrapper > .p-inputnumber > #locale-us').type(this.variable.descuentoGeneralValida);
         cy.intercept("POST","http://localhost:1337/quotationSale/add").as("añadir");
@@ -99,8 +99,9 @@ describe("Cotizaciones de venta",function(){
         cy.get('[psortablecolumn="quotationSaleFolio"]').click();
         //primer fila, columna nombre
         cy.get('.p-datatable-tbody > tr.ng-star-inserted > :nth-child(3)')
-        .contains("3 Cámaras JC450")
+        .contains(this.variable.descripcionValida)
         .should("be.visible");
+        cy.wait(sleepLargo)
     })
     it("Aceptar cotizacion valida",function(){
         //módulo administración

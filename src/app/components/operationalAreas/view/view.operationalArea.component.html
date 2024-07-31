@@ -1,0 +1,120 @@
+<p-toast key="msg"></p-toast>
+<div class="grid justify-content-center">
+    <div class="col-12 md:col-8 justify-content-between">
+        <div class="card p-fluid">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                <div class="field">
+                    <label  class="font-semibold">Identificador</label>
+                    <input type="text" pInputText   formControlName="operationalAreaIdentifier" autofocus />
+                    <div *ngIf="form.controls.operationalAreaIdentifier.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.operationalAreaIdentifier.errors?.['required']" >*Campo requerido</small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.operationalAreaIdentifier.errors?.['maxlength']" >*Longitud máxima 255</small>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="font-semibold">Cliente</label>
+                    <p-dropdown [options]="listCustomers" formControlName="operationalAreaCustomerId"  optionValue="id"  [filter]="true" filterBy="costumerName" [showClear]="true" placeholder="Selecciona uno" optionLabel="costumerName" ></p-dropdown>
+                    <div *ngIf="form.controls.operationalAreaCustomerId.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.operationalAreaCustomerId.errors?.['required']" >*Campo requerido</small>
+                    </div>
+                </div>
+                <div class="field">
+                    <label  class="font-semibold">Tipo</label>
+                    <p-dropdown [options]="listType" formControlName="operationalAreaType"  optionValue="value"  [filter]="true" filterBy="label" [showClear]="true" placeholder="Selecciona uno" optionLabel="label" ></p-dropdown>
+                    <div *ngIf="form.controls.operationalAreaType.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.operationalAreaType.errors?.['required']" >*Campo requerido</small>
+                    </div>
+                </div>
+
+                <div *ngIf="form.controls.operationalAreaType.value != 'cuadrante'  && form.controls.operationalAreaType.value != null">
+                    <div class="field">
+                        <label  class="font-semibold">Calle</label>
+                        <input type="text" pInputText   formControlName="operationalAreaStreet" autofocus />
+                        <div *ngIf="form.controls.operationalAreaStreet.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.operationalAreaStreet.errors?.['maxlength']" >*Longitud máxima 150</small>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label  class="font-semibold">Número interno</label>
+                        <input type="text" pInputText   [maxlength]="5" formControlName="operationalAreaInteriorNumber" />  
+                        <div *ngIf="form.controls.operationalAreaInteriorNumber.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.operationalAreaInteriorNumber.errors?.['maxLength']" >*Loguitud máxima es de 5 dígitos</small>
+                        </div>	 
+                    </div>
+                    <div class="field">
+                        <label  class="font-semibold">Número externo</label>
+                        <p-inputNumber     mode="decimal"  [useGrouping]="false"  [maxlength]="5"  formControlName="operationalAreaExternalNumber" ></p-inputNumber>  
+                        <div *ngIf="form.controls.operationalAreaExternalNumber.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.operationalAreaExternalNumber.errors?.['maxLength']" >*Loguitud máxima es de 5 dígitos</small>
+                        </div>	 
+                    </div>
+                    <div class="field">
+                        <label  class="font-semibold">Colonia</label>
+                        <input type="text" pInputText   formControlName="operationalAreaColony" autofocus />
+                        <div *ngIf="form.controls.operationalAreaColony.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.operationalAreaColony.errors?.['maxlength']" >*Longitud máxima 150</small>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label  class="font-semibold">Municipio</label>
+                        <input type="text" pInputText   formControlName="operationalAreaMunicipality" autofocus />
+                        <div *ngIf="form.controls.operationalAreaMunicipality.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.operationalAreaMunicipality.errors?.['maxlength']" >*Longitud máxima 150</small>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label  class="font-semibold">Estado</label>
+                        <input type="text" pInputText   formControlName="operationalAreaState" autofocus />
+                        <div *ngIf="form.controls.operationalAreaState.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.operationalAreaState.errors?.['maxlength']" >*Longitud máxima 150</small>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label  class="font-semibold">Código postal</label>
+                        <p-inputNumber   mode="decimal"   [useGrouping]="false"  [maxlength]="5" formControlName="operationalAreaPostalCode" ></p-inputNumber>  
+                        <div *ngIf="form.controls.operationalAreaPostalCode.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.operationalAreaPostalCode.errors?.['maxLength']" >*Loguitud máxima es de 5 dígitos</small>
+                        </div>	 
+                    </div>
+                    <div class="field">
+                        <label  class="font-semibold">Cruece 1</label>
+                        <input type="text" pInputText   formControlName="operationalAreaCrossing1" autofocus />
+                        <div *ngIf="form.controls.operationalAreaCrossing1.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.operationalAreaCrossing1.errors?.['maxlength']" >*Longitud máxima 255</small>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label  class="font-semibold">Cruece 2</label>
+                        <input type="text" pInputText   formControlName="operationalAreaCrossing1" autofocus />
+                        <div *ngIf="form.controls.operationalAreaCrossing2.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.operationalAreaCrossing2.errors?.['maxlength']" >*Longitud máxima 255</small>
+                        </div>
+                    </div>
+
+                </div>
+                <div *ngIf="form.controls.operationalAreaType.value == 'sucursal'">
+                    
+                    <div class="field">
+                        <label  class="font-semibold">Teléfono de sucursal</label>                            
+                        <input  pInputText type="text"  placeholder="" formControlName="operationalAreaBranchPhone" >
+                        <div *ngIf="form.controls.operationalAreaBranchPhone.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.operationalAreaBranchPhone.errors?.['maxlength']" >*Longitud máxima 15 </small>
+                        </div>	
+                    </div>
+                    <div class="field"> 
+                        <label  class="font-semibold">Persona responsable de sucursal</label>                            
+                        <input type="text" pInputText   formControlName="operationalAreaBranchResponsiblePerson" autofocus />
+                        <div *ngIf="form.controls.operationalAreaBranchResponsiblePerson.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.operationalAreaBranchResponsiblePerson.errors?.['maxlength']" >*Longitud máxima 255</small>
+                        </div>	
+                    </div>
+                </div>
+
+               
+                <div class="col-12 flex justify-content-end mt-4">
+                    <button pButton pRipple class="p-button-outlined w-8rem mr-3" label="Volver" (click)="goBack()" ></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

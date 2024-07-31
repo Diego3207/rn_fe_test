@@ -1,7 +1,7 @@
 <p-dialog header="Alerta" [(visible)]="confirmDisplaySelected" [modal]="true" showEffect="fade" [style]="{width: '30vw'}" [breakpoints]="{'960px': '75vw'}" [closable]="false" [draggable]="false">
     <p class="line-height-3 m-0">
         {{content}}
-        
+
     </p>
 </p-dialog>
 <p-dialog header="Alerta" [(visible)]="confirmDisplay" [modal]="true" showEffect="fade" [style]="{width: '30vw'}" [breakpoints]="{'960px': '75vw'}" [closable]="false" [draggable]="false">
@@ -14,62 +14,63 @@
     <div class="col-12">
         <div class="card px-6 py-6">
             <!--<p-toast></p-toast> -->
-            
-            <p-table #dt 
+
+            <p-table #dt
             [columns]="supplys"
-            [value]="supplys"  
+            [value]="supplys"
             [lazy]="true"
             [resetPageOnSort]="false"
             [multiSortMeta]="[{field: 'id', order: 1}]"
-            sortMode="multiple" 
-            (onLazyLoad)="load($event)" 
+            sortMode="multiple"
+            (onLazyLoad)="load($event)"
             [lazyLoadOnInit]="true"
-            [paginator]="true" 
+            [paginator]="true"
             [totalRecords]="totalRows"
-            [rowsPerPageOptions]="[10,25,50]" 
-            [loading]="loading"    
+            [rowsPerPageOptions]="[10,25,50]"
+            [loading]="loading"
             [showCurrentPageReport]="true"
             [globalFilterFields]="['supplyProductId', 'supplyPurchaseOrderId', 'supplyLocationId', 'supplyKey', 'supplyStatus']"
-            currentPageReportTemplate=" {{ getPageRange(page, limit, totalRows) }} " 
+            currentPageReportTemplate=" {{ getPageRange(page, limit, totalRows) }} "
             [(selection)]="selectedSupplys" selectionMode="multiple"
             [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="stack" [breakpoint]="'760px'"  >
-                
+
             <ng-template pTemplate="caption">
                 <div class="flex">
                     <button type="button" pButton pRipple icon="pi pi-file-pdf"  (click)="getSupplies('pdf')" class="p-button-warning mr-2" pTooltip="PDF" tooltipPosition="bottom"></button>
-                    <button type="button" pButton pRipple icon="pi pi-file-excel"  (click)="getSupplies('csv')" class="p-button-success mr-2" pTooltip="XLS" tooltipPosition="bottom"></button>     
+                    <button type="button" pButton pRipple icon="pi pi-file-excel"  (click)="getSupplies('csv')" class="p-button-success mr-2" pTooltip="XLS" tooltipPosition="bottom"></button>
                 </div>
             </ng-template>
-            
+
             <ng-template pTemplate="header">
                 <tr>
                     <th pSortableColumn="id">
-                        ID<p-sortIcon field="id"></p-sortIcon>
+                        Id<p-sortIcon field="id"></p-sortIcon>
                     </th>
                     <th pSortableColumn="supplyKey">
-                        # SERIE <p-sortIcon field="supplyKey"></p-sortIcon>
+                        No. serial <p-sortIcon field="supplyKey"></p-sortIcon>
                     </th>
-                    <th >
-                        PRODUCTO 
+                    <th pSortableColumn="supply.supplyProductId['productBrand']">
+                        Marca <p-sortIcon field="supply.supplyProductId['productBrand']"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="supply.supplyProductId['productModel']">
+                        Modelo <p-sortIcon field="supply.supplyProductId['productModel']"></p-sortIcon>
                     </th>
                     <th pSortableColumn="supplyDateSupplied">
-                        FECHA COMPRA <p-sortIcon field="supplyDateSupplied"></p-sortIcon>
+                        Fecha compra <p-sortIcon field="supplyDateSupplied"></p-sortIcon>
                     </th>
                     <th >
-                        FECHA VENTA
+                        Fecha venta
                     </th>
                     <th>
-                        UBICACIÓN
+                        Ubicación
                     </th>
                     <th pSortableColumn="supplyStatus">
-                        ESTADO <p-sortIcon field="supplyStatus"></p-sortIcon>
+                        Estado <p-sortIcon field="supplyStatus"></p-sortIcon>
                     </th>
                     <th >
-                        ACTIVO
+                        Activo
                     </th>
-                    <th>
-                        <!-- Espacio para que se vea bien las columnas -->
-                    </th>
+
                 </tr>
                <tr>
                     <th>
@@ -80,6 +81,9 @@
                     </th>
                     <th>
                         <p-columnFilter type="text" field="supply.supplyProductId['productBrand']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter type="text" field="supply.supplyProductId['productModel']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                     </th>
                     <th>
                         <p-columnFilter type="text" field="supplyDateSupplied" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
@@ -99,13 +103,14 @@
                     <th>
                         <!-- Espacio para que se vea bien las columnas -->
                     </th>
-                </tr> 
+                </tr>
             </ng-template>
             <ng-template pTemplate="body" let-supply>
                 <tr>
                     <td>{{supply.id}}</td>
                     <td>{{supply.supplyKey}}</td>
-                    <td>{{supply.supplyProductId['productBrand']}}  {{supply.supplyProductId['productModel']}}</td>
+                    <td>{{supply.supplyProductId['productBrand']}}</td>
+                    <td>{{supply.supplyProductId['productModel']}}</td>
                     <td>{{supply.supplyDateSupplied | date: 'dd-MM-yyyy' }}</td>
                     <td>{{supply.supplySaleOrderId == null ? 'Sin registro' : supply.supplySaleOrderId['saleOrderDate'] | date: 'dd-MM-yyyy'}}</td>
                     <td>{{supply.supplyLocationId['locationName']}}</td>

@@ -13,41 +13,41 @@
                 </ng-template>
             </p-toolbar>
 
-            <p-table #dt 
-            [value]="databanks"  
+            <p-table #dt
+            [value]="databanks"
             [lazy]="true"
             [resetPageOnSort]="false"
             [multiSortMeta]="[{field: 'id', order: 1}]"
-            sortMode="multiple" 
-            (onLazyLoad)="load($event)" 
+            sortMode="multiple"
+            (onLazyLoad)="load($event)"
             [lazyLoadOnInit]="true"
-            [paginator]="true" 
+            [paginator]="true"
             [totalRecords]="totalRows"
-            [rowsPerPageOptions]="[10,25,50]" 
+            [rowsPerPageOptions]="[10,25,50]"
             [showCurrentPageReport]="true"
             currentPageReportTemplate="{{ getPageRange(page, limit, totalRows) }}"
             [(selection)]="selectedDataBanks" selectionMode="multiple"
             [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="scroll" [breakpoint]="'760px'"  [tableStyle]="{'minx-width': '50rem'}" >
-                
+
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="width: 3rem">
                             <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                         </th>
                         <th pSortableColumn="id">
-                            Id <p-sortIcon field="id"></p-sortIcon>
+                            ID <p-sortIcon field="id"></p-sortIcon>
                         </th>
                         <th pSortableColumn="dataBankBeneficiaryName">
-                            Beneficiario <p-sortIcon field="dataBankBeneficiaryName"></p-sortIcon>
+                            BENEFICIARIO <p-sortIcon field="dataBankBeneficiaryName"></p-sortIcon>
                         </th>
                         <th pSortableColumn="dataBankInstitutionName">
-                            Instutución Bancaria <p-sortIcon field="dataBankInstitutionName"></p-sortIcon>
+                            INSTITUCIÓN BANCARIA <p-sortIcon field="dataBankInstitutionName"></p-sortIcon>
                         </th>
                         <th pSortableColumn="dataBankType">
-                            Medio <p-sortIcon field="dataBankType"></p-sortIcon>
+                            MEDIO <p-sortIcon field="dataBankType"></p-sortIcon>
                         </th>
                         <th pSortableColumn="dataBankNumber">
-                            Número <p-sortIcon field="dataBankNumber"></p-sortIcon>
+                            NÚMERO <p-sortIcon field="dataBankNumber"></p-sortIcon>
                         </th>
                         <th>
                             <!-- Espacio para que se vea bien las columnas -->
@@ -58,27 +58,27 @@
                             <!-- Espacio para que se vea bien las columnas -->
                         </th>
                         <th>
-                            <p-columnFilter type="numeric"  [showButtons]="false" field="id"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
+                            <p-columnFilter type="numeric"  [showButtons]="false" field="id"  [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="dataBankBeneficiaryName" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="dataBankBeneficiaryName"  [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="dataBankInstitutionName" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="dataBankInstitutionName"  [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="dataBankType" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="dataBankType"  [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="dataBankNumber" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="dataBankNumber"  [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
                             <!-- Espacio para que se vea bien las columnas -->
                         </th>
-                    </tr> 
+                    </tr>
                 </ng-template>
 
-                <ng-template pTemplate="body" let-databank let-expanded="expanded"> 
+                <ng-template pTemplate="body" let-databank let-expanded="expanded">
                     <tr>
                         <td>
                             <p-tableCheckbox [value]="databank"></p-tableCheckbox>

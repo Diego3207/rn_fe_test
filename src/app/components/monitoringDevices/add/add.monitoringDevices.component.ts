@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MonitoringDeviceService } from 'src/app/service/monitoringDevice.service';
 import { CostumerService } from 'src/app/service/costumer.service';
+import { OperationalAreaService } from 'src/app/service/operationalArea.service';
 import { Router } from '@angular/router';
 import { MiscService } from 'src/app/service/misc.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -16,11 +17,14 @@ export class AddMonitoringDeviceComponent {
   submitted: boolean = false;
   typeDevices: any[] =  [];
   listCostumers: any[] = [];
+  listOperationalAreas : any[] = [];
   form: FormGroup | any;
+
   constructor(
     private formBuilder: FormBuilder,
     private monitoringDeviceService: MonitoringDeviceService,
     private costumerService: CostumerService,
+    private operationalAreaService: OperationalAreaService,
     private messageService: MessageService,
     private miscService: MiscService,
     private confirmationService: ConfirmationService,
@@ -36,6 +40,7 @@ export class AddMonitoringDeviceComponent {
     this.form = this.formBuilder.group({
       monitoringDeviceName: [null, [Validators.required, Validators.maxLength(255)]],
       monitoringDeviceCostumerId: [null, Validators.required],
+      monitoringDeviceOperationalAreaId: null,
       monitoringDeviceType: [null, Validators.required],
       monitoringDeviceProvider: 0,
     }, formOptions);
@@ -46,6 +51,14 @@ export class AddMonitoringDeviceComponent {
         { name: 'Sensor'},
         { name: 'Botón de Pánico'},
     ];
+
+    this.form.get("monitoringDeviceCostumerId").valueChanges.subscribe(selectedValue => 
+    {
+      if(selectedValue != null){
+      
+        this.getFilter(selectedValue);
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -66,7 +79,14 @@ export class AddMonitoringDeviceComponent {
 
   private save() {
     // create monitoringDevices 
-    this.monitoringDeviceService.create(this.form.value)
+    let monitoringDevices = {};
+    Object.keys(this.form.value).forEach(element => {
+        monitoringDevices[element] = this.form.value[element]; //copia las propiedades del objeto principal        
+    });
+  
+    if(monitoringDevices['monitoringDeviceOperationalAreaId']) monitoringDevices['monitoringDeviceOperationalAreaId'] = (monitoringDevices['monitoringDeviceOperationalAreaId']).toString();
+
+    this.monitoringDeviceService.create(monitoringDevices)
       .subscribe(data => {
         this.miscService.endRquest();
         this.messageService.add({ severity: 'success', key: 'msg', summary: 'Operación exitosa', life: 3000 });
@@ -113,5 +133,25 @@ export class AddMonitoringDeviceComponent {
       });
           
   }
+
+  getFilter(value){
+    if(value != null ) {
+      this.operationalAreaService.getFilter('[{"value":"'+ value+'","matchMode":"equals","field":"operationalAreaCustomerId"}]',0,1,'[{"id":"asc"}]')
+      .subscribe( (data:any )=>
+      {            
+            this.listOperationalAreas = (data == null ? []: data['object']['records']);
+            /*for(let i=0; i < this.deviceSave.length ; i++){
+              var item = this.listMonitoringDevices.find((element) => element.id == this.deviceSave[i].ticketMonitoringdeviceMonitoringDeviceId);
+              this.selectedRegister.push(item);
+            }*/
+         
+      },
+      (err : any) =>
+      {
+          this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error al cargar listado de dispositivos ' , detail:err.message, life: 3000 });
+          this.miscService.endRquest();
+      });
+    }
+  } 
 }
 

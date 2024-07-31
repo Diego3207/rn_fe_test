@@ -1,5 +1,6 @@
 const sleepCorto = 1000;
-const sleepLargo = 2500;
+const sleepLargo = 3500;
+const sleepSuperCorto=100;
 describe("Sim card",function(){
     beforeEach(function(){
         cy.fixture("simCard").then(function (simCard) {
@@ -33,11 +34,17 @@ describe("Sim card",function(){
         .type("{downarrow}")
         .wait(200)
         .type("{enter}");
-        //agregar productocy.get('[ng-reflect-label="Pieza"] > .p-ripple').click()
-        cy.get(':nth-child(5) > .flex > p-button.p-element > .p-ripple').click();
-        cy.wait(200)
+        //tipo moneda
+        cy.get(':nth-child(5) > .p-inputwrapper > .p-dropdown > .p-dropdown-label')
+        .click()
+        //seleccionar MXN
+        cy.get('[ng-reflect-label="Peso mexicano (MXN)"] > .p-ripple')
+        .click()
+        //añadir producto
+        cy.get(':nth-child(6) > .flex > p-button.p-element > .p-ripple')
+        .click()
         //producto
-        cy.get(':nth-child(1) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
+        cy.get(':nth-child(1) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click()
         //escribir producto
         cy.get('.p-dropdown-filter').type(this.simCard.productoChipValida)
         .wait(200)
@@ -140,6 +147,13 @@ describe("Sim card",function(){
         cy.get(".p-button-primary").click();
         cy.wait("@añadirProducto").its("response.statusCode").should("eq", 201);
         cy.url().should("eq", "http://localhost:4200/#/simCards");
+        //id de la tabla
+        cy.get('.p-highlight > .p-element').click();
+        cy.wait(sleepSuperCorto)
+        //primer fila, columna nombre
+        cy.get('.p-datatable-tbody > :nth-child(1) > :nth-child(4)')
+        .contains(this.simCard.iccidValida)
+        .should("be.visible");
         cy.wait(sleepLargo);
     })
     it("Crear sim card invalida por exceso de caracteres",function(){

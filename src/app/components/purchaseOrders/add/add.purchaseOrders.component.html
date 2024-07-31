@@ -36,7 +36,14 @@
                     </div>
                    
                 </div>
-                
+                <div class="field">
+                    <label for="price" class="font-semibold">Tipo de moneda</label> 
+                    <p-dropdown [options]="listCurrencies" appendTo="body" formControlName="purchaseOrderCurrency" filterBy="label" [showClear]="true" placeholder="Selecciona uno" optionValue="value" optionLabel="label"  ></p-dropdown>
+
+                    <div *ngIf="form.controls.purchaseOrderCurrency.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.purchaseOrderCurrency.errors?.['required']">*Campo requerido</small>
+                    </div>
+                </div> 
                 <div  [ngClass]="{'error-box':form.controls.purchaseOrderProducts.errors }">
                     <div class="flex flex-wrap gap-2 m-2">
                         <p-button label="Productos" [disabled]="form.controls.purchaseOrderProviderId.value == null" (onClick)="addRow('product')" icon="pi pi-plus"   badge="{{form.controls.purchaseOrderProducts.length}}"></p-button>
@@ -59,7 +66,7 @@
                                 <tr   [pEditableRow]="purchaseOrderProducts" [formGroupName]="i">
                                     <td>
                                         <div class="col-12 ">
-                                            <p-dropdown  [options]="listProducts" filterBy="labelFilter" [filter]="true" appendTo="body" placeholder="Selecciona uno" formControlName="purchaseOrderProductProductId"   optionValue="value"  optionLabel="label"   [showClear]="true"  [pTooltip]="getLabel(form.controls.purchaseOrderProducts.controls[i].controls.purchaseOrderProductProductId.value,'product')" [style]="{'max-width':'17rem'}" >
+                                            <p-dropdown  [options]="listProducts" filterBy="labelFilter" [filter]="true" appendTo="body" placeholder="Selecciona uno" formControlName="purchaseOrderProductProductId"   optionValue="value"  optionLabel="label"   [showClear]="true"  [pTooltip]="getLabel(form.controls.purchaseOrderProducts.controls[i].controls.purchaseOrderProductProductId.value,'product')"  >
                                                 <ng-template let-product pTemplate="item">
                                                    
                                                     <div>{{ product.label }}</div>

@@ -21,8 +21,8 @@ export class ListSimCardsComponent implements OnInit, OnDestroy {
     totalRows: number = 0;
     limit:number = 10 ;
     page:number  ;
-    sort:string = ''; 
-    search:string = ''; 
+    sort:string = '';
+    search:string = '';
     loading: boolean;
     searching: boolean;
     showButton! : boolean;
@@ -43,21 +43,22 @@ export class ListSimCardsComponent implements OnInit, OnDestroy {
 
     constructor(
         private miscService:MiscService,
-        private simCardService: SimCardService, 
+        private simCardService: SimCardService,
         private cdref:ChangeDetectorRef,
         private router: Router,
-        private messageService: MessageService, 
-        private confirmationService: ConfirmationService ) 
+        private messageService: MessageService,
+        private confirmationService: ConfirmationService )
 	{
-        
-    }
-	
 
-    ngOnInit(): void 
+    }
+
+
+    ngOnInit(): void
 	{
         this.matchModeOptionsText = [
-            { label: 'Comienza con', value: FilterMatchMode.STARTS_WITH  },
+
             { label: 'Contiene', value: FilterMatchMode.CONTAINS },
+            { label: 'Comienza con', value: FilterMatchMode.STARTS_WITH  },
             { label: 'Termina con', value: FilterMatchMode.ENDS_WITH},
             { label: 'Es igual', value: FilterMatchMode.EQUALS },
         ];
@@ -66,21 +67,21 @@ export class ListSimCardsComponent implements OnInit, OnDestroy {
             { label: 'Es igual', value: FilterMatchMode.EQUALS },
         ];
         this.matchModeOptionsDate = [
-            { label: 'Contiene', value:  FilterMatchMode.DATE_IS  },   
-            { label: 'No contiene', value: FilterMatchMode.DATE_IS_NOT },  
-            { label: 'Antes', value: FilterMatchMode.DATE_BEFORE },  
-            { label: 'Después', value: FilterMatchMode.DATE_AFTER },           
+            { label: 'Contiene', value:  FilterMatchMode.DATE_IS  },
+            { label: 'No contiene', value: FilterMatchMode.DATE_IS_NOT },
+            { label: 'Antes', value: FilterMatchMode.DATE_BEFORE },
+            { label: 'Después', value: FilterMatchMode.DATE_AFTER },
         ];
     }
 
 
     ngOnDestroy() {
-       
+
     }
 
     load(event: LazyLoadEvent)
     {
-        this.page =  (event.first / event.rows) + 1; 
+        this.page =  (event.first / event.rows) + 1;
         this.limit = event.rows;
         let order: {}[] = [];
         let filter = [];
@@ -91,9 +92,9 @@ export class ListSimCardsComponent implements OnInit, OnDestroy {
         });
         this.sort = JSON.stringify(order);
         for(let i in event.filters){
-           
+
             let obj= event.filters[i];
-           
+
             if(typeof event.filters[i].value === 'boolean'){
                 if(event.filters[i].value != null){
                     obj['field'] = i;
@@ -110,11 +111,11 @@ export class ListSimCardsComponent implements OnInit, OnDestroy {
         this.search =JSON.stringify(filter);
         this.miscService.startRequest();
         if(filter.length > 0){
-            this.filtrer(this.search);
+            this.filter(this.search);
         }else{
             this.list();
             this.cdref.detectChanges();
-        } 
+        }
     }
 
     list()
@@ -124,7 +125,7 @@ export class ListSimCardsComponent implements OnInit, OnDestroy {
             console.log(data);
             if(data != null)
             {
-                this.simCards = data['object']['records'];                    
+                this.simCards = data['object']['records'];
                 this.totalRows = data['object']['totalRecords'];
 
             }else{
@@ -132,11 +133,11 @@ export class ListSimCardsComponent implements OnInit, OnDestroy {
             }
             this.miscService.endRquest();
         }, (err : any) => {
-            // Entra aquí si el servicio entrega un código http de error EJ: 404, 
+            // Entra aquí si el servicio entrega un código http de error EJ: 404,
             if( err.status == 416){
                 // success  info  warn  error
                 this.messageService.add({severity:'warn', key: 'msg',summary: err.error.message,life: 3000});
-            
+
             }else{
 
                 //status = 0 , cuando no esta el back arriba
@@ -145,13 +146,13 @@ export class ListSimCardsComponent implements OnInit, OnDestroy {
             this.miscService.endRquest();
         });
     }
-    
-    filtrer(texto: any)
+
+    filter(texto: any)
     {
         this.simCardService.getFilter(texto,this.limit, this.page,this.sort) // le sumo +1 ya que en sails le resto uno a la pagina (en sails quitare ese -1 )
         .subscribe((data: any)=>{
             if(data != null){
-                this.simCards = data['object']['records'];                    
+                this.simCards = data['object']['records'];
                 this.totalRows = data['object']['totalRecords'];
 
             }else{
@@ -160,14 +161,14 @@ export class ListSimCardsComponent implements OnInit, OnDestroy {
             this.miscService.endRquest();
 
         },  (err : any) => {
-            // Entra aquí si el servicio entrega un código http de error EJ: 404, 
+            // Entra aquí si el servicio entrega un código http de error EJ: 404,
             if( err.status == 416){
                 // success  info  warn  error
                 this.messageService.add({severity:'warn', key: 'msg',summary: err.error.message,life: 3000});
-            
+
             }else{
 
-                //status = 0 , 
+                //status = 0 ,
                 this.messageService.add({severity:'error', key: 'msg', summary:  err.error.message,detail: err.name,life: 3000});
             }
             this.miscService.endRquest();
@@ -197,26 +198,57 @@ export class ListSimCardsComponent implements OnInit, OnDestroy {
 
     }
 
+    activarDesactivar(deleteType:number, object : SimCard) {
+
+        this.confirmationService.confirm({
+            message: (deleteType == 1 ? '¿Confirma activar/desactivar los registros seleccionados?' :'¿Confirma '+(object.jasperStatus == 'Desactivada' ? 'activar' : 'desactivar')+' el registro?'),
+            header :'Confirmar' ,
+            icon: 'pi pi-info-circle',
+            acceptLabel: 'Aceptar',
+            rejectLabel:'Cancelar',
+            accept: () => {
+                switch (deleteType) {
+                    case 1:
+                        this.confirmActivarDesactivarSelected();
+                        break;
+                    case 2 :
+                        this.confirmActivarDesactivar(object.id, object.jasperStatus);
+                        break;
+
+                }
+            }
+        });
+
+    }
+
     confirmDelete(id:number) {
         this.simCardService.disable(id).subscribe((data: any)=>{
             this.list();
             this.messageService.add({ severity: 'success',key: 'msg', summary: 'Operación exitosa', life: 3000 });
-            
+
+        }, err => {
+        });
+    }
+
+    confirmActivarDesactivar(id:number, jasperStatus:string) {
+        this.simCardService.activateDeactivate(id, jasperStatus).subscribe((data: any)=>{
+            this.list();
+            this.messageService.add({ severity: 'success',key: 'msg', summary: 'Operación exitosa', life: 3000 });            
         }, err => {
         });  
     }
 
-    confirmDeleteSelected() {
+    confirmActivarDesactivarSelected() {
         var peticiones: any[] = []; 
 		
 		
 		for(let i = 0 ; i < this.selectedSimCards.length; i++)
 		{
-            const ptt = this.simCardService.disable(this.selectedSimCards[i].id).pipe
+            const ptt = this.simCardService.activateDeactivate(this.selectedSimCards[i].id, this.selectedSimCards[i].jasperStatus).pipe
 			(
 				catchError((error) => 
 				{
-					this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error eliminar un registro", detail:error.message });
+					this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al activar/desactivar un registro", detail:error.message });
 					return of(null);
 				})
 			);				
@@ -235,8 +267,37 @@ export class ListSimCardsComponent implements OnInit, OnDestroy {
 		});
     }
 
+    confirmDeleteSelected() {
+        var peticiones: any[] = [];
+
+
+		for(let i = 0 ; i < this.selectedSimCards.length; i++)
+		{
+            const ptt = this.simCardService.disable(this.selectedSimCards[i].id).pipe
+			(
+				catchError((error) =>
+				{
+					this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error eliminar un registro", detail:error.message });
+					return of(null);
+				})
+			);
+			peticiones.push(ptt);
+        }
+
+		forkJoin(peticiones).subscribe((respuestas: any[]) =>
+		{
+			this.messageService.add({ severity: 'success', key: 'msg',summary: 'Operación exitosa', detail: 'Elementos eliminados exitosamente', life: 3000 });
+            this.selectedSimCards = [];
+            this.list();
+		},
+		err =>
+		{
+			this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error', detail: 'Problemas al eliminar', life: 3000 });
+		});
+    }
+
     //TODO esta funcion debe ser parte de un helper
-    getPageRange(page: number, limit: number, totalRows: number) 
+    getPageRange(page: number, limit: number, totalRows: number)
     {
         if (!Number.isInteger(page) || page < 1) {
             page = 1;
@@ -257,22 +318,22 @@ export class ListSimCardsComponent implements OnInit, OnDestroy {
         this.visible = true;
 
     }
-    importData(e: any) 
+    importData(e: any)
 	{
-        for (let i = 0; i < e.files.length; i++) 
+        for (let i = 0; i < e.files.length; i++)
         {
-            let file =e.files[i]; 
-            let fileReader = new FileReader(); 
-            fileReader.onload = (e) => 
+            let file =e.files[i];
+            let fileReader = new FileReader();
+            fileReader.onload = (e) =>
             {
             this.processCSV(fileReader.result);
-            };            
+            };
             fileReader.readAsText(file);
         }
     }
 
     processCSV(text:any) {
-        
+
         let keys = [];
         let lines = text.replace(/"+/g,'').split(/[\r\n]+/);
         lines.pop(); //eliminar ultimo elemento del array (ya eque esta vacia la ultima posicion)
@@ -280,24 +341,24 @@ export class ListSimCardsComponent implements OnInit, OnDestroy {
         lines.forEach((obj) => {
             let element = {};
             obj.split(',').forEach((obj, index) => {
-                element[keys[index]] = obj; 
+                element[keys[index]] = obj;
             });
             this.dataCSV.push(element);
         });
     }
-    
-    sendData(event: any) 
+
+    sendData(event: any)
 	{
         let simCards = [];
-        this.dataCSV.forEach((obj, index) => 
+        this.dataCSV.forEach((obj, index) =>
         {
             let keys =  Object.keys(obj);
             let KeysSimCardCSV = keys.slice(0, 7);
             let simCard = {};
             let keysSimCard = ['simCardSupplyId','simCardNumber','simCardRecoveryCode','simCardTsp','simCardPin','simCardPuk','simCardServicePlan'];
-            KeysSimCardCSV.forEach((element, index) => 
+            KeysSimCardCSV.forEach((element, index) =>
             {
-                simCard[keysSimCard[index]] = obj[element];   
+                simCard[keysSimCard[index]] = obj[element];
             });
             simCards.push(simCard);
         });
@@ -309,14 +370,14 @@ export class ListSimCardsComponent implements OnInit, OnDestroy {
         let actions = [];
         simCards.forEach((obj)=>{
             const ptt = this.simCardService.create(obj).pipe(
-                catchError((error) => 
+                catchError((error) =>
                 {
                     let text = (error.error.code == undefined) ? error.error.split("}")[0] :error.error.code +"\n"+error.error.problems ;
 
                     this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error al crear SIM Card con ICCID "+obj.trackerSupplyId, detail:text });
                     return of(null);
                 })
-            );		
+            );
 
             actions.push(ptt);
         });
@@ -329,13 +390,13 @@ export class ListSimCardsComponent implements OnInit, OnDestroy {
                     ok.push(response);
             });
             if(ok.length == actions.length) {
-                this.messageService.add({ severity: 'success', key: 'msg',summary: 'Operación exitosa', detail: 'Datos guardados exitosamente', life: 3000 }); 
+                this.messageService.add({ severity: 'success', key: 'msg',summary: 'Operación exitosa', detail: 'Datos guardados exitosamente', life: 3000 });
                 this.visible = false;
                 this.router.navigate(['/simCards']);
-                this.miscService.endRquest();  
+                this.miscService.endRquest();
             }else{
                 this.miscService.endRquest();
-                this.messageService.add({ severity: 'warn', key: 'msg',summary: 'Advertencia', detail: 'Algunos SIM Cards no fueron agregadas', life: 3000 }); 
+                this.messageService.add({ severity: 'warn', key: 'msg',summary: 'Advertencia', detail: 'Algunos SIM Cards no fueron agregadas', life: 3000 });
             }
         },
         (err:any)=>
@@ -347,7 +408,7 @@ export class ListSimCardsComponent implements OnInit, OnDestroy {
     }
 
     clearCSV(){
-        this.dataCSV = [];    
+        this.dataCSV = [];
     }
 
 }

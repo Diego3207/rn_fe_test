@@ -24,8 +24,8 @@ export class ListProductComponent implements OnInit, OnDestroy {
     totalRows: number = 0;
     limit:number = 10 ;
     page:number  ;
-    sort:string = ''; 
-    search:string = ''; 
+    sort:string = '';
+    search:string = '';
     loading: boolean;
     searching: boolean;
     showButton! : boolean;
@@ -35,21 +35,22 @@ export class ListProductComponent implements OnInit, OnDestroy {
 
     constructor(
         private miscService:MiscService,
-        private productService: ProductService, 
-        private messageService: MessageService, 
+        private productService: ProductService,
+        private messageService: MessageService,
         private cdref:ChangeDetectorRef,
         private fileService: FileService,
-        private confirmationService: ConfirmationService ) 
+        private confirmationService: ConfirmationService )
 	{
-        
-    }
-	
 
-    ngOnInit(): void 
+    }
+
+
+    ngOnInit(): void
 	{
         this.matchModeOptionsText = [
-            { label: 'Comienza con', value: FilterMatchMode.STARTS_WITH  },
+
             { label: 'Contiene', value: FilterMatchMode.CONTAINS },
+            { label: 'Comienza con', value: FilterMatchMode.STARTS_WITH  },
             { label: 'Termina con', value: FilterMatchMode.ENDS_WITH},
             { label: 'Es igual', value: FilterMatchMode.EQUALS },
         ];
@@ -58,25 +59,25 @@ export class ListProductComponent implements OnInit, OnDestroy {
             { label: 'Es igual', value: FilterMatchMode.EQUALS },
         ];
         this.matchModeOptionsDate = [
-            { label: 'Contiene', value:  FilterMatchMode.DATE_IS  },   
-            { label: 'No contiene', value: FilterMatchMode.DATE_IS_NOT },  
-            { label: 'Antes', value: FilterMatchMode.DATE_BEFORE },  
-            { label: 'Después', value: FilterMatchMode.DATE_AFTER },           
+            { label: 'Contiene', value:  FilterMatchMode.DATE_IS  },
+            { label: 'No contiene', value: FilterMatchMode.DATE_IS_NOT },
+            { label: 'Antes', value: FilterMatchMode.DATE_BEFORE },
+            { label: 'Después', value: FilterMatchMode.DATE_AFTER },
         ];
     }
 
 
     ngOnDestroy() {
-       
+
     }
 
     load(event: LazyLoadEvent)
     {
-        this.page =  (event.first / event.rows) + 1; 
+        this.page =  (event.first / event.rows) + 1;
         this.limit = event.rows;
         let order: {}[] = [];
         let filter = [];
-        //Para la seleccion multiple de debe presionar ctrl+Col1+Col2... 
+        //Para la seleccion multiple de debe presionar ctrl+Col1+Col2...
         event.multiSortMeta.forEach(function (obj) {
             let h = {};
             h[obj['field']] = (( obj['order'] == 1) ? "asc": "desc");
@@ -85,9 +86,9 @@ export class ListProductComponent implements OnInit, OnDestroy {
         this.sort = JSON.stringify(order);
         //console.log(this.sort);
         for(let i in event.filters){
-           
+
             let obj= event.filters[i];
-           
+
             if(typeof event.filters[i].value === 'boolean'){
                 //type => boolean
                 //posibles valores false/true/null
@@ -106,11 +107,11 @@ export class ListProductComponent implements OnInit, OnDestroy {
         this.search =JSON.stringify(filter);
         this.miscService.startRequest();
         if(filter.length > 0){
-            this.filtrer(this.search);
+            this.filter(this.search);
         }else{
             this.list();
             this.cdref.detectChanges();
-        } 
+        }
     }
 
     list()
@@ -120,7 +121,7 @@ export class ListProductComponent implements OnInit, OnDestroy {
             console.log(data);
             if(data != null)
             {
-                this.products = data['object']['records'];                    
+                this.products = data['object']['records'];
                 this.totalRows = data['object']['totalRecords'];
 
             }else{
@@ -128,11 +129,11 @@ export class ListProductComponent implements OnInit, OnDestroy {
             }
             this.miscService.endRquest();
         }, (err : any) => {
-            // Entra aquí si el servicio entrega un código http de error EJ: 404, 
+            // Entra aquí si el servicio entrega un código http de error EJ: 404,
             if( err.status == 416){
                 // success  info  warn  error
                 this.messageService.add({severity:'warn', key: 'msg',summary: err.error.message,life: 3000});
-            
+
             }else{
 
                 //status = 0 , cuando no esta el back arriba
@@ -141,13 +142,13 @@ export class ListProductComponent implements OnInit, OnDestroy {
             this.miscService.endRquest();
         });
     }
-    
-    filtrer(texto: any)
+
+    filter(texto: any)
     {
         this.productService.getFilter(texto,this.limit, this.page,this.sort) // le sumo +1 ya que en sails le resto uno a la pagina (en sails quitare ese -1 )
         .subscribe((data: any)=>{
             if(data != null){
-                this.products = data['object']['records'];                    
+                this.products = data['object']['records'];
                 this.totalRows = data['object']['totalRecords'];
 
             }else{
@@ -156,14 +157,14 @@ export class ListProductComponent implements OnInit, OnDestroy {
             this.miscService.endRquest();
 
         },  (err : any) => {
-            // Entra aquí si el servicio entrega un código http de error EJ: 404, 
+            // Entra aquí si el servicio entrega un código http de error EJ: 404,
             if( err.status == 416){
                 // success  info  warn  error
                 this.messageService.add({severity:'warn', key: 'msg',summary: err.error.message,life: 3000});
-            
+
             }else{
 
-                //status = 0 , 
+                //status = 0 ,
                 this.messageService.add({severity:'error', key: 'msg', summary:  err.error.message,detail: err.name,life: 3000});
             }
             this.miscService.endRquest();
@@ -197,45 +198,45 @@ export class ListProductComponent implements OnInit, OnDestroy {
         this.productService.disable(id).subscribe((data: any)=>{
             this.list();
             this.messageService.add({ severity: 'success',key: 'msg', summary: 'Operación exitosa', life: 3000 });
-            
+
         }, err => {
-        });  
+        });
     }
 
     confirmDeleteSelected() {
-        var peticiones: any[] = []; 
-		
-		
+        var peticiones: any[] = [];
+
+
 		for(let i = 0 ; i < this.selectedProducts.length; i++)
 		{
             const ptt = this.productService.disable(this.selectedProducts[i].id).pipe
 			(
-				catchError((error) => 
+				catchError((error) =>
 				{
 					this.messageService.add({ life:5000, key: 'msg', severity: 'error', summary: "Error eliminar un registro", detail:error.message });
 					return of(null);
 				})
-			);				
-			peticiones.push(ptt);			        
+			);
+			peticiones.push(ptt);
         }
-		
-		forkJoin(peticiones).subscribe((respuestas: any[]) => 
+
+		forkJoin(peticiones).subscribe((respuestas: any[]) =>
 		{
 			this.messageService.add({ severity: 'success', key: 'msg',summary: 'Operación exitosa', detail: 'Elementos eliminados exitosamente', life: 3000 });
-            this.selectedProducts = [];        
+            this.selectedProducts = [];
             this.list();
-		}, 
-		err => 
-		{		
+		},
+		err =>
+		{
 			this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error', detail: 'Problemas al eliminar', life: 3000 });
 		});
     }
 
     //TODO esta funcion debe ser parte de un helper
-    getPageRange(page: number, limit: number, totalRows: number) 
+    getPageRange(page: number, limit: number, totalRows: number)
     {
         //console.log(page+"  "+ limit+"  "+ totalRows);
-        
+
         if (!Number.isInteger(page) || page < 1) {
             page = 1;
         }
@@ -251,5 +252,5 @@ export class ListProductComponent implements OnInit, OnDestroy {
 
         return `Mostrando del ${startIndex} al ${endIndex} de ${totalRows}`;
     }
-  
+
 }

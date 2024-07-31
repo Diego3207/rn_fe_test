@@ -90,13 +90,14 @@ export class EditSimCardsComponent implements OnInit, OnDestroy {
 
     private save()  
     {
+        console.log("si entro");
     let productProperties = {};
     Object.keys(this.form.value).forEach(element => 
     {
         productProperties[element] = this.form.value[element];     
     });
 
-    productProperties['simCardSupplyId'] = productProperties['simCardSupplyId'].toString();
+    productProperties['simCardSupplyId'] = productProperties['simCardSupplyId'].id;
     // update SimCards 
     this.simCardService.update(productProperties)
     .subscribe(data =>
@@ -168,38 +169,18 @@ export class EditSimCardsComponent implements OnInit, OnDestroy {
     }
 
     getDetail(data:any){
-        
-       this.supplyService.getById(data['simCardSupplyId'])
+        console.log(data);
+        this.supplyService.getById(data['simCardSupplyId'].id)
         .subscribe(dataSupply => {
-            if(dataSupply != null )
-            {                    
-                this.listSupplies.push({'label':  "Producto: "+dataSupply['supplyProductId']['productBrand']+" "+ dataSupply['supplyProductId']['productModel'] +" / Serial: "+dataSupply['supplyKey'],'value': dataSupply['id']});
-            }
-
-            this.form.patchValue(data); 
-        });
-      /*  forkJoin([currentSim,currentSupply]).subscribe(([dataSim,dataSupply] )=>
-        {
-            if(dataSupply != null )
-            {                    
-                this.listSupplies.push({'label':  "Producto: "+dataSupply['supplyProductId']['productBrand']+" "+ dataSupply['supplyProductId']['productModel'] +" / Serial: "+dataSupply['supplyKey'],'value': dataSupply['id']});
-            }
-
-            if(dataSim != null )
-            {               
-               this.listSimCards.push({'label':  "Número: "+dataSim['simCardNumber'],'value': dataSim['id']});
-              
-            }
-
-            this.form.patchValue(data); 
             
-
-        },
-
-        (err:any)=>
-        {
-            this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error', detail: 'Error general al obtener los catalogos', life: 3000 });
-            this.miscService.endRquest();
-        });*/
+            //console.log(dataSupply['id']);
+            if(dataSupply != null )
+            {                    
+                this.listSupplies.push({'label':  "Producto: "+dataSupply['supplyProductId']['productBrand']+" "+ dataSupply['supplyProductId']['productModel'] +" / Serial: "+dataSupply['supplyKey'],'value': dataSupply['id']});
+            }
+            //console.log(this.listSupplies);
+            this.form.patchValue(data); 
+            this.form.controls.simCardSupplyId.setValue(data['simCardSupplyId'].id);
+        });
     }
 }

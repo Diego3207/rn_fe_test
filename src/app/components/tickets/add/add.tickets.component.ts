@@ -27,7 +27,7 @@ export class AddTicketComponent {
   form: FormGroup | any;
   visible: boolean = false;
   listPhones :any[]= [];
-
+  listChannels :any[]= [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -66,6 +66,14 @@ export class AddTicketComponent {
           this.getFilter(selectedValue);
         }
       });
+
+    this.listChannels = [ 
+      {label:'Llamada Telefónica',value:'llamada'},
+      {label:'WhatsApp',value:'whatsapp'},
+      {label:'Telegram',value:'telegram'},
+      {label:'SMS',value:'sms'},
+      {label:'Correo Electrónico',value:'email'}
+    ];
   }
 
   ngOnDestroy() {
@@ -197,7 +205,7 @@ export class AddTicketComponent {
           }
           
           //Agregamos los datos de phones
-          let labelx = x.dependencyPhoneDependencyId['dependencyDescription']+" / Tel: "+ x.dependencyPhoneNumber +" / Via: "+x.dependencyPhoneCommunicationChannel;
+          let labelx = x.dependencyPhoneDependencyId['dependencyDescription']+" / Tel: "+ x.dependencyPhoneNumber;
           let phone = {label:labelx, value:x.id };
             nuevoObjeto[x.dependencyPhoneDependencyId['dependencyDependencyCategoryId']['dependencyCatergoryDescription']].phones.push(phone);
           
@@ -260,7 +268,8 @@ export class AddTicketComponent {
   {
     return this.formBuilder.group({
         
-        ticketCoordinationDependencyPhoneId:[null,[Validators.required]]
+        ticketCoordinationDependencyPhoneId:[null,[Validators.required]],
+        ticketCoordinationCommunicationChannel:[null,[Validators.required]]
     });
   }
   

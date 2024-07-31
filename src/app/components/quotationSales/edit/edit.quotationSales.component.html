@@ -83,7 +83,7 @@
                 </div>
                 <div class="field">
                     <label for="name" class="font-semibold">Tipo de moneda:</label>
-                    <p-dropdown [options]="listCurrency"    [filter]="true" formControlName="quotationSaleCurrency" filterBy="name" [showClear]="true" placeholder="Selecciona uno" optionValue="name" optionLabel="name"  ></p-dropdown>
+                    <p-dropdown [options]="listCurrencies"    [filter]="true" formControlName="quotationSaleCurrency" filterBy="label" [showClear]="true" placeholder="Selecciona uno" optionValue="value" optionLabel="label"  ></p-dropdown>
                     <div *ngIf="form.controls.quotationSaleCurrency.invalid">
                         <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.quotationSaleCurrency.errors?.['required']" >*Campo requerido</small>
                     </div>
@@ -113,7 +113,7 @@
                                 <tr   [pEditableRow]="quotationSaleProducts" [formGroupName]="i">
                                     <td>
                                         <div class="col-12">
-                                            <p-dropdown [style]="{'max-width':'17rem'}" [options]="listProducts" [pTooltip]="getLabel(form.controls.quotationSaleProducts.controls[i].controls.quotationSaleProductProductId.value,'product')" (onChange)="getPriceProduct($event.value,i)" [filter]="true" appendTo="body" placeholder="Selecciona uno" formControlName="quotationSaleProductProductId"   optionValue="value" filterBy="labelFilter"   optionLabel="label"   [showClear]="true" >
+                                            <p-dropdown  [options]="listProducts" [pTooltip]="getLabel(form.controls.quotationSaleProducts.controls[i].controls.quotationSaleProductProductId.value,'product')" (onChange)="getPriceProduct($event.value,i)" [filter]="true" appendTo="body" placeholder="Selecciona uno" formControlName="quotationSaleProductProductId"   optionValue="value" filterBy="labelFilter"   optionLabel="label"   [showClear]="true" >
                                                 <ng-template let-product pTemplate="item">
                                                    
                                                         <div>{{ product.label }}</div>
@@ -200,8 +200,8 @@
                             <ng-template pTemplate="body" let-quotationSaleServices  let-i="rowIndex">
                                 <tr   [pEditableRow]="quotationSaleServices" [formGroupName]="i">
                                     <td>
-                                        <div class="">
-                                            <p-dropdown  [style]="{'max-width':'17rem'}"  [options]="listServices" (onChange)="getPriceService($event.value,i)"  [pTooltip]="getLabel(form.controls.quotationSaleServices.controls[i].controls.quotationSaleServiceServiceId.value,'service')" [filter]="true" appendTo="body" placeholder="Selecciona uno" formControlName="quotationSaleServiceServiceId"   optionValue="value"  optionLabel="label"  [showClear]="true"   ></p-dropdown>
+                                        <div class="col-12">
+                                            <p-dropdown   [options]="listServices" (onChange)="getPriceService($event.value,i)"  [pTooltip]="getLabel(form.controls.quotationSaleServices.controls[i].controls.quotationSaleServiceServiceId.value,'service')" [filter]="true" appendTo="body" placeholder="Selecciona uno" formControlName="quotationSaleServiceServiceId"   optionValue="value"  optionLabel="label"  [showClear]="true"   ></p-dropdown>
                                             <div *ngIf="form.controls.quotationSaleServices.controls[i].controls.quotationSaleServiceServiceId.invalid">
                                                 <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.quotationSaleServices.controls[i].controls.quotationSaleServiceServiceId.errors?.['required']">*Campo requerido</small>
                                             </div>
@@ -282,7 +282,7 @@
                                 <tr   [pEditableRow]="quotationSalePackages" [formGroupName]="i">
                                     <td>
                                         <div class="col-12 ">
-                                            <p-dropdown  [style]="{'max-width':'17rem'}"  [options]="listPackages"  [pTooltip]="getLabel(form.controls.quotationSalePackages.controls[i].controls.quotationSalePackagePackageId.value,'package')" (onChange)="getPricePackage($event.value,i)"  [filter]="true" appendTo="body" placeholder="Selecciona uno" formControlName="quotationSalePackagePackageId"   optionValue="id"  optionLabel="packageName"   [showClear]="true" ></p-dropdown>
+                                            <p-dropdown  [options]="listPackages"  [pTooltip]="getLabel(form.controls.quotationSalePackages.controls[i].controls.quotationSalePackagePackageId.value,'package')" (onChange)="getPricePackage($event.value,i)"  [filter]="true" appendTo="body" placeholder="Selecciona uno" formControlName="quotationSalePackagePackageId"   optionValue="id"  optionLabel="packageName"   [showClear]="true" ></p-dropdown>
                                             <div *ngIf="form.controls.quotationSalePackages.controls[i].controls.quotationSalePackagePackageId.invalid">
                                                 <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.quotationSalePackages.controls[i].controls.quotationSalePackagePackageId.errors?.['required']">*Campo requerido</small>
                                             </div>

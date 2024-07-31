@@ -1,5 +1,5 @@
 const sleepCorto = 1000;
-const sleepLargo = 2500;
+const sleepLargo = 3500;
 describe("Proveedor", function () {
     beforeEach(function () {
         cy.fixture("provider").then(function (provider) {
@@ -10,7 +10,7 @@ describe("Proveedor", function () {
         cy.get("#password").type("123456");
         cy.get('[label="CONTINUAR"]').click();
     });
-    it("Añadir Proveedor válido con 1 producto y 1 servicio", function () {
+    it("Añadir Proveedor válido con 2 productos y 1 servicio", function () {
         //sección añadir provider
         //módulo administración
         cy.get(".p-element.ng-tns-c21-15").click();
@@ -25,7 +25,7 @@ describe("Proveedor", function () {
         cy.get(".p-dropdown-label").click();
         cy.get(".p-dropdown-filter").type(this.provider.giroComercialValido);
         cy.get(".p-element.ng-star-inserted > .p-ripple").click();
-        //añadir producto
+        //añadir producto 1
         cy.get(
             ":nth-child(4) > .flex > p-button.p-element > .p-ripple"
         ).click();
@@ -46,6 +46,24 @@ describe("Proveedor", function () {
         ).click();
         cy.get('[ng-reflect-label="Día(s)"] > .p-ripple').click();
         cy.wait(sleepCorto);
+        //añadir producto 2
+        cy.get(
+            ":nth-child(4) > .flex > p-button.p-element > .p-ripple"
+        ).click();
+        //seleccionar producto
+        cy.get('[ng-reflect-name="1"] > :nth-child(1) > :nth-child(1) > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
+        //seleccionar "sim card"
+        cy.get(".p-dropdown-filter")
+            .type("sim card")
+            .type("{downarrow}")
+            .wait(500)
+            .type("{enter}");
+        //garantia de
+        cy.get(' #locale-us').last().type(this.provider.garantiaValido);
+        //temporalidad
+        cy.get('[ng-reflect-name="1"] > :nth-child(4) > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
+        //seleccionar "mes"
+        cy.get('[ng-reflect-label="Mes(es)"] > .p-ripple').click();
         //añadir servicio
         cy.get(
             ":nth-child(5) > .flex > p-button.p-element > .p-ripple"
@@ -105,13 +123,13 @@ describe("Proveedor", function () {
             .its("response.statusCode")
             .should("eq", 201);
         cy.url().should("eq", "http://localhost:4200/#/providers");
-        cy.wait(sleepLargo);
         //id de la tabla del listado de ubicaciones
         cy.get('.p-highlight > .p-element').click();
         //primer fila, columna nombre
         cy.get('.p-datatable-tbody > :nth-child(1) > :nth-child(3)')
-        .contains("Concox")
+        .contains(this.provider.nombreValido)
         .should("be.visible");
+        cy.wait(sleepLargo);
     });
     it("Añadir Proveedor duplicado con error 400", function () {
         //sección añadir provider

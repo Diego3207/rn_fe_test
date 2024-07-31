@@ -9,4 +9,6 @@ export interface Ticket {
     ticket_active : boolean,
     ticketDevices: any,
     ticketEndDate: string,
+    ticketEndComment: string,
+    ticketEndUser: string
 }

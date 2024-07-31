@@ -7,6 +7,8 @@ export const environment =
   production: false,
   apiUrl: 'http://localhost:1337',
   //apiUrl: 'http://adm.reportnow.com.mx:1336',
+  apiUrlCurrencies: 'https://api.currencyapi.com/v3/latest?apikey=cur_live_4xRqUHTjJB8DerYmATULvKjZ4e0SgrpB1BOTWyD9'
+   
 };
 
 /*

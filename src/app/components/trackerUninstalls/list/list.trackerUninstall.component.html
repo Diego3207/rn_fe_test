@@ -14,23 +14,23 @@
                 </ng-template>
             </p-toolbar>
 
-            <p-table #dt 
-            [value]="trackerUninstalls"  
+            <p-table #dt
+            [value]="trackerUninstalls"
             [lazy]="true"
             [resetPageOnSort]="false"
             [multiSortMeta]="[{field: 'id', order: 1}]"
-            sortMode="multiple" 
-            (onLazyLoad)="load($event)" 
+            sortMode="multiple"
+            (onLazyLoad)="load($event)"
             [lazyLoadOnInit]="true"
-            [paginator]="true" 
+            [paginator]="true"
             [totalRecords]="totalRows"
-            [rowsPerPageOptions]="[10,25,50]" 
-            [loading]="loading"    
+            [rowsPerPageOptions]="[10,25,50]"
+            [loading]="loading"
             [showCurrentPageReport]="true"
             currentPageReportTemplate="{{ getPageRange(page, limit, totalRows) }}"
             [(selection)]="selectedTrackerUninstalls" selectionMode="multiple"
             [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="scroll" [breakpoint]="'760px'" [tableStyle]="{'minx-width': '50rem'}">
-                
+
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="width: 3rem">
@@ -40,13 +40,13 @@
                             ID <p-sortIcon field="id"></p-sortIcon>
                         </th>
                         <th  pSortableColumn="trackerUninstallTrackerInstallationId" >
-                           ID INSTALACION <p-sortIcon field="trackerUninstallTrackerInstallationId"></p-sortIcon>
+                           ID INSTALACIÓN <p-sortIcon field="trackerUninstallTrackerInstallationId"></p-sortIcon>
                         </th>
                         <th >
                            TECNICO ENCARGADO
                         </th>
                         <th pSortableColumn="trackerUninstallDate">
-                            FECHA DE DESINSTALACION <p-sortIcon field="trackerUninstallDate"></p-sortIcon>
+                            FECHA DE DESINSTALACIÓN <p-sortIcon field="trackerUninstallDate"></p-sortIcon>
                         </th>
                         <th>
                             <!-- Espacio para que se vea bien las columnas -->
@@ -57,24 +57,24 @@
                             <!-- Espacio para que se vea bien las columnas  -->
                         </th>
                         <th>
-                            <p-columnFilter type="numeric"  [showButtons]="false" field="id"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
+                            <p-columnFilter type="numeric"  [showButtons]="false" field="id" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="numeric"  [showButtons]="false" field="trackerUninstallTrackerInstallationId"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
+                            <p-columnFilter type="numeric"  [showButtons]="false" [matchMode]="'contains'" field="trackerUninstallTrackerInstallationId"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="trackerUninstallUninstallerUserId['userFullName']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" [matchMode]="'contains'" field="trackerUninstallUninstallerUserId['installerName']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="trackerUninstallDate" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="date" field="trackerUninstallDate" [matchModeOptions]="matchModeOptionsDate" ></p-columnFilter>
                         </th>
                         <th>
                             <!-- Espacio para que se vea bien las columnas -->
                         </th>
-                    </tr> 
+                    </tr>
                 </ng-template>
 
-                <ng-template pTemplate="body" let-trackerUninstall let-expanded="expanded"> 
+                <ng-template pTemplate="body" let-trackerUninstall let-expanded="expanded">
                     <tr>
                         <td>
                             <p-tableCheckbox [value]="trackerUninstall"></p-tableCheckbox>

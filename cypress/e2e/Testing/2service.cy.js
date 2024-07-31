@@ -1,5 +1,5 @@
 const sleepCorto = 1000;
-const sleepLargo = 2500;
+const sleepLargo = 3500;
 describe("Servicio",function(){
     beforeEach(function(){
         cy.fixture("service").then(function (service) {
@@ -19,29 +19,40 @@ describe("Servicio",function(){
         //boton agregar
         cy.get('.p-button-success').click();
         //formulario
-        //nombre
+        //descripcion
         cy.get('#name').type(this.service.descripcionValido);
+        //tipo moneda
+        cy.get(':nth-child(1) > .p-inputwrapper > .p-dropdown > .p-dropdown-label')
+        .click()
+        //seleccionar MXN
+        cy.get('[ng-reflect-label="Peso mexicano (MXN)"] > .p-ripple')
+        .click()
         //precio
-        cy.get('[formControlName="servicePrice"]').type(this.service.precioValido);
+        cy.get('#price > .p-inputnumber > #locale-us')
+        .type(this.service.precioValido);
         //renovación
-        cy.get('.grid > :nth-child(2) > .p-inputwrapper > .p-inputnumber > #locale-us').type(this.service.renovacionValido);
+        cy.get('.grid.field > :nth-child(2) > .p-inputwrapper > .p-inputnumber > #locale-us')
+        .type(this.service.renovacionValido);
         //selecciona uno
-        cy.get('.p-dropdown-label').click();
-        cy.get('.p-dropdown-filter').type(this.service.cadaXTiempoValido);
-        cy.get('.p-element.ng-star-inserted > .p-ripple > .ng-star-inserted').click();
+        cy.get(':nth-child(3) > .p-inputwrapper > .p-dropdown > .p-dropdown-label')
+        .click();
+        cy.get('.p-dropdown-filter')
+        .type("{downarrow}")
+        .wait(200)
+        .type("{enter}")
         cy.intercept("POST","http://localhost:1337/service/add").as("añadirServicio");
         //boton guardar
         cy.wait(sleepLargo)
         cy.get('.p-button-primary').click();
         cy.wait("@añadirServicio").its("response.statusCode").should("eq",201);
         cy.url().should("eq","http://localhost:4200/#/services");
-        cy.wait(sleepLargo)
         //id de la tabla del listado de ubicaciones
         cy.get('.p-highlight > .p-element').click();
         //primer fila, columna nombre
         cy.get('.p-datatable-tbody > :nth-child(1) > :nth-child(3)')
-        .contains("Material e instalación")
+        .contains(this.service.descripcionValido)
         .should("be.visible");
+        cy.wait(sleepLargo)
     })
     it("Añadir Servicio inválido por campos vacíos",function(){
         //sección añadir producto
@@ -65,13 +76,17 @@ describe("Servicio",function(){
         //boton agregar
         cy.get('.p-button-success').click();
         //formulario
-        //
         cy.get('#name').type(this.service.descripcionInvalido);
-        cy.get('[formControlName="servicePrice"]').type(this.service.precioInvalido);
+        //precio
+        cy.get('#price > .p-inputnumber > #locale-us')
+        .type(this.service.precioInvalido);
         //selecciona uno
-        cy.get('.p-dropdown-label').click();
-        cy.get('.p-dropdown-filter').type(this.service.cadaXTiempoValido);
-        cy.get('.p-element.ng-star-inserted > .p-ripple > .ng-star-inserted').click();
+        cy.get(':nth-child(3) > .p-inputwrapper > .p-dropdown > .p-dropdown-label')
+        .click();
+        cy.get('.p-dropdown-filter')
+        .type("{downarrow}")
+        .wait(200)
+        .type("{enter}")
         //boton guardar
         cy.wait(sleepLargo)
         cy.get('.p-button-primary').click();

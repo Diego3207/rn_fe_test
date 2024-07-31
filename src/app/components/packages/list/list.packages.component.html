@@ -6,26 +6,26 @@
             <!--<p-toast></p-toast> -->
             <p-toolbar styleClass="mb-4 gap-2">
                 <ng-template pTemplate="left">
-                    <div class="my-2"> 
+                    <div class="my-2">
                         <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success  m-2" [routerLink]="['/packages/add/']"></button>
                         <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger m-2"  (click)="delete(1,null)" [disabled]="!selectedElements || !selectedElements.length"></button>
-                    </div> 
+                    </div>
                 </ng-template>
             </p-toolbar>
 
-            <p-table #dt 
-            [value]="packages"  
+            <p-table #dt
+            [value]="packages"
             [lazy]="true"
             [resetPageOnSort]="false"
             [multiSortMeta]="[{field: 'id', order: 1}]"
-            sortMode="multiple" 
-            (onLazyLoad)="load($event)" 
+            sortMode="multiple"
+            (onLazyLoad)="load($event)"
             [lazyLoadOnInit]="true"
-            [paginator]="true" 
+            [paginator]="true"
             [totalRecords]="totalRows"
-            [rowsPerPageOptions]="[10,25,50]" 
+            [rowsPerPageOptions]="[10,25,50]"
             [showCurrentPageReport]="true"
-            currentPageReportTemplate=" {{ getPageRange(page, limit, totalRows) }}" 
+            currentPageReportTemplate=" {{ getPageRange(page, limit, totalRows) }}"
             [(selection)]="selectedElements" selectionMode="multiple"
             [responsive]="true"
             [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="scroll"  [breakpoint]="'760px'" [tableStyle]="{'min-width': '50rem'}"   >
@@ -46,13 +46,13 @@
                         <th>
                         </th>
                         <th>
-                            <p-columnFilter type="numeric"  [showButtons]="false" field="id"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
+                            <p-columnFilter type="numeric"  [showButtons]="false" field="id" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="packageName" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="packageName" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th></th>
-                    </tr> 
+                    </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-package>
                     <tr>
@@ -61,7 +61,7 @@
                         </td>
                         <td>{{package.id}}</td>
                         <td>{{package.packageName}}</td>
-                    
+
                         <td>
                             <div class="flex">
                                 <button  pTooltip="Modificar paquete" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-info  p-button-text p-mr-3" [routerLink]="['/packages/edit/', package.id]"></button>

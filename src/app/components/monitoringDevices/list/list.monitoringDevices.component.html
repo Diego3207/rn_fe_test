@@ -14,42 +14,42 @@
                 </ng-template>
             </p-toolbar>
 
-            <p-table #dt 
-            [value]="monitoringDevices"  
+            <p-table #dt
+            [value]="monitoringDevices"
             [lazy]="true"
             [resetPageOnSort]="false"
             [multiSortMeta]="[{field: 'id', order: 1}]"
-            sortMode="multiple" 
-            (onLazyLoad)="load($event)" 
+            sortMode="multiple"
+            (onLazyLoad)="load($event)"
             [lazyLoadOnInit]="true"
-            [paginator]="true" 
+            [paginator]="true"
             [totalRecords]="totalRows"
-            [rowsPerPageOptions]="[10,25,50]" 
-            [loading]="loading"    
+            [rowsPerPageOptions]="[10,25,50]"
+            [loading]="loading"
             [showCurrentPageReport]="true"
             currentPageReportTemplate="{{ getPageRange(page, limit, totalRows) }}"
             [(selection)]="selectedMonitoringDevices" selectionMode="multiple"
             [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="scroll" [breakpoint]="'760px'" [tableStyle]="{'minx-width': '50rem'}">
-                
+
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="width: 3rem">
                             <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                         </th>
                         <th pSortableColumn="id">
-                            Id <p-sortIcon field="id"></p-sortIcon>
+                            ID <p-sortIcon field="id"></p-sortIcon>
                         </th>
                         <th pSortableColumn="monitoringDeviceName">
-                           Nombre <p-sortIcon field="monitoringDeviceName"></p-sortIcon>
+                           NOMBRE <p-sortIcon field="monitoringDeviceName"></p-sortIcon>
                         </th>
                         <th pSortableColumn="monitoringDeviceType">
-                            Tipo <p-sortIcon field="monitoringDeviceType"></p-sortIcon>
+                            TIPO <p-sortIcon field="monitoringDeviceType"></p-sortIcon>
                         </th>
                         <th pSortableColumn="monitoringDeviceCostumerId">
-                            Cliente <p-sortIcon field="monitoringDeviceCostumerId"></p-sortIcon>
+                            CLIENTE <p-sortIcon field="monitoringDeviceCostumerId"></p-sortIcon>
                         </th>
                         <th pSortableColumn="monitoringDeviceProvider">
-                            Provedor Interno <p-sortIcon field="monitoringDeviceProvider"></p-sortIcon>
+                            PROVEEDOR INTERNO <p-sortIcon field="monitoringDeviceProvider"></p-sortIcon>
                         </th>
                         <th>
                             <!-- Espacio para que se vea bien las columnas -->
@@ -60,27 +60,27 @@
                             <!-- Espacio para que se vea bien las columnas -->
                         </th>
                         <th>
-                            <p-columnFilter type="numeric"  [showButtons]="false" field="id"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
+                            <p-columnFilter type="numeric"  [showButtons]="false" field="id" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="monitoringDeviceCostumerId['costumerName']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="monitoringDeviceCostumerId['costumerName']"  [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="monitoringDeviceType" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="monitoringDeviceType" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="monitoringDeviceCostumerId" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="monitoringDeviceCostumerId" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="monitoringDeviceProvider" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="boolean" field="monitoringDeviceProvider" ></p-columnFilter>
                         </th>
                         <th>
                             <!-- Espacio para que se vea bien las columnas -->
                         </th>
-                    </tr> 
+                    </tr>
                 </ng-template>
 
-                <ng-template pTemplate="body" let-monitoringDevice let-expanded="expanded"> 
+                <ng-template pTemplate="body" let-monitoringDevice let-expanded="expanded">
                     <tr>
                         <td>
                             <p-tableCheckbox [value]="monitoringDevice"></p-tableCheckbox>

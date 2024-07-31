@@ -1,5 +1,5 @@
 const sleepCorto = 1000;
-const sleepLargo = 2500;
+const sleepLargo = 3500;
 describe("Cotizaciones de compra",function(){
     beforeEach(function(){
         cy.fixture("quotationPurchase").then(function (variable) {
@@ -41,13 +41,15 @@ describe("Cotizaciones de compra",function(){
         .wait(200)
         .type("{enter}");
         //unidad
-        cy.get('.col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
+        cy.get(':nth-child(2) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label')
+        .click();
         //elegir primera opcion
         cy.get('[ng-reflect-label="Pieza"] > .p-ripple').click();
         //cantidad
         cy.get('#locale-us').type(this.variable.cantidadValido);
         //agregar servicio
-        cy.get(':nth-child(4) > .flex-wrap > p-button.p-element > .p-ripple').click();
+        cy.get(':nth-child(4) > .flex > p-button.p-element > .p-ripple')
+        .click();
         //servicio
         cy.get('.ng-untouched.ng-star-inserted > :nth-child(1) > :nth-child(1) > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
         //escribir "instala"
@@ -91,9 +93,16 @@ describe("Cotizaciones de compra",function(){
         //tiempo de entrega
         cy.get('.p-calendar > .p-inputtext').click();
         //dia 10
-        cy.get('tbody.ng-tns-c88-59 > :nth-child(2) > :nth-child(4) > .p-ripple').click();
+        cy.get('tbody.ng-tns-c88-60 > :nth-child(2) > :nth-child(4) > .p-ripple')
+        .click();
         //garantia
         cy.get('.p-inputswitch-slider').click();
+        //tipo moneda
+        cy.get(':nth-child(4) > .p-inputwrapper > .p-dropdown > .p-dropdown-label')
+        .click()
+        //pesos mexicanos
+        cy.get('[ng-reflect-label="Peso mexicano (MXN)"] > .p-ripple')
+        .click()
         //precio 1
         cy.get('[formControlName="quotationPurchaseProductPrice"]').type(this.variable.precioValido);
         //precio 2
@@ -105,13 +114,13 @@ describe("Cotizaciones de compra",function(){
         cy.get(".p-button-primary").click();
         cy.wait("@añadirProducto").its("response.statusCode").should("eq", 200);
         cy.url().should("eq", "http://localhost:4200/#/quotationPurchases");
-        cy.wait(sleepLargo);
         //id de la tabla del listado de ubicaciones
         cy.get('.p-highlight > .p-element').click();
         //primer fila, columna nombre
         cy.get('.p-datatable-tbody > :nth-child(1) > :nth-child(5)')
         .contains("aceptada")
         .should("be.visible");
+        cy.wait(sleepLargo);
     })
     it("Crear cotizacion de compra invalida por campos vacíos",function(){
         //módulo administración
@@ -159,13 +168,15 @@ describe("Cotizaciones de compra",function(){
         .wait(200)
         .type("{enter}");
         //unidad
-        cy.get('.col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
+        cy.get(':nth-child(2) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label')
+        .click();
         //elegir primera opcion
         cy.get('[ng-reflect-label="Pieza"] > .p-ripple').click();
         //cantidad
         cy.get('#locale-us').type(this.variable.cantidadValido);
         //agregar servicio
-        cy.get(':nth-child(4) > .flex-wrap > p-button.p-element > .p-ripple').click();
+        cy.get(':nth-child(4) > .flex > p-button.p-element > .p-ripple')
+        .click();
         //servicio
         cy.get('.ng-untouched.ng-star-inserted > :nth-child(1) > :nth-child(1) > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
         //escribir "instala"
@@ -180,10 +191,22 @@ describe("Cotizaciones de compra",function(){
         cy.get('[ng-reflect-label="Anual"] > .p-ripple').click();
         //cantidad
         cy.get('.ng-invalid.ng-star-inserted > :nth-child(3) > .col-12 > .p-inputwrapper > .p-inputnumber > #locale-us').type(this.variable.cantidadValido);
-        cy.get(".p-button-primary").click();
+        cy.intercept("POST", "http://localhost:1337/quotationPurchase/add").as(
+            "añadirProducto"
+        );
         cy.wait(sleepLargo);
+        cy.get(".p-button-primary").click();
+        cy.wait("@añadirProducto").its("response.statusCode").should("eq", 201);
+        cy.url().should("eq", "http://localhost:4200/#/quotationPurchases");
+        cy.wait(sleepLargo);
+        //id de la tabla del listado de ubicaciones
+        cy.get('.p-highlight > .p-element').click();
+        //primer fila, columna nombre
+        cy.get('.p-datatable-tbody > tr.ng-star-inserted > :nth-child(3)')
+        .contains("1 chip")
+        .should("be.visible");
     })
-    it("Procesar cotización de compra invalida",function(){
+    it("Procesar cotización de compra invalida por algunos campos vacíos",function(){
         //módulo administración
         cy.get('.p-element.ng-tns-c21-15').click();
         //módulo cotizaciones

@@ -19,6 +19,7 @@ export class AddServiceComponent  {
     //providersList: Provider[];
     form: FormGroup | any;
     listItem: any[] = [];
+    listCurrencies: any[] = [];
 
     constructor(
         private formBuilder: FormBuilder,
@@ -41,12 +42,19 @@ export class AddServiceComponent  {
             servicePrice: [null,[Validators.required ,Validators.min(1), Validators.max(999999999999)]],
             serviceQuantityTemporality:null,
             serviceTemporality:null, 
+            serviceCurrency:[null, Validators.required]
         }, formOptions);
 
 		this.listItem= [
             { label: 'Día(s)', value:"dia"},
             { label: 'Mes(es)', value:"mes"},
             { label: 'Año(s)', value:"año"}
+        ];
+        this.listCurrencies = [
+            { label: 'Dólar estadounidense (USD)', value:"USD"},
+            { label: 'Peso mexicano (MXN)', value:"MXN"},
+           // { label: 'Dólar canadiense (CAD)', value:"CAD"},
+          //  { label: 'Euro (EUR)', value:'EUR'}
         ];
        
     }   

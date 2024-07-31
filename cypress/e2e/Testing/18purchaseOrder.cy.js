@@ -1,5 +1,6 @@
+const superCorto = 100;
 const sleepCorto = 1000;
-const sleepLargo = 2500;
+const sleepLargo = 3500;
 describe("Orden de compra",function(){
     beforeEach(function(){
         cy.fixture("purchaseOrder").then(function (variable) {
@@ -29,14 +30,21 @@ describe("Orden de compra",function(){
         //escribir proveedor
         cy.get('.p-dropdown-filter')
         .type(this.variable.proveedorValida)
-        .wait(200)
         .type("{downarrow}")
         .wait(200)
         .type("{enter}");
-        cy.get(':nth-child(5) > .flex > p-button.p-element > .p-ripple').click();
-        cy.wait(200)
+        //tipo moneda
+        cy.get(':nth-child(5) > .p-inputwrapper > .p-dropdown > .p-dropdown-label')
+        .click();
+        //seleccionar MXN
+        cy.get('[ng-reflect-label="Peso mexicano (MXN)"] > .p-ripple')
+        .click()
+        //añadir producto
+        cy.get(':nth-child(6) > .flex > p-button.p-element > .p-ripple')
+        .click();
         //producto
-        cy.get(':nth-child(1) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
+        cy.get(':nth-child(1) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label')
+        .click()
         //escribir producto
         cy.get('.p-dropdown-filter').type(this.variable.productoValida)
         .wait(200)
@@ -52,7 +60,7 @@ describe("Orden de compra",function(){
         //precio
         cy.get(':nth-child(4) > .col-12 > .p-inputwrapper > .p-inputnumber > .p-inputtext').type(this.variable.precioValida);
         //agregar servicio
-        cy.get(':nth-child(6) > .flex-wrap > p-button.p-element > .p-ripple').click();
+        cy.get(':nth-child(7) > .flex-wrap > p-button.p-element > .p-ripple').click();
         //servicio
         cy.get(':nth-child(1) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label').last().click();
         //escribir "Material"
@@ -78,13 +86,13 @@ describe("Orden de compra",function(){
         cy.get(".p-button-primary").click();
         cy.wait("@añadirProducto").its("response.statusCode").should("eq", 201);
         cy.url().should("eq", "http://localhost:4200/#/orders");
-        cy.wait(sleepLargo);
         //id de la tabla del listado de ubicaciones
         cy.get('.p-highlight > .p-element').click();
         //primer fila, columna nombre
         cy.get('.p-datatable-tbody > :nth-child(1) > :nth-child(3)')
         .contains("1 chip")
         .should("be.visible");
+        cy.wait(sleepLargo);
     })
     it("Abastecer compra válida con 1 producto y 1 servicio",function(){
         //?CREAR ORDEN DE COMPRA
@@ -169,11 +177,18 @@ describe("Orden de compra",function(){
         .type("{downarrow}")
         .wait(200)
         .type("{enter}");
-        //agregar producto
-        cy.get(':nth-child(5) > .flex > p-button.p-element > .p-ripple').click();
-        cy.wait(200)
+        //tipo moneda
+        cy.get(':nth-child(5) > .p-inputwrapper > .p-dropdown > .p-dropdown-label')
+        .click();
+        //seleccionar MXN
+        cy.get('[ng-reflect-label="Peso mexicano (MXN)"] > .p-ripple')
+        .click()
+        //añadir producto
+        cy.get(':nth-child(6) > .flex > p-button.p-element > .p-ripple')
+        .click();
         //producto
-        cy.get(':nth-child(1) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
+        cy.get(':nth-child(1) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label')
+        .click();
         //escribir producto
         cy.get('.p-dropdown-filter').type(this.variable.productoValida)
         .wait(200)
@@ -181,28 +196,47 @@ describe("Orden de compra",function(){
         .wait(200)
         .type("{enter}");
         //unidad
-        cy.get(':nth-child(2) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
-        //elegir "pieza"
-        cy.get('[ng-reflect-label="Pieza"] > .p-ripple').click();
+        cy.get(':nth-child(2) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label')
+        .click()
+        //pieza
+        cy.get('[ng-reflect-label="Pieza"] > .p-ripple')
+        .click()
         //cantidad
-        cy.get('#locale-us').type(this.variable.cantidadValida);
+        cy.get('#locale-us')
+        .type(this.variable.cantidadValida)
         //precio
-        cy.get(':nth-child(4) > .col-12 > .p-inputwrapper > .p-inputnumber > .p-inputtext').type(this.variable.precioValida);
-        //agregar producto 2
-        cy.get(':nth-child(5) > .flex > p-button.p-element > .p-ripple').click();
-        cy.wait(200)
+        cy.get(':nth-child(4) > .col-12 > .p-inputwrapper > .p-inputnumber > .p-inputtext')
+        .type(this.variable.precioValida)
+        //añadir producto 2
+        cy.get(':nth-child(6) > .flex > p-button.p-element > .p-ripple')
+        .click();
         //producto 2
-        cy.get(':nth-child(1) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label').last().click();
+        cy.get('.ng-untouched.ng-star-inserted > :nth-child(1) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label')
+        .click();
         //escribir producto 2
         cy.get('.p-dropdown-filter').type(this.variable.productoValida)
         .wait(200)
         .type("{downarrow}")
         .wait(200)
         .type("{enter}");
+        //unidad
+        cy.get('.ng-invalid.ng-star-inserted > :nth-child(2) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label')
+        .click()
+        //pieza
+        cy.get('[ng-reflect-label="Pieza"] > .p-ripple')
+        .click()
+        //cantidad
+        cy.get('.ng-invalid.ng-star-inserted > :nth-child(3) > .col-12 > .p-inputwrapper > .p-inputnumber > #locale-us')
+        .type(this.variable.cantidadValida)
+        //precio
+        cy.get('.ng-invalid.ng-star-inserted > :nth-child(4) > .col-12 > .p-inputwrapper > .p-inputnumber > .p-inputtext')
+        .type(this.variable.precioValida)
         //agregar servicio
-        cy.get(':nth-child(6) > .flex-wrap > p-button.p-element > .p-ripple').click();
+        cy.get(':nth-child(7) > .flex > p-button.p-element > .p-ripple')
+        .click();
         //servicio
-        cy.get(':nth-child(1) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label').last().click();
+        cy.get('#pr_id_12-table > .p-datatable-tbody > .ng-untouched.ng-star-inserted > :nth-child(1) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label')
+        .click();
         //escribir "Material"
         cy.get('.p-dropdown-filter')
         .type(this.variable.servicioValida)
@@ -219,7 +253,8 @@ describe("Orden de compra",function(){
         //precio
         cy.get(':nth-child(4) > .col-12 > .p-inputwrapper > .p-inputnumber > .p-inputtext').last().type(this.variable.precioValida);
         //agregar servicio 2
-        cy.get(':nth-child(6) > .flex-wrap > p-button.p-element > .p-ripple').click();
+        cy.get(':nth-child(7) > .flex > p-button.p-element > .p-ripple')
+        .click();
         //servicio 2
         cy.get(':nth-child(1) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label').last().click();
         //escribir "Material"
@@ -229,6 +264,18 @@ describe("Orden de compra",function(){
         .type("{downarrow}")
         .wait(200)
         .type("{enter}");
+        //unidad
+        cy.get('.ng-invalid.ng-star-inserted > :nth-child(2) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label')
+        .click()
+        //pieza
+        cy.get('[ng-reflect-label="Anual"] > .p-ripple')
+        .click()
+        //cantidad
+        cy.get('.ng-invalid.ng-star-inserted > :nth-child(3) > .col-12 > .p-inputwrapper > .p-inputnumber > #locale-us')
+        .type(this.variable.cantidadValida)
+        //precio
+        cy.get('.ng-invalid.ng-star-inserted > :nth-child(4) > .col-12 > .p-inputwrapper > .p-inputnumber > .p-inputtext')
+        .type(this.variable.precioValida)
         cy.wait(sleepLargo);
         //boton guardar
         cy.get(".p-button-primary").click();
@@ -284,7 +331,8 @@ describe("Orden de compra",function(){
         .wait(200)
         .type("{enter}");
         //unidad
-        cy.get('.col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
+        cy.get(':nth-child(2) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label')
+        .click();
         //elegir primera opcion
         cy.get('[ng-reflect-label="Pieza"] > .p-ripple').click();
         //cantidad
@@ -323,9 +371,16 @@ describe("Orden de compra",function(){
         //tiempo de entrega
         cy.get('.p-calendar > .p-inputtext').click();
         //dia 10
-        cy.get('tbody.ng-tns-c88-59 > :nth-child(2) > :nth-child(4) > .p-ripple').click();
+        cy.get('tbody.ng-tns-c88-60 > :nth-child(2) > :nth-child(4) > .p-ripple')
+        .click()
         //garantia
         cy.get('.p-inputswitch-slider').click();
+        //tipo moneda
+        cy.get(':nth-child(4) > .p-inputwrapper > .p-dropdown > .p-dropdown-label')
+        .click();
+        //USD
+        cy.get('[ng-reflect-label="Dólar estadounidense (USD)"] > .p-ripple')
+        .click()
         //precio 1
         cy.get('[formControlName="quotationPurchaseProductPrice"]').type(this.variable.precioValida);
         //precio 2
@@ -334,7 +389,7 @@ describe("Orden de compra",function(){
         cy.get(".p-button-primary").click();
         cy.wait(sleepLargo);
     })
-    it.only("Crear orden de compra valida con cotización con 1 producto y 1 servicio",function(){
+    it("Crear orden de compra valida con cotización con 1 producto y 1 servicio",function(){
         //?CREAR ORDEN DE COMPRA
         //sección añadir provider
         //módulo administración
@@ -366,7 +421,7 @@ describe("Orden de compra",function(){
         cy.url().should("eq", "http://localhost:4200/#/orders");
         cy.wait(sleepLargo);
     })
-    it.only("Abastecer compra invalida por campos vacíos al recibir",function(){
+    it("Abastecer compra invalida por campos vacíos al recibir",function(){
         //?CREAR ORDEN DE COMPRA
         //sección añadir provider
         //módulo administración
@@ -390,7 +445,7 @@ describe("Orden de compra",function(){
         cy.wait(sleepLargo);
         //aquí va a salir un error pero es necesario para la prueba.
     })
-    it.only("Abastecer compra invalida por campos vacíos al abastecer",function(){
+    it("Abastecer compra invalida por campos vacíos al abastecer",function(){
         //?CREAR ORDEN DE COMPRA
         //sección añadir provider
         //módulo administración

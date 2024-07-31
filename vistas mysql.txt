@@ -1,5 +1,4 @@
-CREATE 
-VIEW cruddesarrollo.view_trackers AS
+CREATE VIEW cruddesarrollo.view_trackers AS
     SELECT 
         t.tracker_id AS id,
         t.tracker_id AS trackerId,
@@ -21,4 +20,68 @@ VIEW cruddesarrollo.view_trackers AS
         LEFT JOIN cruddesarrollo.quotation_sales qs ON ((qs.quotation_sale_id = so.sale_order_quotation_sale_id)))
         LEFT JOIN cruddesarrollo.costumers c ON ((c.costumer_id = qs.quotation_sale_customer_id)))
     WHERE
-        (t.tracker_active = 1)
+        (t.tracker_active = 1);
+
+
+CREATE 
+    
+VIEW view_renovations AS
+    SELECT 
+        sor.createdAt AS createdAt,
+        sor.updatedAt AS updatedAt,
+        sor.sale_order_renovation_quotation_sale_service_id AS id,
+        sor.sale_order_renovation_id AS renovationId,
+        qss.quotation_sale_service_id AS quotationSaleServiceId,
+        c.costumer_name AS renovationCostumerName,
+        qs.quotation_sale_folio AS renovationFolio,
+        qss.quotation_sale_service_quantity AS renovationServiceQuantity,
+        s.service_description AS renovationServiceDescripcion,
+        s.service_quantity_temporality AS renovationServiceQuantityTemporality,
+        s.service_temporality AS renovationServiceTemporality,
+        MONTHNAME(sor.sale_order_renovation_date_renovation) AS renovationMonth,
+        so.sale_order_shipping_date AS renovationShippingDate,
+        sor.sale_order_renovation_date_renovation AS renovationRenovationDate,
+        sor.sale_order_renovation_date_cancellation AS renovationCancellationDate,
+        sor.sale_order_renovation_active AS renovationStatus
+    FROM
+        ((((((sale_order_renovations sor
+        JOIN (SELECT 
+            sale_order_renovations.sale_order_renovation_quotation_sale_service_id AS sale_order_renovation_quotation_sale_service_id,
+                MAX(sale_order_renovations.sale_order_renovation_date_renovation) AS fecha_max
+        FROM
+            sale_order_renovations
+        GROUP BY sale_order_renovations.sale_order_renovation_quotation_sale_service_id) tmp ON (((sor.sale_order_renovation_quotation_sale_service_id = tmp.sale_order_renovation_quotation_sale_service_id)
+            AND (sor.sale_order_renovation_date_renovation = tmp.fecha_max))))
+        LEFT JOIN quotation_sale_services qss ON ((sor.sale_order_renovation_quotation_sale_service_id = qss.quotation_sale_service_id)))
+        LEFT JOIN quotation_sales qs ON ((qss.quotation_sale_service_quotation_sale_id = qs.quotation_sale_id)))
+        JOIN sale_orders so ON ((so.sale_order_quotation_sale_id = qs.quotation_sale_id)))
+        LEFT JOIN services s ON ((qss.quotation_sale_service_service_id = s.service_id)))
+        LEFT JOIN costumers c ON ((c.costumer_id = qs.quotation_sale_customer_id)))
+    WHERE
+        ((s.service_quantity_temporality IS NOT NULL)
+            AND (so.sale_order_active = 1));
+
+CREATE VIEW view_association_tracker_services AS
+    SELECT 
+        '' AS createdAt,
+        '' AS updatedAt,
+        ats.association_tracker_service_id AS id,
+        ats.association_tracker_service_id AS associationId,
+        ats.association_tracker_service_quotation_sale_service_id AS quotationSaleServiceId,
+        qs.quotation_sale_folio AS quotationSaleFolio,
+        qs.quotation_sale_description AS quotationSaleDescription,
+        t.tracker_imei AS trackerImei,
+        ti.tracker_installation_id AS idInstallation,
+        ve.vehicle_brand AS vehicleBrand,
+        ve.vehicle_model AS vehicleModel,
+        ve.vehicle_plate_number AS vehiclePlate
+    FROM
+        (((((quotation_sales qs
+        LEFT JOIN quotation_sale_services qss ON ((qss.quotation_sale_service_quotation_sale_id = qs.quotation_sale_id)))
+        LEFT JOIN association_tracker_services ats ON ((ats.association_tracker_service_quotation_sale_service_id = qss.quotation_sale_service_id)))
+        LEFT JOIN tracker_installations ti ON ((ti.tracker_installation_id = ats.association_tracker_service_tracker_installation_id)))
+        LEFT JOIN trackers t ON ((t.tracker_id = ti.tracker_installation_tracker_id)))
+        JOIN vehicles ve ON ((ve.vehicle_id = ti.tracker_installation_vehicle_id)))
+    WHERE
+        ((ats.association_tracker_service_tracker_installation_id IS NOT NULL)
+            AND (ats.association_tracker_service_active = 1));

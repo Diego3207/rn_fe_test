@@ -102,7 +102,6 @@ export class AddTrackerComponent  {
     }
        
     private save(){
-        this.miscService.startRequest();  
         
         this.form.value.trackerSupplyId = (this.form.value.trackerSupplyId).toString();
         this.form.value.trackerSimCardId = (this.form.value.trackerSimCardId).toString();

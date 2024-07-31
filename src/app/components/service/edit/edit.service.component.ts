@@ -20,7 +20,7 @@ export class EditServiceComponent implements OnInit, OnDestroy {
     id:number;
     form: FormGroup | any;
     listItem: any[] = [];
-
+    listCurrencies: any[] = [];
 
     constructor(private miscService:MiscService,private formBuilder: FormBuilder,private serviceService: ServiceService, private messageService: MessageService, private confirmationService: ConfirmationService,private route: ActivatedRoute,private router: Router ) 
     {
@@ -37,6 +37,7 @@ export class EditServiceComponent implements OnInit, OnDestroy {
              servicePrice: [null,[Validators.required ,Validators.min(1), Validators.max(999999999999)]],
              serviceQuantityTemporality:0,
              serviceTemporality:'',
+             serviceCurrency:[null, Validators.required]
 
         }, formOptions);;
 
@@ -45,6 +46,12 @@ export class EditServiceComponent implements OnInit, OnDestroy {
             { label: 'Día(s)', value:"dia"},
             { label: 'Mes(es)', value:"mes"},
             { label: 'Año(s)', value:"año"}
+        ];
+        this.listCurrencies = [
+            { label: 'Dólar estadounidense (USD)', value:"USD"},
+            { label: 'Peso mexicano (MXN)', value:"MXN"},
+          //  { label: 'Dólar canadiense (CAD)', value:"CAD"},
+          //  { label: 'Euro (EUR)', value:'EUR'}
         ];
 
         

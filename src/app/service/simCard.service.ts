@@ -45,6 +45,9 @@ export class SimCardService
     const body = { id: id };
     return this.http.put<SimCard>(this.SimCardUrl+"/disable",body);
   }
-
+  activateDeactivate(id:number, status:string){
+    const body = { id: id, status: status };
+    return this.http.put<SimCard>(this.SimCardUrl+"/activate-deactivate",body);
+  }
 }
 

@@ -1,5 +1,5 @@
 const sleepCorto = 1000;
-const sleepLargo = 2500;
+const sleepLargo = 3500;
 describe("Clientes", function () {
     beforeEach(function () {
         cy.fixture("costumer").then(function (costumer) {
@@ -82,13 +82,13 @@ describe("Clientes", function () {
             .its("response.statusCode")
             .should("eq", 201);
         cy.url().should("eq", "http://localhost:4200/#/costumers");
-        cy.wait(sleepLargo);
         //id de la tabla del listado de ubicaciones
         cy.get('.p-highlight > .p-element').click();
         //primer fila, columna nombre
         cy.get('.p-datatable-tbody > :nth-child(1) > :nth-child(3)')
-        .contains("MATTEL")
+        .contains(this.costumer.nombreValido)
         .should("be.visible");
+        cy.wait(sleepLargo);
     });
     it("Añadir cliente inválido por cliente duplicado con error 400", function () {
         //sección añadir provider

@@ -1,10 +1,17 @@
 {
-    "clienteValido":"MATTEL",
+    "clienteValido":"Costumer",
     "datosInformanteValido":"MT González",
-    "cuadranteValido":"F9",
     "descripcionValido":"Se detecto a una unidad de trasporte",
-    "personaInvolucradaValido":"S/D",
-    "vehiculoInvolucradoValido":"Camión de transporte",
-    "viaCoordinacionValido":"911",
+    "nombreValido":"Alex",
+    "edadValido":"34",
+    "lugarNacimientoValido":"Jalisco",
+    "domicilioValido":"Mar de bering",
+    "señasParticulares":"Caucásico",
+    "marcaValido":"suski",
+    "modeloValido":"swift",
+    "placaValido":"DK838",
+    "colorValido":"Rojo",
+    "caracteristicaValido":"caracteristica",
+    "telefonoValido":"911",
     "observacionesValido":"n/a"
 }

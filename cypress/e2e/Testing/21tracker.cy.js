@@ -1,5 +1,5 @@
 const sleepCorto = 1000;
-const sleepLargo = 2500;
+const sleepLargo = 3500;
 describe("Rastreador",function(){
     beforeEach(function(){
         cy.fixture("tracker").then(function (tracker) {
@@ -33,11 +33,17 @@ describe("Rastreador",function(){
         .type("{downarrow}")
         .wait(200)
         .type("{enter}");
-        //agregar producto
-        cy.get(':nth-child(5) > .flex > p-button.p-element > .p-ripple').click();
-        cy.wait(200)
-        //producto 1
-        cy.get(':nth-child(1) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
+        //tipo moneda
+        cy.get(':nth-child(5) > .p-inputwrapper > .p-dropdown > .p-dropdown-label')
+        .click()
+        //seleccionar MXN
+        cy.get('[ng-reflect-label="Peso mexicano (MXN)"] > .p-ripple')
+        .click()
+        //añadir producto
+        cy.get(':nth-child(6) > .flex > p-button.p-element > .p-ripple')
+        .click()
+        //producto
+        cy.get(':nth-child(1) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click()
         //escribir producto
         cy.get('.p-dropdown-filter').type(this.variable.producto1)
         .wait(200)
@@ -49,11 +55,12 @@ describe("Rastreador",function(){
         //elegir "pieza"
         cy.get('[ng-reflect-label="Pieza"] > .p-ripple').click();
         //cantidad
-        cy.get('#locale-us').type(this.variable.cantidad);
+        cy.get('[ng-reflect-name="0"] > :nth-child(3) > .col-12 > .p-inputwrapper > .p-inputnumber > #locale-us').type(this.variable.cantidad);
         //precio
         cy.get(':nth-child(4) > .col-12 > .p-inputwrapper > .p-inputnumber > .p-inputtext').type(this.variable.precio);
-        //agregar producto
-        cy.get(':nth-child(5) > .flex > p-button.p-element > .p-ripple').click();
+        //añadir producto
+        cy.get(':nth-child(6) > .flex > p-button.p-element > .p-ripple')
+        .click()
         //producto 2
         cy.get(':nth-child(1) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label').last().click();
         //escribir producto
@@ -214,6 +221,13 @@ describe("Rastreador",function(){
         cy.get(".p-button-primary").click();
         cy.wait("@añadirProducto").its("response.statusCode").should("eq", 201);
         cy.url().should("eq", "http://localhost:4200/#/trackers");
+        //id de la tabla
+        cy.get('[psortablecolumn="trackerId"]')
+        .click();
+        //primer fila, columna imei
+        cy.get('.p-datatable-tbody > .ng-star-inserted > :nth-child(3)')
+        .contains(this.variable.serialGPS)
+        .should("be.visible");
         cy.wait(sleepLargo);
     })
     it("Crear rastreador invalida por exceso de caracteres",function(){

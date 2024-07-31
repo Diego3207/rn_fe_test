@@ -36,10 +36,14 @@ export class EditIncidenceComponent implements OnInit, OnDestroy {
     uploadedFiles: any[] = []; //lista de archivos por cargar
     listPhones :any[]= [];
     listChannels :any[]= [];
+    listSourceChannels :any[]= [];
     dateStart : any = '';
     dateEnd : any = '';
     items :any[]= [];
     listGenre :any[]= [];
+    listPreventive :any[]= [];
+    listOperational :any[]= [];
+    listInformation :any[]= [];
 
     constructor(
         private formBuilder: FormBuilder,
@@ -72,11 +76,11 @@ export class EditIncidenceComponent implements OnInit, OnDestroy {
         id:[this.id, Validators.required],
         incidenceCostumerId: [{disabled:true,value:null}, [Validators.required]],
         incidenceSourceInformation: [{disabled:true,value:null}, [Validators.required]],
+        incidenceSourceChannel: [{disabled:true,value:null}, [Validators.required]],
         incidenceStartDateAttention: this.datePipe.transform(new Date(), 'yyyy-MM-dd  HH:mm:ss'), // se pone al cargar el formulario
         incidenceInformantData:[{disabled:true,value:null}, [Validators.required]],
         incidenceType: [{disabled:true,value:null}, [Validators.required]],
-        incidenceTypeDescription: [{disabled:true,value:null}, [Validators.required]],
-        incidenceQuadrant: {disabled:true,value:''},
+        incidenceClassification: [{disabled:true,value:null}, [Validators.required]],
         incidenceStartDate: [{disabled:true,value:null}, [Validators.required]],
         incidenceEndDate: [{disabled:true,value:null}, [Validators.required]],
         incidenceCoordinations: this.formBuilder.array([],[this.isCoordinationDuplicated]),
@@ -119,7 +123,12 @@ export class EditIncidenceComponent implements OnInit, OnDestroy {
         {label:'Masculino',value:'masculino'},
         {label:'No especificado',value:'no especificado'}
       ];
-
+      this.listSourceChannels = [ 
+        {label:'Llamada Telefónica',value:'llamada'},
+        {label:'WhatsApp',value:'whatsapp'},
+        {label:'Vía Radio',value:'radio'},
+        {label:'Detección de alarma en sistema de seguridad',value:'sistema'}
+      ];
       this.items = [
         { name: 'Aguascalientes'},
         { name: 'Baja California'},
@@ -154,6 +163,21 @@ export class EditIncidenceComponent implements OnInit, OnDestroy {
         { name: 'Yucatán'},
         { name: 'Zacatecas'}
       ]; 
+      this.listPreventive = [ 
+        { name: 'Activación de dispositivo'},
+      ];
+      this.listOperational = [ 
+        { name: 'Robo'},
+        { name: 'Daño a infraestructura'},
+        { name: 'Saqueo'},
+        { name: 'Amenazas'},
+        { name: 'Emergencia Médica'},
+        { name: 'Emergencia Servicios Generales'},
+      ];
+      this.listInformation = [ 
+        { name: 'Pérdida de control remoto'},
+      ];
+  
 
       this.getInfo();
 
@@ -350,13 +374,15 @@ export class EditIncidenceComponent implements OnInit, OnDestroy {
                   id:row['id'],
                   name: row['incidenceEvidenceName'],
                   size: row['incidenceEvidenceSize'] * 1024,
-                  objectURL:this.fileService.downloadServer(row['incidenceEvidencePath'])
+                  objectURL:this.fileService.downloadServer(row['incidenceEvidencePath']),
+                  type: row['incidenceEvidenceMime']
               }
               this.uploadedFiles.push(obj);               
 
           }
           this.dateStart = data['incidenceStartDateAttention'];
           this.dateEnd = data['incidenceEndDateAttention'];
+          console.log(data);
           this.form.patchValue(data);
 
         });

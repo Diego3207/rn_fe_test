@@ -14,7 +14,7 @@ import { RippleModule } from 'primeng/ripple';
 import { ToastModule } from 'primeng/toast';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip'; 
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -29,7 +29,9 @@ import { TooltipModule } from 'primeng/tooltip';
 		RippleModule,
 		ToastModule,
 		TagModule,
-		TooltipModule
+		TooltipModule,
+		FormsModule,
+		ReactiveFormsModule
 	],
 	declarations: [ListTicketComponent],
 	providers: [ProviderService, MessageService, ConfirmationService]

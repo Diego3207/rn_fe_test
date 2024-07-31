@@ -1,37 +1,37 @@
 <p-confirmDialog  #confirm [style]="{width: '50vw'}" rejectButtonStyleClass="p-button-outlined"></p-confirmDialog>
 <p-toast key="msg"></p-toast>
 <p-dialog header="Historial" [(visible)]="visibleHistorial"  [modal]="true"[breakpoints]="{ '960px': '75vw' }" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
-    <p-table #dt 
-    [value]="listHistorial"  
+    <p-table #dt
+    [value]="listHistorial"
     [lazy]="true"
     [resetPageOnSort]="false"
     [multiSortMeta]="[{field: 'id', order: 1}]"
-    sortMode="multiple" 
-    (onLazyLoad)="load($event)" 
+    sortMode="multiple"
+    (onLazyLoad)="load($event)"
     [lazyLoadOnInit]="true"
-    [paginator]="true" 
+    [paginator]="true"
     [totalRecords]="totalRowsHistorial"
-    [rowsPerPageOptions]="[10,25,50]" 
-    [loading]="loading"    
+    [rowsPerPageOptions]="[10,25,50]"
+    [loading]="loading"
     [showCurrentPageReport]="true"
     currentPageReportTemplate="{{ getPageRange(page, limit, totalRowsHistorial) }}"
     [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="scroll" [breakpoint]="'760px'" [tableStyle]="{'minx-width': '50rem'}">
-        
+
         <ng-template pTemplate="header">
             <tr>
                 <th>
-                    FECHA 
+                    FECHA
                 </th>
                 <th>
-                    DESCRIPCIÓN 
+                    DESCRIPCIÓN
                  </th>
                  <th>
-                   
+
                  </th>
             </tr>
         </ng-template>
 
-        <ng-template pTemplate="body" let-historial > 
+        <ng-template pTemplate="body" let-historial >
             <tr>
                 <td>
                     {{historial.date | date: 'dd-MM-yyyy' }}
@@ -39,7 +39,7 @@
                 </td>
 
                 <td>
-                    {{historial.description }} 
+                    {{historial.description }}
                 </td>
                 <td>
                     <button *ngIf="historial.type == 'installation'" target="_blank" pButton pRipple label="Ver detalle" icon="pi pi-window-maximize" class="p-button-rounded p-button-info p-button-text" fragment="ayudaDiv" [routerLink]="['/trackerInstallations/edit/', historial.id]"></button>
@@ -48,7 +48,7 @@
 
                 </td>
 
-                
+
             </tr>
         </ng-template>
     </p-table>
@@ -66,23 +66,23 @@
                 </ng-template>
             </p-toolbar>
 
-            <p-table #dt 
-            [value]="trackerInstallations"  
+            <p-table #dt
+            [value]="trackerInstallations"
             [lazy]="true"
             [resetPageOnSort]="false"
             [multiSortMeta]="[{field: 'id', order: 1}]"
-            sortMode="multiple" 
-            (onLazyLoad)="load($event)" 
+            sortMode="multiple"
+            (onLazyLoad)="load($event)"
             [lazyLoadOnInit]="true"
-            [paginator]="true" 
+            [paginator]="true"
             [totalRecords]="totalRows"
-            [rowsPerPageOptions]="[10,25,50]" 
-            [loading]="loading"    
+            [rowsPerPageOptions]="[10,25,50]"
+            [loading]="loading"
             [showCurrentPageReport]="true"
             currentPageReportTemplate="{{ getPageRange(page, limit, totalRows) }}"
             [(selection)]="selectedTrackerInstallations" selectionMode="multiple"
             [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="scroll" [breakpoint]="'760px'" [tableStyle]="{'minx-width': '50rem'}">
-                
+
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="width: 3rem">
@@ -92,13 +92,13 @@
                             ID <p-sortIcon field="id"></p-sortIcon>
                         </th>
                         <th >
-                           RASTREADOR 
+                           RASTREADOR
                         </th>
                         <th >
                             CLIENTE
                         </th>
                         <th >
-                            INSTALADOR 
+                            INSTALADOR
                         </th>
                         <th pSortableColumn="trackerInstallationDate">
                             FECHA <p-sortIcon field="trackerInstallationDate"></p-sortIcon>
@@ -115,16 +115,16 @@
                             <!-- Espacio para que se vea bien las columnas -->
                         </th>
                         <th>
-                            <p-columnFilter type="numeric"  [showButtons]="false" field="id"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
+                            <p-columnFilter type="numeric"  [showButtons]="false" field="id" [matchMode]="'contains'"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="trackerInstallationTrackerId['trackerImei']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="trackerInstallationTrackerId['trackerImei']" [matchMode]="'contains'"  [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="trackerInstallationCostumerId['costumerName']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="trackerInstallationCostumerId['costumerName']" [matchMode]="'contains'"  [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="trackerInstallationInstallerId" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="trackerInstallationInstallerId" [matchMode]="'contains'"  [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
                             <p-columnFilter type="text" field="trackerInstallationDate" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
@@ -135,10 +135,10 @@
                         <th>
                             <!-- Espacio para que se vea bien las columnas -->
                         </th>
-                    </tr> 
+                    </tr>
                 </ng-template>
 
-                <ng-template pTemplate="body" let-trackerInstallation let-expanded="expanded"> 
+                <ng-template pTemplate="body" let-trackerInstallation let-expanded="expanded">
                     <tr>
                         <td>
                             <p-tableCheckbox [value]="trackerInstallation"></p-tableCheckbox>

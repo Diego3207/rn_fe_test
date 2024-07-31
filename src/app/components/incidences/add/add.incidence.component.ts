@@ -42,6 +42,10 @@ export class AddIncidenceComponent {
   selectedRegister: MonitoringDevice[] = [];
   listPhones :any[]= [];
   listChannels :any[]= [];
+  listSourceChannels :any[]= [];
+  listPreventive :any[]= [];
+  listOperational :any[]= [];
+  listInformation :any[]= [];
   listGenre :any[]= [];
   items :any[]= [];
 
@@ -74,7 +78,6 @@ export class AddIncidenceComponent {
 
       inputs.forEach((input,index) => {
         // Aquí puedes realizar cualquier acción que desees para los nuevos elementos creados.
-        console.log(index);
         // Binding autocomplete to search input control
         let autocomplete = new google.maps.places.Autocomplete(
             input.nativeElement
@@ -101,11 +104,11 @@ export class AddIncidenceComponent {
     this.form = this.formBuilder.group({
       incidenceCostumerId: [null, [Validators.required]],
       incidenceSourceInformation: [null, [Validators.required]],
+      incidenceSourceChannel: [null, [Validators.required]],
       incidenceStartDateAttention: this.datePipe.transform(new Date(), 'yyyy-MM-dd  HH:mm:ss'), // se pone al cargar el formulario
       incidenceInformantData:[null, [Validators.required]],
       incidenceType: [null, [Validators.required]],
-      incidenceTypeDescription: ' ',
-      incidenceQuadrant: '',
+      incidenceClassification: [null, [Validators.required]],
       incidenceStartDate: [null, [Validators.required]],
       incidenceEndDate: [null, [Validators.required]],
       incidenceCoordinations: this.formBuilder.array([],[Validators.required,Validators.minLength(1),this.isCoordinationDuplicated]),
@@ -140,8 +143,7 @@ export class AddIncidenceComponent {
     this.listType = [ 
       {label:'Operativa',value:'operativa'},
       {label:'Preventiva',value:'preventiva'},
-      {label:'Informativa',value:'informativa'},
-      {label:'Robo de activo',value:'robo de activo'}
+      {label:'Informativa',value:'informativa'}
     ];
     this.listValidation = [ 
       {label:'Positivo',value:'positivo'},
@@ -157,7 +159,12 @@ export class AddIncidenceComponent {
       {label:'SMS',value:'sms'},
       {label:'Correo Electrónico',value:'email'}
     ];
-
+    this.listSourceChannels = [ 
+      {label:'Llamada Telefónica',value:'llamada'},
+      {label:'WhatsApp',value:'whatsapp'},
+      {label:'Vía Radio',value:'radio'},
+      {label:'Detección de alarma en sistema de seguridad',value:'sistema'}
+    ];
     this.items = [
       { name: 'Aguascalientes'},
       { name: 'Baja California'},
@@ -192,6 +199,20 @@ export class AddIncidenceComponent {
       { name: 'Yucatán'},
       { name: 'Zacatecas'}
     ];  
+    this.listPreventive = [ 
+      { name: 'Activación de dispositivo'},
+    ];
+    this.listOperational = [ 
+      { name: 'Robo'},
+      { name: 'Daño a infraestructura'},
+      { name: 'Saqueo'},
+      { name: 'Amenazas'},
+      { name: 'Emergencia Médica'},
+      { name: 'Emergencia Servicios Generales'},
+    ];
+    this.listInformation = [ 
+      { name: 'Pérdida de control remoto'},
+    ];
 
     this.list();
   }
@@ -204,7 +225,7 @@ export class AddIncidenceComponent {
   onSubmit() 
   {
     // stop here if form is invalid
-    if (this.form.invalid || this.uploadedFiles.length == 0) {     
+    if (this.form.invalid) {     
       return;
     }
     this.save();
@@ -317,7 +338,7 @@ export class AddIncidenceComponent {
       
         this.listDevices = (data== null ? []: data['object']['records']);
 
-            
+        console.log(data);    
          
       },
       (err : any) =>
@@ -365,6 +386,7 @@ export class AddIncidenceComponent {
       for(let i = 0 ; i < this.files.length; i++)
       {
         if(this.uploadedFiles.indexOf(this.files[i]) === -1){
+         
           this.uploadedFiles.push(this.files[i]);
           //this.addRow('evidence');
           //asigna valores del File 
@@ -381,7 +403,6 @@ export class AddIncidenceComponent {
   }
   saveEvidence(id:string)
   {     
-  
     if(this.uploadedFiles.length > 0)
     {	
             var peticiones: any[] = []; 
@@ -409,6 +430,7 @@ export class AddIncidenceComponent {
                           incidenceEvidencePath: data[i].files[0].fd,
                           incidenceEvidenceName : data[i].files[0].filename,
                           incidenceEvidenceSize : (data[i].files[0].size / 1024).toFixed(2),
+                          incidenceEvidenceMime : data[i].files[0].type
                         });
                     }           
                 }
@@ -583,10 +605,6 @@ export class AddIncidenceComponent {
               }else{
                 this.saveEvidence((data['newId']).toString());
               }
-
-              
-                  
-
           },
 
           (err:any)=>
@@ -594,12 +612,10 @@ export class AddIncidenceComponent {
               this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error', detail: 'Error general al guardar respaldos y  telefonos de coordinacion', life: 3000 });                    this.miscService.endRquest();
           });
         }else{
+          console.log("salio a incidencia");
           this.miscService.endRquest(); 
           this.router.navigate(['/incidences']);
         }
-
-
-       
       }, (err: any) => {
         this.messageService.add({ severity: 'error', key: 'msg', summary: 'Error', detail: 'Problemas al guardar', life: 3000 });
         this.miscService.endRquest();

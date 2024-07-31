@@ -14,23 +14,23 @@
                 </ng-template>
             </p-toolbar>
 
-            <p-table #dt 
-            [value]="users"  
+            <p-table #dt
+            [value]="users"
             [lazy]="true"
             [resetPageOnSort]="false"
             [multiSortMeta]="[{field: 'id', order: 1}]"
-            sortMode="multiple" 
-            (onLazyLoad)="load($event)" 
+            sortMode="multiple"
+            (onLazyLoad)="load($event)"
             [lazyLoadOnInit]="true"
-            [paginator]="true" 
+            [paginator]="true"
             [totalRecords]="totalRows"
-            [rowsPerPageOptions]="[10,25,50]"     
+            [rowsPerPageOptions]="[10,25,50]"
             [showCurrentPageReport]="true"
-            currentPageReportTemplate=" {{ getPageRange(page, limit, totalRows) }}" 
+            currentPageReportTemplate=" {{ getPageRange(page, limit, totalRows) }}"
             [(selection)]="selectedElements" selectionMode="multiple"
             [responsive]="true"
             [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="scroll"  [breakpoint]="'760px'" [tableStyle]="{'min-width': '50rem'}"   >
-                
+
                 <ng-template pTemplate="header">
                     <tr>
                         <th >
@@ -42,8 +42,8 @@
                         <th pSortableColumn="id">
                             ID <p-sortIcon field="id"></p-sortIcon>
                         </th>
-                        <th > 
-                            IMAGEN 
+                        <th >
+                            IMAGEN
                         </th>
                         <th pSortableColumn="userFullName">
                             NOMBRE <p-sortIcon field="userFullName"></p-sortIcon>
@@ -62,30 +62,30 @@
                         <th>
                             <!-- expander -->
                         </th>
-						<th> 
+						<th>
 							<!-- checkbox -->
                         </th>
                         <th>
-                            <p-columnFilter type="numeric"  [showButtons]="false" field="id"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
+                            <p-columnFilter type="numeric"  [showButtons]="false" field="id" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
                         </th>
                         <th>
                             <p-columnFilter style="visibility: hidden;" ></p-columnFilter>
                         </th>
 						<th>
-                            <p-columnFilter type="text" field="userFullName" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="userFullName" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="userEmail" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="text" field="userEmail" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
                         <th>
-                            <p-columnFilter type="text" field="userEmailStatus" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                            <p-columnFilter type="boolean" field="userEmailStatus" [matchMode]="'contains'" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
                         </th>
 						<th>
 							<!-- controles -->
 						</th>
-                    </tr> 
+                    </tr>
                 </ng-template>
-				
+
                 <ng-template pTemplate="body" let-user let-expanded="expanded" >
                     <tr>
 						<td>
@@ -106,7 +106,7 @@
 						<td>{{user.userEmail}}</td>
 						<td>
 							<i class="pi" [ngClass]="{'true-icon pi-check-circle text-green-500': user.userEmailStatus == 'confirmed', 'false-icon pi-times-circle text-pink-500': user.userEmailStatus != 'confirmed'}"></i>
-						</td>                       
+						</td>
 						<td>
                             <div class="flex">
                                 <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-info p-button-text" [routerLink]="['/users/edit/', user.id]"></button>
@@ -115,7 +115,7 @@
                         </td>
                     </tr>
                 </ng-template>
-				
+
 				<ng-template pTemplate="rowexpansion" let-user>
 					<tr>
 						<td colspan="7">
@@ -142,12 +142,12 @@
 											<td colspan="6">No hay sucursales asignadas.</td>
 										</tr>
 									</ng-template>
-								</p-table>								
+								</p-table>
 							</div>
 						</td>
 					</tr>
 				</ng-template>
-				
+
             </p-table>
         </div>
     </div>

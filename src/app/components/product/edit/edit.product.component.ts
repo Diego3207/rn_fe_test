@@ -32,6 +32,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
     listCategory: any[] = [];
     visible: boolean = false;
     valueChange;
+    listCurrencies: any[] = [];
 
     constructor(
         private formBuilder: FormBuilder,
@@ -63,12 +64,19 @@ export class EditProductComponent implements OnInit, OnDestroy {
             productGuaranteeUnit: [null,[Validators.required ,Validators.min(1), Validators.max(365)]],
             productGuaranteeUnitMeasure: [null, [Validators.required,]],
             productGuaranteeSpecifications: [" ", [Validators.max(250)]], 
+            productCurrency:[null, Validators.required]
          }, formOptions);
 
          this.unitMeasures = [
             { name: 'Día(s)', value:"dia"},
             { name: 'Mes(es)', value:"mes"},
             { name: 'Año(s)', value:"año"},
+        ];
+        this.listCurrencies = [
+            { label: 'Dólar estadounidense (USD)', value:"USD"},
+            { label: 'Peso mexicano (MXN)', value:"MXN"},
+            //{ label: 'Dólar canadiense (CAD)', value:"CAD"},
+           // { label: 'Euro (EUR)', value:'EUR'}
         ];
 
         this.list();

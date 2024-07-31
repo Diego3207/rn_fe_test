@@ -16,6 +16,7 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { InputMaskModule } from 'primeng/inputmask';
 import { InputSwitchModule } from 'primeng/inputswitch';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
 	imports: [
@@ -33,7 +34,8 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 		FileUploadModule,
 		GoogleMapsModule,
 		InputMaskModule,
-		InputSwitchModule
+		InputSwitchModule,
+		TableModule
 	],
 	declarations: [AddMonitoringDeviceComponent],
 	providers: [ProviderService, MessageService, ConfirmationService]

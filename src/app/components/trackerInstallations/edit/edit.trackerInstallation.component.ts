@@ -86,6 +86,7 @@ export class EditTrackerInstallationComponent implements OnInit, OnDestroy {
             trackerInstallationInstallerId: [null, [Validators.required]],
             trackerInstallationDate: [null, [Validators.required]],
             trackerInstallationEngineStop: [false,[Validators.required]],
+            trackerInstallationObservation: null,
             trackerInstallationTypeCut: [null, [Validators.required, Validators.maxLength(100)]],
             trackerInstallationAccessories: this.formBuilder.array([],[this. isAccessoryDuplicated]),
             trackerInstallationLocation: [null, [Validators.required, Validators.maxLength(100)]],

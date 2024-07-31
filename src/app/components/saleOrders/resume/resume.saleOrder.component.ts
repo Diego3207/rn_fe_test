@@ -115,14 +115,14 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
         this.getFilter(selectedValue);
       });
 
-      this.form.get("saleOrderShippingDate").valueChanges.subscribe(selectedDate => 
+      /*this.form.get("saleOrderShippingDate").valueChanges.subscribe(selectedDate => 
         {
           this.listServices.forEach(e => {
               if(e.temporalityQuantity != null || 0 ){
                   this.getDateRenovation(e.temporalityQuantity,e.temporality,selectedDate);
               }
           });
-        });
+        });*/
 
     }
 
@@ -146,7 +146,7 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
       this.router.navigate(['/saleOrders']);
     }
 
-    getDateRenovation(quantity, temporality, date:Date){
+    /*getDateRenovation(quantity, temporality, date:Date){
       console.log(quantity, temporality, date);
         let dateShopping = new Date(date)
         switch (temporality) {
@@ -160,20 +160,21 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
                 this.dateRenovation = this.datePipe.transform(dateShopping.setDate(dateShopping.getDate() + quantity), 'yyyy-MM-dd HH:mm:ss');
                 break;
         }
-    }
+    }*/
 
+    
     private save()  
     {
-      // En las siguientes variables se guardarán los valores del formulario
-      let propertiesSaleOrder = {};
+        // The values ​​of the form will be saved in the following variables
+        let propertiesSaleOrder = {};
 
-      //Iteramos el objeto de formulario para guardar el valor en las variables arriba declaradas
-      Object.keys(this.form.value).forEach(element => 
-      {
-        propertiesSaleOrder[element] = this.form.value[element];           
-      });
+        // iterate the form object to save the value in the variables to
+        Object.keys(this.form.value).forEach(element => 
+        {
+          propertiesSaleOrder[element] = this.form.value[element];           
+        }); 
 
-       //Parseamos los id a string y actualizamos el formato de fecha
+       // parse the ids to string and update the date format
         if (propertiesSaleOrder['saleOrderQuotationSaleId']) propertiesSaleOrder['saleOrderQuotationSaleId'] = (propertiesSaleOrder['saleOrderQuotationSaleId']).toString();
         if (propertiesSaleOrder['saleOrderCfdiId']) propertiesSaleOrder['saleOrderCfdiId'] = (propertiesSaleOrder['saleOrderCfdiId']).toString();
         if (propertiesSaleOrder['saleOrderPayWayId']) propertiesSaleOrder['saleOrderPayWayId'] = (propertiesSaleOrder['saleOrderPayWayId']).toString();
@@ -181,24 +182,40 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
         if (propertiesSaleOrder['saleOrderDate']) propertiesSaleOrder['saleOrderDate'] = this.datePipe.transform(propertiesSaleOrder['saleOrderDate'], 'yyyy-MM-dd HH:mm:ss');
         if (propertiesSaleOrder['saleOrderShippingDate']) propertiesSaleOrder['saleOrderShippingDate'] = this.datePipe.transform(propertiesSaleOrder['saleOrderShippingDate'], 'yyyy-MM-dd HH:mm:ss');
        
-      //Método para agregar elementos a la tabla de renovacion
+      // Method to add elements to the renewal table
       /////////////////////
-      if(this.dateRenovation != null) {
-      let renovationProperties = {};
-      renovationProperties['saleOrderRenovationDateRenovation'] = this.dateRenovation;
-      renovationProperties['saleOrderRenovationSaleOrdertId'] = (propertiesSaleOrder['id']).toString();
+      this.listServices.forEach(e => {
+        if(e.temporalityQuantity != null || 0 ){
+            let renovationProperties = {};
+            //add the id of quotation sale services.
+            renovationProperties['saleOrderRenovationQuotationSaleServiceId'] = e.quotationSaleServiceId.toString();
 
-      this.saleOrderRenovationService.create(renovationProperties)
-        .subscribe(data => {
-          this.miscService.endRquest();
-          this.messageService.add({ severity: 'success', key: 'msg', summary: 'Operación exitosa', life: 3000 })
-        }, (err: any) => {
-          this.messageService.add({ severity: 'error', key: 'msg', summary: 'Error', detail: 'Problemas al guardar', life: 3000 });
-          this.miscService.endRquest();
-        });
+            let auxDate = new Date (this.form.value['saleOrderShippingDate']);
+            //add the renewal date.
+            if(e.temporality == "año"){
+              renovationProperties['saleOrderRenovationDateRenovation'] = this.datePipe.transform(auxDate.setFullYear(auxDate.getFullYear() + e.temporalityQuantity), 'yyyy-MM-dd HH:mm:ss').toString();
+            } else if (e.temporality == "mes"){
+              renovationProperties['saleOrderRenovationDateRenovation'] = this.datePipe.transform(auxDate.setMonth(auxDate.getMonth() + e.temporalityQuantity), 'yyyy-MM-dd HH:mm:ss').toString();
+            } else {
+              renovationProperties['saleOrderRenovationDateRenovation'] =  this.datePipe.transform(auxDate.setDate(auxDate.getDate() + e.temporalityQuantity), 'yyyy-MM-dd HH:mm:ss').toString();
+            } 
+
+            this.saleOrderRenovationService.create(renovationProperties)
+              .subscribe(data => {
+                this.miscService.endRquest();
+                this.messageService.add({ severity: 'success', key: 'msg', summary: 'Operación exitosa', life: 3000 })
+              }, (err: any) => {
+                this.messageService.add({ severity: 'error', key: 'msg', summary: 'Error', detail: 'Problemas al guardar', life: 3000 });
+                this.miscService.endRquest();
+              });
+
+        }
+    });
+
+     // if(this.dateRenovation != null) {
 
       /////////
-      }
+      //}
       //Actualizamos la orden de Compra
       this.saleOrderService.update(propertiesSaleOrder)
       .subscribe(data => 
@@ -462,10 +479,9 @@ export class ResumeSaleOrderComponent implements OnInit, OnDestroy {
 
               if(dataServices != null )
               { 
-                
-                  console.log(dataServices);
                   dataServices['object']['records'].forEach(element => {
                     this.listServices.push({
+                      "quotationSaleServiceId": element.id,
                       "id": element.quotationSaleServiceServiceId.id , 
                       "description": element.quotationSaleServiceServiceId.serviceDescription,
                       "temporality": element.quotationSaleServiceServiceId.serviceTemporality,

@@ -238,6 +238,11 @@ export class AppMenuComponent implements OnInit {
                                 icon: 'pi pi-book',
                                 routerLink: ['/directory']
                             },
+                            {
+                                label: 'Áreas operativas',
+                                icon: 'pi pi-globe',
+                                routerLink: ['/operationalAreas']
+                            },
                         ]
                     },
                     {

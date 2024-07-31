@@ -97,7 +97,7 @@ export class AddSaleOrderComponent
     this.form = this.formBuilder.group
       ({
         saleOrderQuotationSaleId: [null,[Validators.required]],
-        saleOrderShippingDate: [null,[Validators.required]],
+        saleOrderShippingDate: null,
         saleOrderShippingAddress: [null,[Validators.required]],
         saleOrderTransmitter: [this.sessionService.getUserId(),[Validators.required]], 
         saleOrderCfdiId: null,
@@ -156,7 +156,6 @@ export class AddSaleOrderComponent
       if (propertiesSaleOrder['saleOrderCfdiId']) propertiesSaleOrder['saleOrderCfdiId'] = (propertiesSaleOrder['saleOrderCfdiId']).toString();
       if (propertiesSaleOrder['saleOrderPayWayId']) propertiesSaleOrder['saleOrderPayWayId'] = (propertiesSaleOrder['saleOrderPayWayId']).toString();
       if (propertiesSaleOrder['saleOrderPayMethodId']) propertiesSaleOrder['saleOrderPayMethodId'] = (propertiesSaleOrder['saleOrderPayMethodId']).toString();
-      if (propertiesSaleOrder['saleOrderShippingDate']) propertiesSaleOrder['saleOrderShippingDate'] = this.datePipe.transform(propertiesSaleOrder['saleOrderShippingDate'], 'yyyy-MM-dd HH:mm:ss');
 
       //Creamos la orden de Compra
       this.saleOrderService.create(propertiesSaleOrder)
