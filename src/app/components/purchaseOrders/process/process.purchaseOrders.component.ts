@@ -149,7 +149,7 @@ export class ProcessPurchaseOrdersComponent implements OnInit, OnDestroy {
         
         this.miscService.startRequest();
 
-        if (!this.formReceived.invalid  &&  (( this.uploadedFiles.length + this.listEvidence.length) > 0 )) {
+        if (!this.formReceived.invalid  ) {
             let received = this.formReceived.value;
 
             

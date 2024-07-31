@@ -50,13 +50,13 @@ describe("Directorio/Dependencias",function(){
         cy.get('.p-button-primary').click();
         cy.wait("@añadir").its("response.statusCode").should("eq",201);
         cy.url().should("eq","http://localhost:4200/#/directory");
-        cy.wait(sleepLargo);
         //id de la tabla del listado de ubicaciones
         cy.get('.p-highlight > .p-element').click();
         //primer fila, columna nombre
         cy.get('.p-datatable-tbody > .ng-star-inserted > :nth-child(3)')
-        .contains("911 (Escudo Urbano)")
+        .contains(this.dependencies.nombreValido)
         .should("be.visible");
+        cy.wait(sleepLargo);
     })
     it("Añadir dependencia inválido por exceso de carecteres",function(){
         //módulo operativo

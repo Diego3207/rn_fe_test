@@ -45,13 +45,13 @@ describe("Paquetes",function(){
             .its("response.statusCode")
             .should("eq", 201);
         cy.url().should("eq", "http://localhost:4200/#/packages");
-        cy.wait(sleepLargo);
         //id de la tabla del listado de ubicaciones
         cy.get('.p-highlight > .p-element').click();
         //primer fila, columna nombre
         cy.get('.p-datatable-tbody > .ng-star-inserted > :nth-child(3)')
-        .contains("PAQUETE INICIAL")
+        .contains(this.paquete.nombreValido)
         .should("be.visible");
+        cy.wait(sleepLargo);
     })
     it("Añadir paquete inválido por exceso de caracteres",function(){
         //sección añadir producto

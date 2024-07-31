@@ -99,8 +99,9 @@ describe("Cotizaciones de venta",function(){
         cy.get('[psortablecolumn="quotationSaleFolio"]').click();
         //primer fila, columna nombre
         cy.get('.p-datatable-tbody > tr.ng-star-inserted > :nth-child(3)')
-        .contains("3 Cámaras JC450")
+        .contains(this.variable.descripcionValida)
         .should("be.visible");
+        cy.wait(sleepLargo)
     })
     it("Aceptar cotizacion valida",function(){
         //módulo administración

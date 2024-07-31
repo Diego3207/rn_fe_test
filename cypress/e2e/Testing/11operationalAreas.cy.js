@@ -21,8 +21,10 @@ describe("Áreas Operativas",function(){
         cy.get('form.ng-untouched > :nth-child(1) > .p-inputtext').type(this.variable.identificadorValido)
         //cliente
         cy.get(':nth-child(2) > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click()
-        //seleccionar primer cliente "Mattel"
+        //seleccionar costumer
         cy.get('.p-dropdown-filter')
+        .wait(200)
+        .type(this.variable.clienteValido)
         .wait(200)
         .type("{downarrow}")
         .wait(200)
@@ -67,7 +69,6 @@ describe("Áreas Operativas",function(){
         cy.wait(sleepLargo)
         //boton guardar
         cy.get('.p-button-primary').click()
-        cy.wait(sleepLargo)
         //esperar respuesta
         cy.wait("@añadir").its("response.statusCode").should("eq",201)
         cy.url().should("eq","http://localhost:4200/#/operationalAreas")
@@ -77,6 +78,7 @@ describe("Áreas Operativas",function(){
         cy.get('.p-datatable-tbody > :nth-child(1) > :nth-child(3)')
         .contains(this.variable.identificadorValido)
         .should("be.visible");
+        cy.wait(sleepLargo)
     })
     it("Crear Area operativa (Sucursal) valida",function(){
         //módulo operativo

@@ -225,7 +225,7 @@ export class AddIncidenceComponent {
   onSubmit() 
   {
     // stop here if form is invalid
-    if (this.form.invalid || this.uploadedFiles.length == 0) {     
+    if (this.form.invalid) {     
       return;
     }
     this.save();
@@ -403,7 +403,6 @@ export class AddIncidenceComponent {
   }
   saveEvidence(id:string)
   {     
-  
     if(this.uploadedFiles.length > 0)
     {	
             var peticiones: any[] = []; 
@@ -606,10 +605,6 @@ export class AddIncidenceComponent {
               }else{
                 this.saveEvidence((data['newId']).toString());
               }
-
-              
-                  
-
           },
 
           (err:any)=>
@@ -617,12 +612,10 @@ export class AddIncidenceComponent {
               this.messageService.add({ severity: 'error',key: 'msg', summary: 'Error', detail: 'Error general al guardar respaldos y  telefonos de coordinacion', life: 3000 });                    this.miscService.endRquest();
           });
         }else{
+          console.log("salio a incidencia");
           this.miscService.endRquest(); 
           this.router.navigate(['/incidences']);
         }
-
-
-       
       }, (err: any) => {
         this.messageService.add({ severity: 'error', key: 'msg', summary: 'Error', detail: 'Problemas al guardar', life: 3000 });
         this.miscService.endRquest();

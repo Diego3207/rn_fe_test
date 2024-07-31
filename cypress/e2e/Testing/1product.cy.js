@@ -35,19 +35,22 @@ describe("Añadir producto", function () {
         .type("{downarrow}")
         .wait(200)
         .type("{enter}");
+        //tipo moneda
+        cy.get(':nth-child(1) > .p-inputwrapper > .p-dropdown > .p-dropdown-label')
+        .click()
+        //seleccionar dolares
+        cy.get('[ng-reflect-label="Dólar estadounidense (USD)"] > .p-ripple')
+        .click()
         //precio
-        cy.get("#price > .p-inputnumber > #locale-us").type(
-            this.producto.precioValido
-        );
+        cy.get('#price > .p-inputnumber > #locale-us')
+        .type(this.producto.precioValido);
         cy.wait(sleepCorto);
         //garantia para el cliente
-        cy.get(
-            ":nth-child(2) > .p-inputwrapper > .p-inputnumber > #locale-us"
-        ).type(this.producto.garantiaValido);
-        cy.wait(sleepCorto);
-        cy.get(
-            ":nth-child(3) > .p-inputwrapper > .p-dropdown > .p-dropdown-label"
-        ).click();
+        cy.get('.col-2 > .p-inputwrapper > .p-inputnumber > #locale-us')
+        .type(this.producto.garantiaValido);
+        //temporalidad
+        cy.get(":nth-child(3) > .p-inputwrapper > .p-dropdown > .p-dropdown-label")
+        .click();
         cy.get("[ng-reflect-label='Día(s)'] > .p-ripple").click();
         cy.get(
             ":nth-child(4) > .p-element > .p-radiobutton > .p-radiobutton-box"
@@ -59,15 +62,14 @@ describe("Añadir producto", function () {
         cy.get(".p-button-primary").click();
         cy.wait("@añadirProducto").its("response.statusCode").should("eq", 201);
         cy.url().should("eq", "http://localhost:4200/#/product");
-        cy.wait(sleepLargo);
         //id de la tabla del listado de ubicaciones
         cy.get('.p-highlight > .p-element').click();
         //primer fila, columna nombre
         cy.get('.p-datatable-tbody > :nth-child(1) > :nth-child(4)')
-        .contains("Telcel")
+        .contains(this.producto.marcaValido)
         .should("be.visible");
+        cy.wait(sleepLargo);
     });
-    
     it("Añadir Producto inválido por campos sin llenar", function () {
         //módulo inventario
         cy.get(".p-element.ng-tns-c21-16").click();
@@ -87,15 +89,13 @@ describe("Añadir producto", function () {
         cy.get(".p-element.ng-tns-c21-16").click();
         //módulo productos
         cy.get('.ng-tns-c21-29.ng-tns-c21-16 > .p-element > .layout-menuitem-text').click();
+        //boton agregar
         cy.get(".p-button-success").click();
-        cy.wait(sleepLargo);
         //formulario
         cy.get("#brand").type(this.producto.marcaInvalido);
         cy.get("#model").type(this.producto.modeloInvalido);
-        cy.get("#price").type(this.producto.precioInvalido);
-        cy.get(
-            ":nth-child(2) > .p-inputwrapper > .p-inputnumber > #locale-us"
-        ).type(366);
+        cy.get('#price > .p-inputnumber > #locale-us')
+        .type(this.producto.precioInvalido);
         //botón de guardar
         //cy.get(".p-button-primary > .p-button-label").click();
         cy.wait(sleepLargo);
@@ -205,7 +205,7 @@ describe.only("Buscar producto", function () {
         ).click();
     });
 });
-*/
 describe("Eliminar producto",function(){
 
 })
+*/

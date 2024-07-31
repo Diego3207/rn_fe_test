@@ -167,7 +167,7 @@ insert into products value
 (1716414276362,1716414276362,2,"Concox","qbit","N/A",2000.00,36,"dia","Defectos de fabricación","circulante","MXN",1,1);
 
 insert into services value
-(1716491236412,1716491236412,1,"Material e instalación",100,"dia",1500.00,1);
+(1716491236412,1716491236412,1,"Material e instalación",100,"dia",1500.00,"MXN",1);
 
 insert into packages value
 (1716508097215,1716508097215,1,"Paquete Telcel",1);

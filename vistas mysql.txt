@@ -20,7 +20,7 @@ CREATE VIEW cruddesarrollo.view_trackers AS
         LEFT JOIN cruddesarrollo.quotation_sales qs ON ((qs.quotation_sale_id = so.sale_order_quotation_sale_id)))
         LEFT JOIN cruddesarrollo.costumers c ON ((c.costumer_id = qs.quotation_sale_customer_id)))
     WHERE
-        (t.tracker_active = 1)
+        (t.tracker_active = 1);
 
 
 CREATE 
@@ -59,7 +59,7 @@ VIEW view_renovations AS
         LEFT JOIN costumers c ON ((c.costumer_id = qs.quotation_sale_customer_id)))
     WHERE
         ((s.service_quantity_temporality IS NOT NULL)
-            AND (so.sale_order_active = 1))
+            AND (so.sale_order_active = 1));
 
 CREATE VIEW view_association_tracker_services AS
     SELECT 

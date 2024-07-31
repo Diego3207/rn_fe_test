@@ -123,13 +123,13 @@ describe("Proveedor", function () {
             .its("response.statusCode")
             .should("eq", 201);
         cy.url().should("eq", "http://localhost:4200/#/providers");
-        cy.wait(sleepLargo);
         //id de la tabla del listado de ubicaciones
         cy.get('.p-highlight > .p-element').click();
         //primer fila, columna nombre
         cy.get('.p-datatable-tbody > :nth-child(1) > :nth-child(3)')
-        .contains("Provider")
+        .contains(this.provider.nombreValido)
         .should("be.visible");
+        cy.wait(sleepLargo);
     });
     it("Añadir Proveedor duplicado con error 400", function () {
         //sección añadir provider

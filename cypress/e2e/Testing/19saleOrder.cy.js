@@ -40,8 +40,15 @@ describe("Orden de venta",function(){
         .wait(200)
         .type("{enter}");
         cy.wait(sleepSuperCorto)
+        //tipo moneda
+        cy.get(':nth-child(5) > .p-inputwrapper > .p-dropdown > .p-dropdown-label')
+        .click()
+        //MXN
+        cy.get('[ng-reflect-label="Peso mexicano (MXN)"] > .p-ripple')
+        .click()
         //agregar producto
-        cy.get(':nth-child(5) > .flex > p-button.p-element > .p-ripple').click();
+        cy.get(':nth-child(6) > .flex > p-button.p-element')
+        .click();
         cy.wait(sleepSuperCorto)
         //producto 1
         cy.get(':nth-child(1) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
@@ -66,10 +73,12 @@ describe("Orden de venta",function(){
         cy.get(':nth-child(4) > .col-12 > .p-inputwrapper > .p-inputnumber > .p-inputtext').type(this.variable.precio);
         cy.wait(sleepSuperCorto)
         //agregar producto
-        cy.get(':nth-child(5) > .flex > p-button.p-element > .p-ripple').click();
+        cy.get(':nth-child(6) > .flex-wrap > p-button.p-element > .p-ripple')
+        .click()
         cy.wait(sleepSuperCorto)
         //producto 2
-        cy.get(':nth-child(1) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label').last().click();
+        cy.get('.ng-untouched.ng-star-inserted > :nth-child(1) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label')
+        .last().click();
         cy.wait(sleepSuperCorto)
         //escribir producto
         cy.get('.p-dropdown-filter').type(this.variable.producto2)
@@ -79,7 +88,8 @@ describe("Orden de venta",function(){
         .type("{enter}");
         cy.wait(sleepSuperCorto)
         //unidad
-        cy.get(':nth-child(2) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label').last().click();
+        cy.get('.ng-invalid.ng-star-inserted > :nth-child(2) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label')
+        .click();
         cy.wait(sleepSuperCorto)
         //elegir "pieza"
         cy.get('[ng-reflect-label="Pieza"] > .p-ripple').last().click();
@@ -539,7 +549,6 @@ describe("Orden de venta",function(){
         cy.wait(sleepSuperCorto)
         cy.wait("@añadirProducto").its("response.statusCode").should("eq", 200);
         cy.url().should("eq", "http://localhost:4200/#/saleOrders");
-        cy.wait(sleepLargo);
         //id de la tabla del listado de ubicaciones
         cy.get('.p-highlight > .p-element').click();
         cy.wait(sleepSuperCorto)
@@ -547,6 +556,7 @@ describe("Orden de venta",function(){
         cy.get('.p-datatable-tbody > :nth-child(1) > :nth-child(8)')
         .contains("terminada")
         .should("be.visible");
+        cy.wait(sleepLargo);
     })
     it("Crear cotización de venta con 1 producto",function(){
         //módulo administración

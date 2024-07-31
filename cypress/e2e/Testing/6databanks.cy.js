@@ -39,13 +39,13 @@ describe("Cuentas bancaria",function(){
         cy.get('.p-button-primary').click();
         cy.wait("@añadirCuentaBanco").its("response.statusCode").should("eq",201)
         cy.url().should("eq","http://localhost:4200/#/databanks")
-        cy.wait(sleepLargo)
         //id de la tabla del listado de ubicaciones
         cy.get('.p-highlight > .p-element').click();
         //primer fila, columna nombre
         cy.get('.p-datatable-tbody > .ng-star-inserted > :nth-child(3)')
-        .contains("test")
+        .contains(this.databank.nombreBeneficiarioValido)
         .should("be.visible");
+        cy.wait(sleepLargo)
     })
     it("Añadir Cuenta bancaria por un campo inexistente",function(){
         //sección añadir provider

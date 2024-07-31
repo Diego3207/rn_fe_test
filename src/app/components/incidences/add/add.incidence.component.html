@@ -384,7 +384,7 @@
                     <h5 >Finalizar incidencia</h5>
 					<div [ngClass]="{'error-box  mt-5':form.controls.incidenceCoordinations.errors }" >
 						<div class="flex flex-wrap gap-2 m-2">
-							<p-button label="Vía de coordinación"  (onClick)="addRow('coordination')" icon="pi pi-plus"   badge="{{form.controls.incidenceCoordinations.length}}" ></p-button>
+							<p-button id="botonAgregarViaCoordinacion" label="Vía de coordinación"  (onClick)="addRow('coordination')" icon="pi pi-plus"   badge="{{form.controls.incidenceCoordinations.length}}" ></p-button>
 						</div>
 						<div class="card mt-3" formArrayName="incidenceCoordinations">
 						   
