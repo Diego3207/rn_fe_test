@@ -13,13 +13,17 @@ describe("Vehículos",function(){
     it("Añadir Vehículo válido",function(){
        //módulo instalaciones
        cy.get('.p-element.ng-tns-c21-34').click();
-       //módulo instalación
+       //módulo vehiculos
        cy.get('.ng-tns-c21-37.ng-tns-c21-34 > .p-element').click();
        //boton agregar
         cy.get('.p-button-success').click();
         //cliente
         cy.get('.p-dropdown-label').click();
-        cy.get('[formControlName="vehicleCostumerId"]').type(this.vehicle.clienteValido).wait(500).type("{downarrow}").wait(500).type("{enter}");
+        cy.get('[formControlName="vehicleCostumerId"]').type(this.vehicle.clienteValido)
+        .wait(500)
+        .type("{downarrow}")
+        .wait(500)
+        .type("{enter}");
         cy.get('#vehicleBrand').type(this.vehicle.marcaValido);
         cy.get('#vehicleModel').type(this.vehicle.modeloValido);
         cy.get('#vehicleYear').type(this.vehicle.anoValido);

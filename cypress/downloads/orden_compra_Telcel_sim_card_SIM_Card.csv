@@ -1,0 +1,2 @@
+id,suministro,id_orden_compra,fecha_compra,producto,status,ubicacion,categoria,observaciones,iccid,numero,tsp,plan,estado_sim
+28,"12797310632065721536",12,"2024-08-01","Telcel sim card","vendido","Oficina","SIM Card",null,"12797310632065721536","4055488899","Telcel","ADDON","disponible"

@@ -1,16 +1,16 @@
 {
     "descripcion":"1 qbit y 1 sim card",
     "voltajeValida":"3.7",
-    "iccidValida":"81998904234309897747",
+    "iccidValida":"53859011816854393940",
     "planServicio":"ADDON",
     "proveedor":"Provider",
     "producto1":"qbit",
-    "serialGPS":"607892343736339",
+    "serialGPS":"485758552680811",
     "producto2":"sim card",
     "cantidad":"1",
     "precio":"300",
-    "numeroValida":"1265752414",
-    "categoriaValida":"Móvil",
+    "numeroValida":"1897284481",
+    "categoriaValida":"Fijo",
     "serialGPSInvalida":"355087093979655355087093",
     "imeiInvalida":"355087093979655355087093979655"
 }
