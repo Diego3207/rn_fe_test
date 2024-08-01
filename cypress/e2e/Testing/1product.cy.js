@@ -10,7 +10,7 @@ describe("Añadir producto", function () {
         cy.get("#password").type("123456");
         cy.get('[label="CONTINUAR"]').click();
     });
-    it("Añadir Producto válido de tipo sim card", function () {
+    it("Añadir Producto válido de tipo rastreador", function () {
         //módulo inventario
         cy.get(".p-element.ng-tns-c21-16").click();
         //módulo productos
@@ -30,7 +30,7 @@ describe("Añadir producto", function () {
         ).click();
         cy.get('.p-dropdown-filter')
         .wait(200)
-        .type("{downarrow}")
+        .type(this.producto.categoria)
         .wait(200)
         .type("{downarrow}")
         .wait(200)

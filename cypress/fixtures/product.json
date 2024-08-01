@@ -1,7 +1,8 @@
 {
-    "marcaValido":"Telcel1",
-    "modeloValido":"sim card",
+    "marcaValido":"Teltonika",
+    "modeloValido":"FMC920",
     "descripcionValido":"N/A",
+    "categoria":"Rastreador",
     "precioValido":"2000",
     "garantiaValido":"36",
     "marcaInvalido":"ConcoxConcoxConcoxConcoxConcoxConcoxConcoxConcoxConcoxConcoxConcoxConcoxConcoxConcoxConcoxConcoxConcoxConcoxConcoxConcoxConcox",

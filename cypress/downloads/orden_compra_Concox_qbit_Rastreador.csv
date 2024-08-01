@@ -1,0 +1,2 @@
+id,suministro,id_orden_compra,fecha_compra,producto,status,ubicacion,categoria,observaciones,imei,sim_card,voltage_minimo,voltage_maximo
+27,"731428440875645",12,"2024-08-01","Concox qbit","disponible","Oficina","Rastreador",null,"731428440875645",6,0,0

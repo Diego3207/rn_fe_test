@@ -89,6 +89,11 @@ def generarImeiAleatorio():
     numero = random.randint(100000000000000, 999999999999999)
     return numero
 
+def generarVinAleatorio():
+    numero = random.randint(100000000000000, 999999999999999)
+    return numero
+
+
 def llenardatos(archivo,campoBuscar, numero):
     for line in fileinput.FileInput(archivo+".json", inplace=1):
         if line.startswith(campoBuscar):
@@ -173,5 +178,31 @@ def menu():
     llenardatos(archivo,campos[0], numero)
     llenardatos(archivo,campos[1], numero2)
     llenardatos(archivo,campos[2], numero3)
+
+    #VEHICLE
+    campos = ['    "vinValido":"']
+    numero = generarVinAleatorio()
+    llenardatos(archivo,campos[0], "D"+str(numero)+"E")
+
+    #TRACKER INSTALLATIONS
+    campos = [
+        '    "modelo":"',
+        '    "iccidValida":"',
+        '    "serialGPS":"',
+        '    "numeroValida":"',
+        '    "vinValido":"'
+        ]
+    numero = generarNumero6Cifras()
+    numero2 = generarIccidAleatorio()
+    numero3 = generarImeiAleatorio()
+    numero4 = generarNumeroTelefonoAleatorio()
+    numero5 = generarVinAleatorio()
+    archivo="trackerInstallations"
+    llenardatos(archivo,campos[0], "Boton de panico "+str(numero))
+    llenardatos(archivo,campos[1], str(numero2))
+    llenardatos(archivo,campos[2], str(numero3))
+    llenardatos(archivo,campos[3], str(numero4))
+    llenardatos(archivo,campos[4], "D"+str(numero5)+"E")
+
 
 menu()
