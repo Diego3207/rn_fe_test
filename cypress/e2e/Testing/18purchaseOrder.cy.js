@@ -549,7 +549,7 @@ describe("Orden de compra",function(){
         cy.get(".p-button-primary").click();
         cy.wait(sleepLargo);
     })
-    it.only("Abastecer compra invalida por campos vacíos al abastecer",function(){
+    it("Abastecer compra invalida por serial repetido",function(){
         //?CREAR ORDEN DE COMPRA
         //sección añadir provider
         //módulo administración
