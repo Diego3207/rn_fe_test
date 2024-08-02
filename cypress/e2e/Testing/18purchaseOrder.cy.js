@@ -143,16 +143,19 @@ describe("Orden de compra",function(){
         cy.get(
             '[ng-reflect-name="0"] > :nth-child(5) > .col-12 > #reason'
         ).type("na");
+        cy.intercept("POST", "http://localhost:1337/supply/add").as(
+            "añadirProducto"
+        );
         //boton abastecer
         cy.get("#p-tabpanel-0 > .mt-4 > .p-button-primary").click();
-        cy.wait(sleepLargo);
-        cy.wait(sleepLargo);
+        cy.wait("@añadirProducto").its("response.statusCode").should("eq", 201);
         //id de la tabla del listado de ubicaciones
         cy.get('.p-highlight > .p-element').click();
         //primer fila, columna nombre
         cy.get('.p-datatable-tbody > tr.ng-star-inserted > :nth-child(5)')
         .contains("abastecida")
         .should("be.visible");
+        cy.wait(sleepLargo);
     })
     it("Crear orden de compra invalida por exceso de caracteres y por productos duplicados",function(){
         //?CREAR ORDEN DE COMPRA
@@ -472,6 +475,133 @@ describe("Orden de compra",function(){
         cy.get('#p-tabpanel-0 > :nth-child(1) > .field > .font-semibold')
         .contains('Abastecimiento por lote')
         .should('be.visible')
+        cy.wait(sleepLargo);
+    })
+    it.only("Crear orden de compra valida sin cotización con 1 producto y 1 servicio",function(){
+        //?CREAR ORDEN DE COMPRA
+        //sección añadir provider
+        //módulo administración
+        cy.get('.p-element.ng-tns-c21-15').click();
+        //ordenes
+        cy.get('.p-element.ng-tns-c21-21').click();
+        //de compra
+        cy.get('.ng-tns-c21-26.ng-tns-c21-21 > .p-element').click();
+        //boton agregar
+        cy.get(".p-button-success").click();
+        cy.wait(300)
+        //nombre
+        cy.get("#name").type(this.variable.descripcionValida);
+        //proveedor
+        cy.get(':nth-child(3) > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
+        //escribir proveedor
+        cy.get('.p-dropdown-filter')
+        .type(this.variable.proveedorValida)
+        .type("{downarrow}")
+        .wait(200)
+        .type("{enter}");
+        //tipo moneda
+        cy.get(':nth-child(5) > .p-inputwrapper > .p-dropdown > .p-dropdown-label')
+        .click();
+        //seleccionar MXN
+        cy.get('[ng-reflect-label="Peso mexicano (MXN)"] > .p-ripple')
+        .click()
+        //añadir producto
+        cy.get(':nth-child(6) > .flex > p-button.p-element > .p-ripple')
+        .click();
+        //producto
+        cy.get(':nth-child(1) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label')
+        .click()
+        //escribir producto
+        cy.get('.p-dropdown-filter').type(this.variable.productoValida)
+        .wait(200)
+        .type("{downarrow}")
+        .wait(200)
+        .type("{enter}");
+        //unidad
+        cy.get(':nth-child(2) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label').click();
+        //elegir "pieza"
+        cy.get('[ng-reflect-label="Pieza"] > .p-ripple').click();
+        //cantidad
+        cy.get('#locale-us').type(this.variable.cantidadValida);
+        //precio
+        cy.get(':nth-child(4) > .col-12 > .p-inputwrapper > .p-inputnumber > .p-inputtext').type(this.variable.precioValida);
+        //agregar servicio
+        cy.get(':nth-child(7) > .flex-wrap > p-button.p-element > .p-ripple').click();
+        //servicio
+        cy.get(':nth-child(1) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label').last().click();
+        //escribir "Material"
+        cy.get('.p-dropdown-filter')
+        .type(this.variable.servicioValida)
+        .wait(200)
+        .type("{downarrow}")
+        .wait(200)
+        .type("{enter}");
+        //unidad
+        cy.get(':nth-child(2) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-label').last().click();
+        //elegir "anual"
+        cy.get('[ng-reflect-label="Anual"] > .p-ripple').click();
+        //cantidad
+        cy.get('[formControlName="purchaseOrderServiceQuantity"]').type(this.variable.cantidadValida);
+        //precio
+        cy.get(':nth-child(4) > .col-12 > .p-inputwrapper > .p-inputnumber > .p-inputtext').last().type(this.variable.precioValida);
+        cy.wait(sleepLargo);
+        //boton guardar
+        cy.get(".p-button-primary").click();
+        cy.wait(sleepLargo);
+    })
+    it.only("Abastecer compra invalida por campos vacíos al abastecer",function(){
+        //?CREAR ORDEN DE COMPRA
+        //sección añadir provider
+        //módulo administración
+        cy.get('.p-element.ng-tns-c21-15').click();
+        //ordenes
+        cy.get('.p-element.ng-tns-c21-21').click();
+        //de compra
+        cy.get('.ng-tns-c21-26.ng-tns-c21-21 > .p-element').click();
+        //id
+        cy.get(':nth-child(1) > .p-highlight')
+        .click();
+        //boton abastecer
+        cy.get(":nth-child(1) > :nth-child(6) > .flex > .p-button-success")
+            .first()
+            .click();
+        cy.wait(400)
+        //observaciones
+        cy.get("#reason").type("eb");
+        //siguiente
+        cy.get(".p-button-primary").click();
+        //switch abastecer por lote
+        cy.get('.p-inputswitch-slider').click();
+        //asignar persona
+        cy.get(
+            ".field > .p-inputwrapper > .p-dropdown > .p-dropdown-label"
+        ).click();
+        //elijo "administrador"
+        cy.get(".p-element.ng-star-inserted > .p-ripple").click();
+        //producto 1
+        //serial
+        cy.get('[ng-reflect-name="0"] > :nth-child(2) > .col-12 > #key').type(
+            this.variable.serialValida
+        );
+        //ubicacion
+        cy.get(':nth-child(3) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-trigger').click();
+        cy.wait(200)
+        cy.get('.p-dropdown-filter')
+        .type("Oficina")
+        .wait(200)
+        .type("{downarrow}")
+        .wait(200)
+        .type("{enter}");
+        //estado
+        cy.get(':nth-child(4) > .col-12 > .p-inputwrapper > .p-dropdown > .p-dropdown-trigger').click();
+        //elegir "disponible"
+        cy.get('[ng-reflect-label="Disponible"] > .p-ripple').click();
+        cy.intercept("POST", "http://localhost:1337/supply/add").as(
+            "añadirProducto"
+        );
+        //boton abastecer
+        cy.get("#p-tabpanel-0 > .mt-4 > .p-button-primary").click();
+        cy.wait("@añadirProducto").its("response.statusCode").should("eq", 400);
         cy.wait(sleepLargo);
     })
 })
